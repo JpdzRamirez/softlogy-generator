@@ -81,7 +81,7 @@
                     <div class="icon"><i class="bi bi-activity icon"></i></div>
                     <h4>Generador de Cufes</h4>
                     <p>Herramienta para generar los Cufes de una lista de folios y prefijo específico</p>
-                    <form action="{{ route('procesarTxt') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('obtener.cufes') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <label for="formFile" class="form-label">Lista de Folios TXT</label>
@@ -99,6 +99,25 @@
                               <input type="text" name="nitEmisor" required class="form-control" id="nitEmisor" placeholder="Ejemplo: 123546879">
                             </div>
                             <div class="form-text" id="basic-addon4">Sin numero de verificacion.</div>
+                          </div>
+                        <button type="submit" style="background: #27303F; margin:auto;" class="btn btn-primary mb-3">Procesar TXT</button>
+                    </form>
+                  </div>
+                </div><!-- End Service Item -->
+      
+              </div>
+              <div class="col gy-4">
+      
+                <div class="row d-flex" data-aos="fade-up" style="min-width: 50em;" data-aos-delay="100">
+                  <div class="service-item position-relative">
+                    <div class="icon"><i class="bi bi-activity icon"></i></div>
+                    <h4>Generador de Errores - SOLO PARA FACTURAS ELECTRONICAS</h4>
+                    <p>Herramienta para generar el conteo de errores de los JSON de cada BD de todas las empresas</p>
+                    <form action="{{ route('obtener.errores') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">Lista de Errores JSON-TXT</label>
+                            <input class="form-control" required name="archivo"  type="file" id="formFile">
                           </div>
                         <button type="submit" style="background: #27303F; margin:auto;" class="btn btn-primary mb-3">Procesar TXT</button>
                     </form>

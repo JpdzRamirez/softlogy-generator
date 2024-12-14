@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 class FacturaController extends Controller
 {
-    public function procesarTxt(Request $request)
+    public function obtenerCUFES_Folios(Request $request)
     {
         $prefijo=$request->input("prefijo");
         $nitEmisor=$request->input("nitEmisor");
