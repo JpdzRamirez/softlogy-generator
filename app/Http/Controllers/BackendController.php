@@ -22,12 +22,13 @@ class BackendController extends Controller
         $categorias = [
             'vencimiento' => ['resolucion vencida', 'está vencida', 'error la resolución'],
             'email' => ['email'],
-            'tag' => ['tag'],
+            'tag' => ['no existe TAG_NAME'],
             'calculos' => ['campos mandatorios'],
             'sin_resolucion' => ['sin resolución','error no se encuentra ninguna resolucion'],
             'nombre' => ['nombre', 'error al dato nombre'],
-            'folios' => ['error folio de factura'],
-            'resolucion_nocoincide' => ['resolucion no coincide'],
+            'folios-fuera-rangos' => ['error folio de factura fuera'],
+            'folios-agotados' => ['error los folios de la'],
+            'resolucion_nocoincide' => ['error el tipo de resolución no coincide con el tipo de documento'],
             'negativos' => ['valores negativos'],
             'timbrador'=> ['error comunicacion DIAN'],
         ];
@@ -38,6 +39,7 @@ class BackendController extends Controller
         // Inicializar los contadores para cada categoría combinada
         $contadores = array_fill_keys(array_keys($categoriasCombinadas), 0);
         $contadores['otros'] = 0;
+        $contadores['error-dian'] = 0;
     
         // Ruta del archivo TXT subido
         $path = $request->file('archivo')->getRealPath();
@@ -112,6 +114,10 @@ class BackendController extends Controller
                             $contadores['otros']++;
                         }
                     }
+                }
+                // caso DIAN[] EMPTY
+                if(empty($errorData['DIAN'])){
+                    $contadores['error-dian']++;
                 }
             }
         }

@@ -44,8 +44,8 @@
             <nav id="navmenu" class="navmenu me-auto">
               <ul>
                 <li><a href="#hero" class="active">Home<br></a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
+                <li><a href="#featured-services">Services</a></li>
+                <li><a href="#about">About</a></li>                
               </ul>
               <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
@@ -112,7 +112,7 @@
                   <div class="service-item position-relative">
                     <div class="icon"><i class="bi bi-activity icon"></i></div>
                     <h4>Generador de Errores - SOLO PARA FACTURAS ELECTRONICAS</h4>
-                    <p>Herramienta para generar el conteo de errores de los JSON de cada BD de todas las empresas</p>
+                    <p>Herramienta para generar el conteo de errores de los JSON para cada BD de todas las empresas</p>
                     <form action="{{ route('obtener.errores') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
@@ -137,7 +137,9 @@
             <div class="container section-title" data-aos="fade-up">
               <h2>SOFTLOGY-GENERATOR</h2>
               <p>Herramienta Integral para la Gestión de Reportes y Datos XML Relacionados con la DIAN
-                SOFTLOGY-GENERATOR es una solución tecnológica diseñada para facilitar la gestión de reportes y la consulta de datos en formatos XML, con un enfoque especializado en los procesos regulatorios exigidos por la Dirección de Impuestos y Aduanas Nacionales de Colombia (DIAN). Este software está orientado a empresas y profesionales que necesitan cumplir con las normativas fiscales y tributarias mediante la generación, consulta y validación de documentos electrónicos de manera eficiente.</p>
+                SOFTLOGY-GENERATOR es una solución tecnológica diseñada para facilitar la gestión de reportes y la consulta de datos en formatos XML, 
+                con un enfoque especializado en los procesos regulatorios exigidos por la Dirección de Impuestos y Aduanas Nacionales de Colombia (DIAN). 
+                Este software también está orientado a facilitar el proceso de verificación de errores en la facturación electrónica.</p>
             </div><!-- End Section Title -->
       
             <div class="container" data-aos="fade-up">
@@ -146,18 +148,16 @@
       
                 <div class="col-lg-5">
                   <div class="about-img">
-                    <img src="assets/img/about-portrait.jpg" class="img-fluid" alt="">
+                    <img src="https://www.obsbusiness.school/sites/obsbusiness.school/files/inline-images/importancia-trabajo-en-equipo.jpg" class="img-fluid" alt="">
                   </div>
                 </div>
       
                 <div class="col-lg-7">
-                  <h3 class="pt-0 pt-lg-5">Neque officiis dolore maiores et exercitationem quae est seda lidera pat claero</h3>
+                  <h3 class="pt-0 pt-lg-5">Nuestro equipo de trabajo</h3>
       
                   <!-- Tabs -->
                   <ul class="nav nav-pills mb-3">
-                    <li><a class="nav-link active" data-bs-toggle="pill" href="#about-tab1">Saepe fuga</a></li>
-                    <li><a class="nav-link" data-bs-toggle="pill" href="#about-tab2">Voluptates</a></li>
-                    <li><a class="nav-link" data-bs-toggle="pill" href="#about-tab3">Corrupti</a></li>
+                    <li><a class="nav-link active" data-bs-toggle="pill" href="#about-tab1">Soporte y Contabilidad</a></li>
                   </ul><!-- End Tabs -->
       
                   <!-- Tab Content -->
@@ -165,7 +165,7 @@
       
                     <div class="tab-pane fade show active" id="about-tab1">
       
-                      <p class="fst-italic">Consequuntur inventore voluptates consequatur aut vel et. Eos doloribus expedita. Sapiente atque consequatur minima nihil quae aspernatur quo suscipit voluptatem.</p>
+                      <p class="fst-italic">Somos un equipo profesional.</p>
       
                       <div class="d-flex align-items-center mt-4">
                         <i class="bi bi-check2"></i>
@@ -186,54 +186,6 @@
                       <p>Eius alias aut cupiditate. Dolor voluptates animi ut blanditiis quos nam. Magnam officia aut ut alias quo explicabo ullam esse. Sunt magnam et dolorem eaque magnam odit enim quaerat. Vero error error voluptatem eum.</p>
       
                     </div><!-- End Tab 1 Content -->
-      
-                    <div class="tab-pane fade" id="about-tab2">
-      
-                      <p class="fst-italic">Consequuntur inventore voluptates consequatur aut vel et. Eos doloribus expedita. Sapiente atque consequatur minima nihil quae aspernatur quo suscipit voluptatem.</p>
-      
-                      <div class="d-flex align-items-center mt-4">
-                        <i class="bi bi-check2"></i>
-                        <h4>Repudiandae rerum velit modi et officia quasi facilis</h4>
-                      </div>
-                      <p>Laborum omnis voluptates voluptas qui sit aliquam blanditiis. Sapiente minima commodi dolorum non eveniet magni quaerat nemo et.</p>
-      
-                      <div class="d-flex align-items-center mt-4">
-                        <i class="bi bi-check2"></i>
-                        <h4>Incidunt non veritatis illum ea ut nisi</h4>
-                      </div>
-                      <p>Non quod totam minus repellendus autem sint velit. Rerum debitis facere soluta tenetur. Iure molestiae assumenda sunt qui inventore eligendi voluptates nisi at. Dolorem quo tempora. Quia et perferendis.</p>
-      
-                      <div class="d-flex align-items-center mt-4">
-                        <i class="bi bi-check2"></i>
-                        <h4>Omnis ab quia nemo dignissimos rem eum quos..</h4>
-                      </div>
-                      <p>Eius alias aut cupiditate. Dolor voluptates animi ut blanditiis quos nam. Magnam officia aut ut alias quo explicabo ullam esse. Sunt magnam et dolorem eaque magnam odit enim quaerat. Vero error error voluptatem eum.</p>
-      
-                    </div><!-- End Tab 2 Content -->
-      
-                    <div class="tab-pane fade" id="about-tab3">
-      
-                      <p class="fst-italic">Consequuntur inventore voluptates consequatur aut vel et. Eos doloribus expedita. Sapiente atque consequatur minima nihil quae aspernatur quo suscipit voluptatem.</p>
-      
-                      <div class="d-flex align-items-center mt-4">
-                        <i class="bi bi-check2"></i>
-                        <h4>Repudiandae rerum velit modi et officia quasi facilis</h4>
-                      </div>
-                      <p>Laborum omnis voluptates voluptas qui sit aliquam blanditiis. Sapiente minima commodi dolorum non eveniet magni quaerat nemo et.</p>
-      
-                      <div class="d-flex align-items-center mt-4">
-                        <i class="bi bi-check2"></i>
-                        <h4>Incidunt non veritatis illum ea ut nisi</h4>
-                      </div>
-                      <p>Non quod totam minus repellendus autem sint velit. Rerum debitis facere soluta tenetur. Iure molestiae assumenda sunt qui inventore eligendi voluptates nisi at. Dolorem quo tempora. Quia et perferendis.</p>
-      
-                      <div class="d-flex align-items-center mt-4">
-                        <i class="bi bi-check2"></i>
-                        <h4>Omnis ab quia nemo dignissimos rem eum quos..</h4>
-                      </div>
-                      <p>Eius alias aut cupiditate. Dolor voluptates animi ut blanditiis quos nam. Magnam officia aut ut alias quo explicabo ullam esse. Sunt magnam et dolorem eaque magnam odit enim quaerat. Vero error error voluptatem eum.</p>
-      
-                    </div><!-- End Tab 3 Content -->
       
                   </div>
       
