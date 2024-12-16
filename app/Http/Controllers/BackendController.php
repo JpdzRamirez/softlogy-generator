@@ -3,7 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use Exception;
+
 
 class BackendController extends Controller
 {
@@ -136,4 +143,37 @@ class BackendController extends Controller
         return response()->download($outputPath, 'errores.txt')->deleteFileAfterSend(true);
     }
     
+    public function cargarClientes_xlsxs(Request $request){
+
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        try {
+            // Cargar el archivo
+            // Ruta del archivo XLSX subido
+            $path = $request->file('archivo')->getRealPath();
+            $excel = IOFactory::load($path);
+            $hojas = $excel->getSheetNames();
+            foreach( $hojas as $nombreHoja ) {
+                $hoja = $excel->getSheet($nombreHoja);
+
+                // Número de filas en la hoja
+                $filas = $hoja->getHighestRow();
+
+                // Procesar filas si hay más de una (asumiendo que la primera es encabezado)
+                if ($filas > 1) {
+                    for ($i = 2; $i <= $filas; $i++) { // Comienza en 2 si la fila 1 es encabezado
+                        $resultados[] = [
+                            'columna_1' => $hoja->getCell("A$i")->getValue(), // Columna A
+                            'columna_2' => $hoja->getCell("B$i")->getValue(), // Columna B
+                            'columna_3' => $hoja->getCell("C$i")->getValue(), // Columna C
+                        ];
+                    }
+                }
+            }
+            
+        } catch (Exception $e) {
+            return $ex->getMessage() . "---" . $ex->getLine() . "---Error fila: " . $i;
+        }
+
+    }
 }

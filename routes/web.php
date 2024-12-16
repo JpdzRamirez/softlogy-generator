@@ -10,3 +10,4 @@ Route::get('/', function () {
 
 Route::post('/cufes-folios', [FacturaController::class, 'obtenerCUFES_Folios'])->name('obtener.cufes');
 Route::post('/errores-json', [BackendController::class, 'obtenerErrores_JSON'])->name('obtener.errores');
+Route::post('/cargar-clientes', [BackendController::class, 'cargarClientes_xlsxs'])->name('cargar.clientes');
