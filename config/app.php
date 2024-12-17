@@ -96,7 +96,7 @@ return [
     */
 
     'cipher' => 'AES-256-CBC',
-
+    'admin-password'=> env('ADMIN_PASSWORD'),
     'key' => env('APP_KEY'),
 
     'previous_keys' => [

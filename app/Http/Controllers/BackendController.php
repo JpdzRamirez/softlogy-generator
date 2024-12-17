@@ -49,7 +49,7 @@ class BackendController extends Controller
         $contadores['error-dian'] = 0;
     
         // Ruta del archivo TXT subido
-        $path = $request->file('archivo')->getRealPath();
+        $path = $request->file('errorFile')->getRealPath();
     
         // Leer el archivo TXT línea por línea
         $errores = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -145,12 +145,30 @@ class BackendController extends Controller
     
     public function cargarClientes_xlsxs(Request $request){
 
+        // La contraseña ingresada por el usuario
+        $inputPassword = $request->input('adminPassword');
+
+        // Comparar contraseña con la de entorno
+        if ($inputPassword != config('app.admin-password')) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Contraseña no válida'
+            ], 401); // Código HTTP 401 (No Autorizado)
+        }
+
         set_time_limit(0);
         ini_set("memory_limit", -1);
+
         try {
-            // Cargar el archivo
+            
+            // Validar el archivo
+            $request->validate([
+                'usersFile' => 'required|file|mimes:xlsx,xls', // Máximo 2MB y formatos xlsx/xls
+            ]);
+
             // Ruta del archivo XLSX subido
-            $path = $request->file('archivo')->getRealPath();
+            // Cargar el archivo
+            $path = $request->file('usersFile')->getRealPath();            
             $excel = IOFactory::load($path);
             $hojas = $excel->getSheetNames();
             foreach( $hojas as $nombreHoja ) {
@@ -161,7 +179,7 @@ class BackendController extends Controller
 
                 // Procesar filas si hay más de una (asumiendo que la primera es encabezado)
                 if ($filas > 1) {
-                    for ($i = 2; $i <= $filas; $i++) { // Comienza en 2 si la fila 1 es encabezado
+                    for ($i = 6; $i <= $filas; $i++) { // Comienza en 2 si la fila 1 es encabezado
                         $resultados[] = [
                             'columna_1' => $hoja->getCell("A$i")->getValue(), // Columna A
                             'columna_2' => $hoja->getCell("B$i")->getValue(), // Columna B
@@ -172,7 +190,7 @@ class BackendController extends Controller
             }
             
         } catch (Exception $e) {
-            return $ex->getMessage() . "---" . $ex->getLine() . "---Error fila: " . $i;
+            return $e->getMessage() . "---" . $e->getLine() . "---Error fila: " . $i;
         }
 
     }

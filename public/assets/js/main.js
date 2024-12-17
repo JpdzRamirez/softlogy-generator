@@ -210,4 +210,11 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
+  $('#usersFileButton').on('click', function(){
+        // Mostrar el modal con el id 'adminUserModal'
+        console.log("clickedFileButton");
+        let adminModal = new bootstrap.Modal(document.getElementById('adminUserModal'));
+        adminModal.show();
+  });
+
 })();
