@@ -111,7 +111,7 @@ class helpdeskServices implements HelpDeskServiceInterface
         $nombreDireccion = str_replace(' ', '_', $nombreDireccion); // Reemplazar los espacios por _
         $queryCreateLocation="INSERT INTO glpi_locations (entities_id,is_recursive,name,locations_id,completename,comment,`level`,ancestors_cache,sons_cache,address,postcode,town,state,country,building,room,latitude,longitude,altitude,date_mod,date_creation) 
         VALUES
-            (0,0,
+            (0,1,
             '{$nombreDireccion}',0,
             '{$location['direccion']}','',1,'[]',
             '{$ancestorsCache}',
