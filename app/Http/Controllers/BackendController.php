@@ -148,8 +148,19 @@ class BackendController extends Controller
         // Descargar el archivo generado
         return response()->download($outputPath, 'errores.txt')->deleteFileAfterSend(true);
     }
-    
-    public function cargarClientes_xlsxs(Request $request,HelpDeskServiceInterface $helpdeskService,){
+    public function descargarFormatoClientes_xlsx(){
+        // Ruta al archivo en el directorio storage
+        $filePath = storage_path('documents/Formato_Cargue.xlsx');
+
+        // Verifica si el archivo existe antes de intentar descargarlo
+        if (!file_exists($filePath)) {
+            return response()->json(['error' => 'El archivo no existe.'], 404);
+        }
+
+        // Retorna el archivo para su descarga
+        return response()->download($filePath, 'Formato_Cargue.xlsx');
+    }
+    public function cargarClientes_xlsx(Request $request,HelpDeskServiceInterface $helpdeskService,){
 
         // La contraseña ingresada por el usuario
         $inputPassword = $request->input('adminPassword');
@@ -158,12 +169,11 @@ class BackendController extends Controller
         if ($inputPassword != config('app.admin-password')) {
             return response()->json([
                 'error' => true,
+                'title'=>'Error de Credenciales, Status: 401',
                 'message' => 'Contraseña no válida'
             ], 401); // Código HTTP 401 (No Autorizado)
         }
 
-        set_time_limit(0);
-        ini_set("memory_limit", -1);
 
         try {
             
@@ -176,17 +186,23 @@ class BackendController extends Controller
             // Cargar el archivo
             $path = $request->file('usersFile')->getRealPath();            
             $excel = IOFactory::load($path);
-            $hojas = $excel->getSheetNames();
-            foreach( $hojas as $nombreHoja ) {
-                $hoja = $excel->getSheet($nombreHoja);
+
+                // Obtenemos la hoja principal para el cargue
+                $hoja = $excel->getSheet(0);
 
                 // Número de filas en la hoja
                 $filas = $hoja->getHighestRow();
-
+                $procesado=$filas;
+                $filasNoProcesadas=[];
                 // Procesar filas si hay más de una (asumiendo que la primera es encabezado)
                 if ($filas > 1) {
                     for ($i = 7; $i <= $filas; $i++) { // Comienza en 2 si la fila 1 es encabezado
-                        $dataInput[] = [
+                        $isvalid = $hoja->getCell("A$i")->getValue() ?: false;
+                        if (!$isvalid) {
+                            $filasNoProcesadas[] = $i;
+                            continue;
+                        }
+                        $dataInput= [
                             'nombre' => $hoja->getCell("A$i")->getValue() ?: '', 
                             'telefono' => $hoja->getCell("B$i")->getValue() ?: '', 
                             'direccion' => $hoja->getCell("C$i")->getValue() ?: '', 
@@ -205,10 +221,11 @@ class BackendController extends Controller
                             'prefijo_fact_2' => $hoja->getCell("V$i")->getValue() ?: '', 
                             'prefijo_nota_2' => $hoja->getCell("W$i")->getValue() ?: '', 
                             'fecha_resol_2' => $hoja->getCell("AA$i")->getValue() ?: '',  
-                            'usuario' => $hoja->getCell("AC$i")->getValue() ?: '', 
-                            'ciudad' => $hoja->getCell("AD$i")->getValue() ?: '',
-                            'departamento' => $hoja->getCell("AE$i")->getValue() ?: '',
-                            'codigo_postal' => $hoja->getCell("AF$i")->getValue() ?: '',
+                            'usuario' => $hoja->getCell("AC$i")->getCalculatedValue() ?: '', 
+                            'ciudad' => $hoja->getCell("AD$i")->getCalculatedValue() ?: '',
+                            'departamento' => $hoja->getCell("AE$i")->getCalculatedValue() ?: '',
+                            'codigo_postal' => $hoja->getCell("AF$i")->getCalculatedValue() ?: '',
+                            'clave_tecnica' => $hoja->getCell("AB$i")->getCalculatedValue() ?: '',
                         ];
                         // Creamos la Ubicación del Punto
                         $locationId=$helpdeskService->createLocation($dataInput);
@@ -220,13 +237,31 @@ class BackendController extends Controller
                         }
                         $response = $helpdeskService->createEntiti( $dataInput);
 
+                        $notProcessedRows = count($filasNoProcesadas) > 0 ? implode(', ', $filasNoProcesadas) : 'Ninguna fila fue ignorada';
+
+                        // Si la respuesta no es exitosa, false anotamos fila como no procesada
+                        if(!$response){
+                            $filasNoProcesadas[] = $i;
+                        }
 
                     }
+                    $diferencia= $procesado-count($filasNoProcesadas);
+                    // Ending request 
+                    return response()->json([
+                        'status' => true,
+                        'records'=>$diferencia,
+                        'notProcess'=>$notProcessedRows,
+                        'title' => 'Usuarios Creados Exitosamente'
+                    ], 200); // Código HTTP 401 (No Autorizado)
                 }
-            }
+            
             
         } catch (Exception $e) {
-            return $e->getMessage() . "---" . $e->getLine() . "---Error fila: " . $i;
+            return response()->json([
+                'error' => true,
+                'title'=>'Error en HelpDesk Services, Status: 500',
+                'message' => "Algo salio mal en el momento de crear los puntos de venta. ERROR: {$e->getMessage()}, Fila: {$e->getLine()}."
+            ], 500); // Código HTTP 401 (No Autorizado)            
         }
 
     }

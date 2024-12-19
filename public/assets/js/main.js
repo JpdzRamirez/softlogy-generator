@@ -216,5 +216,10 @@
         let adminModal = new bootstrap.Modal(document.getElementById('adminUserModal'));
         adminModal.show();
   });
+    // Evento de cierre del modal
+  $('#adminUserModal').on('hidden.bs.modal', function () {
+      // Limpiar los campos del formulario
+    $('#adminFormModal')[0].reset();
+  });
 
 })();

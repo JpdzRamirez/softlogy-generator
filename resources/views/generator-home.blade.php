@@ -61,7 +61,7 @@
           <section id="hero" class="hero section">
       
             <div class="container d-flex flex-column justify-content-center align-items-center text-center position-relative" data-aos="zoom-out">
-              <img src="assets/img/hero-img.svg" class="img-fluid animated" alt="">
+              <img src="{{asset('assets/img/hero-img.svg')}}" class="img-fluid animated" alt="">
               <h1>Bienvenido a <span>Softlogy Generator</span></h1>
               <p>Aquí podrás agilizar gestiones de soporte.</p>
               <div class="d-flex">
@@ -78,7 +78,7 @@
       
               <div class="col gy-4">
       
-                <div class="row d-flex" data-aos="fade-up" style="min-width: 50em;" data-aos-delay="100">
+                <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
                   <div class="service-item position-relative">
                     <div class="icon"><i class="bi bi-activity icon"></i></div>
                     <h4>Generador de Cufes</h4>
@@ -110,7 +110,7 @@
               </div>
               <div class="col gy-4">
       
-                <div class="row d-flex" data-aos="fade-up" style="min-width: 50em;" data-aos-delay="100">
+                <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
                   <div class="service-item position-relative">
                     <div class="icon"><i class="fa-solid fa-bomb"></i></div>
                     <h4>Generador de Errores - SOLO PARA FACTURAS ELECTRONICAS</h4>
@@ -130,11 +130,17 @@
 
               <div class="col gy-4">
       
-                <div class="row d-flex" data-aos="fade-up" style="min-width: 50em;" data-aos-delay="100">
+                <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
                   <div class="service-item position-relative">
                     <div class="icon"><i class="fa-solid fa-user"></i></div>
                     <h4>Cargue de clientes HelpDesk - SOLO PARA ADMINISTRADORES</h4>
                     <p>Su uso está pensado para la creación de usuarios para puntos de ventas de forma masiva</p>
+                    <div class="d-flex flex-column align-items-center g-1 mb-8">
+                      <a href="{{route('descargar.formatos')}}" style="position: relative" class="d-flex flex-column align-items-center">Descargar formato Excel 
+                        <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDlhaWNjaWEwdmFla2tpdnYwdXE1amF4b2RzNmV2ZDZ5NTRsZ3F4dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/24G0F8lQWYMb6jD47X/giphy.webp" 
+                        alt="Click-Here" style="width: 5em; position: absolute; top:1em;"></a>
+
+                    </div>
                     <form id="formUsersFile">                        
                         <div class="mb-3">
                             <label for="usersFile" class="form-label">Archivo Excel Formato- XLSS</label>
@@ -298,7 +304,7 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h1 class="modal-title fs-5" id="adminUserModalLabel">Modal title</h1>
+                <h1 class="modal-title fs-5" id="adminUserModalLabel"><i style="color:#0EA2BD" class="fa-solid fa-circle-exclamation"></i> Aceso Restringido</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <form id="adminFormModal">
@@ -318,21 +324,23 @@
         </div>
         
         <!-- Vendor JS Files -->
+        <!-- Jquery -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="assets/vendor/php-email-form/validate.js"></script>
-        <script src="assets/vendor/aos/aos.js"></script>
-        <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-        <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-        <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-        <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-      
+        <!-- Swal Alerts -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- Bootstrap -->
+        <script src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+        <!-- Vendor Scripts -->
+        <script src="{{asset('assets/vendor/aos/aos.js')}}"></script>
+        <script src="{{asset('assets/vendor/glightbox/js/glightbox.min.js')}}"></script>
+        <script src="{{asset('assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
+        <script src="{{asset('assets/vendor/imagesloaded/imagesloaded.pkgd.min.js')}}"></script>
+        <script src="{{asset('assets/vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
         <!-- Main JS File -->
-        <script src="assets/js/main.js"></script>
+        <script src="{{asset('assets/js/main.js')}}"></script>
         @routes
         <script>
-            $('#submitAdminPassword').on('click', function () {
-              console.log("submitteClicked")
+            $('#submitAdminPassword').on('click', function () {              
               let formData = new FormData(); // Crear objeto FormData
               let fileInput = $('#usersFile')[0].files[0]; // Obtener el archivo seleccionado
               let passwordInput = $('#adminPassword').val(); // Obtener la contraseña ingresada
@@ -356,11 +364,42 @@
                             'X-CSRF-TOKEN': token // Incluir el token CSRF en el encabezado
                         },
                         success: function (response) {
-                            console.log("ok");
-                            console.log(response); // Manejar la respuesta
+                          if (response.status) {
+                            Swal.fire({
+                              title: response.title,
+                              text: "Se han añadido un total de: "+response.record+" Puntos de venta. Filas no Procesadas "+ response.notProcess,
+                              icon: "success"
+                            });                                                           
+                          } else {                              
+                            Swal.fire({
+                              title: "Error de Integración",
+                              text: "Ha sucedido un error inseperado" ,
+                              icon: "warning"
+                            });    
+                          }
                         },
                         error: function (xhr, status, error) {
-                          alert(xhr.responseJSON.message);
+                          let errorMessage = "Ocurrió un error inesperado."; // Mensaje genérico por defecto
+                          let title = "Error de Integración";
+                          if (xhr.responseJSON && xhr.responseJSON.message) {
+                              // Obtener el mensaje específico desde el backend
+                              errorMessage = xhr.responseJSON.message;
+                          }
+
+                          // Manejar errores específicos según el código HTTP
+                          if (xhr.status === 401) {
+                              title = xhr.responseJSON.title;
+                          } else if (xhr.status === 500) {
+                              title = xhr.responseJSON.title;
+                          }
+
+                          // Mostrar el mensaje con SweetAlert2
+                          Swal.fire({
+                              icon: "error",
+                              title: title,
+                              text: errorMessage,
+                              confirmButtonText: "Entendido"
+                          });
                         }
                     });
             });
