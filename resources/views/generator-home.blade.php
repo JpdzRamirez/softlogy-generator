@@ -135,7 +135,7 @@
                     <div class="icon"><i class="fa-solid fa-user"></i></div>
                     <h4>Cargue de clientes HelpDesk - SOLO PARA ADMINISTRADORES</h4>
                     <p>Su uso está pensado para la creación de usuarios para puntos de ventas de forma masiva</p>
-                    <div class="d-flex flex-column align-items-center g-1 mb-8">
+                    <div class="d-flex flex-column align-items-center g-1" style="margin-bottom: 4em">
                       <a href="{{route('descargar.formatos')}}" style="position: relative" class="d-flex flex-column align-items-center">Descargar formato Excel 
                         <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDlhaWNjaWEwdmFla2tpdnYwdXE1amF4b2RzNmV2ZDZ5NTRsZ3F4dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/24G0F8lQWYMb6jD47X/giphy.webp" 
                         alt="Click-Here" style="width: 5em; position: absolute; top:1em;"></a>
@@ -367,7 +367,7 @@
                           if (response.status) {
                             Swal.fire({
                               title: response.title,
-                              text: "Se han añadido un total de: "+response.record+" Puntos de venta. Filas no Procesadas "+ response.notProcess,
+                              text: "Se han añadido un total de: "+response.records+" Puntos de venta. Filas no Procesadas "+ response.notProcess,
                               icon: "success"
                             });                                                           
                           } else {                              

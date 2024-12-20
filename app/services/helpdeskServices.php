@@ -214,7 +214,10 @@ class helpdeskServices implements HelpDeskServiceInterface
                     --------------------------
                     Usuario SQL / Instancia:
                     Contraseña SQL:
-                    ',0,1,NULL,'2024-12-18 13:03:44',NULL,0,1,0,393,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+                    ',0,1,NULL,'2024-12-18 13:03:44',NULL,0,1,
+                    20,
+                    393
+                    ,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
                     '{$data['nit']}',
                     NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'2024-12-01 12:00:00',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2024-12-18 10:05:03',0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL);";
     
@@ -240,7 +243,9 @@ class helpdeskServices implements HelpDeskServiceInterface
             // Realizar la Tercera inserción en perfiles relacionando la entidad, entidad, perfil etc
             $queryEntitiRelation="INSERT INTO glpi_profiles_users (users_id,profiles_id,entities_id,is_recursive,is_dynamic,is_default_profile) 
             VALUES
-	        ({$lastId},1,0,0,0,0);";
+	        ({$lastId},1,
+            20,
+            0,0,0);";
 
             // Insertar la relacion
             DB::connection('mysql_second')->insert($queryEntitiRelation);

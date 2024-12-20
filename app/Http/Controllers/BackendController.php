@@ -34,7 +34,7 @@ class BackendController extends Controller
         // Definir las categorías de errores y palabras clave asociadas
         $categorias = [
             'vencimiento' => ['resolucion vencida', 'está vencida', 'error la resolución'],
-            'email' => ['email'],
+            'email' => ['mail','null Error el dato Mail Receptor'],
             'tag' => ['no existe TAG_NAME'],
             'calculos' => ['campos mandatorios'],
             'sin_resolucion' => ['sin resolución','error no se encuentra ninguna resolucion'],
@@ -150,7 +150,7 @@ class BackendController extends Controller
     }
     public function descargarFormatoClientes_xlsx(){
         // Ruta al archivo en el directorio storage
-        $filePath = storage_path('documents/Formato_Cargue.xlsx');
+        $filePath = storage_path('documents/Formato_Cargue_v1.xlsx');
 
         // Verifica si el archivo existe antes de intentar descargarlo
         if (!file_exists($filePath)) {
