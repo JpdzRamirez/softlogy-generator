@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace app\services;
 
 use Illuminate\Support\Facades\DB;
 use App\Contracts\AuthServicesInterface;

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class PuntosVentaController extends Controller
 {
-    public function login(ValidateLoginRequest $request, AuthServicesInterface $auth)
+    public function loginOAuth(ValidateLoginRequest $request, AuthServicesInterface $auth)
     {
                 
         // Se valida los datos con inyección de dependencias de un validador 
