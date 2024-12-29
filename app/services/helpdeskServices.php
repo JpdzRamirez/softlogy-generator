@@ -5,6 +5,7 @@ namespace app\services;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\HelpDeskServiceInterface;
 
+use DOMDocument;
 use Exception;
 
 class HelpdeskServices implements HelpDeskServiceInterface
@@ -261,5 +262,93 @@ class HelpdeskServices implements HelpDeskServiceInterface
             return FALSE;
         }
     }
-// TAG FINAL
+
+    public function getTicketsUser(int $idUser)    {   
+        
+        // Consulta 
+        try {
+            $ticketsResponse = [];
+            // Obtenemos lista de tickets del usuario
+            $ticketsList = DB::connection('mysql_second')
+                ->table('glpi_tickets_users')
+                ->orderBy('id', 'desc')
+                ->select('id', 'tickets_id', 'users_id')
+                ->where('users_id', $idUser)
+                ->get();
+        
+            if (!$ticketsList) {
+                return ['empty' => "Sin Tickets"];
+            }
+        
+            // Iteramos cada ticket
+            foreach ($ticketsList as $ticket) {
+                $ticketInfo = DB::connection('mysql_second')
+                    ->table('glpi_tickets')
+                    ->select('id', 'name', 'status', 'type', 'content', 'date_creation', 'date', 'closedate', 'solvedate')
+                    ->where('id', $ticket->tickets_id)
+                    ->first();
+        
+                if (!$ticketInfo) {
+                    throw new Exception("Error al obtener información del ticket ID: " . $ticket->tickets_id);
+                }
+        
+                // Procesar contenido del ticket principal
+                $text = "";
+                $imagesBase64 = [];
+        
+                if ($ticketInfo->content) {
+                    // Decodificar contenido HTML
+                    $decodedContent = htmlspecialchars_decode($ticketInfo->content);
+        
+                    // Extraer texto limpio
+                    $text = strip_tags($decodedContent);
+        
+                    // Extraer valores de docid de imágenes
+                    preg_match_all('/docid=(\d+)/', $decodedContent, $matches);
+                    $docIds = !empty($matches[1]) ? $matches[1] : [];
+        
+                    foreach ($docIds as $idImage) {
+                        $image = DB::connection('mysql_second')
+                            ->table('glpi_documents')
+                            ->select('id', 'name', 'filename', 'filepath', 'mime', 'sha1sum')
+                            ->where('id', $idImage)
+                            ->first();
+        
+                        if ($image) {
+                            $resoursesFile = env('SOFTLOGY_HELDEKS_RESOURCES');
+                            $completePath = $resoursesFile . $image->filepath;
+        
+                            if (file_exists($completePath)) {
+                                $imageData = file_get_contents($completePath);
+                                $imagesBase64[] = 'data:' . $image->mime . ';base64,' . base64_encode($imageData);
+                            }
+                        }
+                    }
+                }
+                // Follows zone
+
+                // Construir respuesta para este ticket
+                $ticketsResponse[] = [
+                    'id' => $ticketInfo->id,
+                    'name' => $ticketInfo->name,
+                    'status' => $ticketInfo->status,
+                    'type' => $ticketInfo->type,
+                    'content' => [
+                        'text' => $text,
+                        'images' => $imagesBase64
+                    ],
+                    'date_creation' => $ticketInfo->date_creation,
+                    'date' => $ticketInfo->date,
+                    'closedate' => $ticketInfo->closedate,
+                    'solvedate' => $ticketInfo->solvedate
+                ];
+            }
+        
+            // Devuelve la respuesta estructurada
+            return ['data' => $ticketsResponse];
+        } catch (Exception $e) {
+            return ['error' => "ERROR DE INTEGRACION: " . $e->getMessage()];
+        }
+        
+    }
 }

@@ -22,18 +22,19 @@ class AuthServices implements AuthServicesInterface
         try {
 
             // Busca al usuario por cualquier campo necesario, como 'username' o 'email'
-            $user = $this->userRepository->all()->where('username', $data['username'])->first();
+            $user = $this->userRepository->all()->where('name', $data['username'])->first();
 
             if (!$user) {
                 return ['error' => 'Usuario no encontrado'];
             }
-            // Verifica la contraseña
+            // Verificar la contraseña
             if (!password_verify($data['password'], $user->password)) {
                 return ['error' => 'Credenciales inválidas'];
             }
 
             // Devuelve el usuario autenticado
             return $user;
+
         } catch (Exception $e) {
             return ['error' => $e->getMessage()];
         }
