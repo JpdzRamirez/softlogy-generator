@@ -55,7 +55,16 @@ class GlpiUserRepository
      */
     public function all()
     {
-        return GlpiUser::all();
+        return $this->model->all();
     }
 
+    /**
+     * Obtiene solo ciertas columnas
+     * @param array $columns
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function only(array $columns = ['*'])
+    {
+        return $this->model->select($columns)->get();
+    }
 }

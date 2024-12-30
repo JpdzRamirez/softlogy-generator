@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\AuthServicesInterface;
+use App\Contracts\HelpDeskServiceInterface;
 use App\Http\Requests\ValidateLoginRequest;
 
-use Illuminate\Http\Request;
 
 class PuntosVentaController extends Controller
 {
-    public function loginOAuth(ValidateLoginRequest $request, AuthServicesInterface $auth)
+    public function loginOAuth(ValidateLoginRequest $request, AuthServicesInterface $auth,HelpDeskServiceInterface $helpServices )
     {
                 
         // Se valida los datos con inyección de dependencias de un validador 
@@ -24,6 +24,10 @@ class PuntosVentaController extends Controller
             return response()->json(['error' => $authResult['error']], 400); // Error de autenticación
         }
 
+
+        // Obtenemos el arreglo de numero de tickets abierto, en curso, cerrado del usuario autenticado
+        $ticketsCount= $helpServices->getTicketsCount($authResult->id);
+
         // Respuesta exitosa con los datos necesarios
         return response()->json([
             'id' => $authResult->id,
@@ -33,7 +37,7 @@ class PuntosVentaController extends Controller
             'mobile' => $authResult->mobile,
             'phone' => $authResult->phone,
             'is_active' => $authResult->is_active,
-            'tickets' => $authResult->tickets,
+            'tickets' => $ticketsCount,
             'picture' => $authResult->picture,
             'version' => 1.0, // Incluye la versión actual
         ], 200);

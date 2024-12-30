@@ -262,7 +262,54 @@ class HelpdeskServices implements HelpDeskServiceInterface
             return FALSE;
         }
     }
-
+    public function getTicketsCount(int $idUser)    {  
+         try{
+            $tickets = [
+                "nuevos" => 0,
+                "encurso" => 0,
+                "planificados" => 0,
+                "enespera" => 0,
+                "solucionados" => 0,
+                "cerrados" => 0
+            ];
+            // Obtenemos el numero de tickets del usuario
+            $statusCounts = DB::connection('mysql_second')
+            ->table('glpi_tickets')
+            ->join('glpi_tickets_users', 'glpi_tickets.id', '=', 'glpi_tickets_users.tickets_id')
+            ->select('glpi_tickets.status', DB::raw('COUNT(*) as total'))
+            ->where('glpi_tickets_users.users_id', $idUser)
+            ->groupBy('glpi_tickets.status')
+            ->orderBy('glpi_tickets.status')
+            ->get();
+        
+            // Iterar sobre los resultados de la consulta para asignar los valores al arreglo
+            foreach ($statusCounts as $statusCount) {
+                switch ($statusCount->status) {
+                    case '1':
+                        $tickets["nuevos"] = $statusCount->total;
+                        break;
+                    case '2':
+                        $tickets["encurso"] = $statusCount->total;
+                        break;
+                    case '3':
+                        $tickets["planificados"] = $statusCount->total;
+                        break;
+                    case '4':
+                        $tickets["enespera"] = $statusCount->total;
+                        break;
+                    case '5':
+                        $tickets["solucionados"] = $statusCount->total;
+                        break;
+                    case '6':
+                        $tickets["cerrados"] = $statusCount->total;
+                        break;
+                }
+            }
+            return $tickets;
+         }catch(Exception $e){
+            return ['error' => "ERROR DE INTEGRACION: " . $e->getMessage()];
+         }
+    }
     public function getTicketsUser(int $idUser)    {   
         
         // Consulta 
