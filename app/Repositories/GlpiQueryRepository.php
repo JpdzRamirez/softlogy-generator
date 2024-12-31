@@ -2,11 +2,18 @@
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
+use App\Repositories\UserRepository;
 use App\Models\User;
 
 class GlpiQueryRepository
 {
 
+    protected $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;        
+    }
     public function getUserEmailById(int $userId)
     {
         return DB::connection('mysql_second')
@@ -17,29 +24,43 @@ class GlpiQueryRepository
     }
 
     public function setTokenUserSession($user, $userEmail){
+
+        /*
+            **************************
+                🍫Local Session token
+            **************************
+         */
         // Buscar usuario local por nombre
         $localUser = User::where('name', $user->name)->first();
 
+        // Si existe el usuario
         if ($localUser) {
             // Preparar los datos a actualizar solo si hay cambios
             $updatedData = array_filter([
                 'email' => $userEmail ?? "{$user->name}@example.com",
                 'realname' => $user->realname !== $localUser->realname ? $user->realname : null,
                 'firstname' => $user->firstname !== $localUser->firstname ? $user->firstname : null,
-            ]);
+                'phone' => $user->phone !== $localUser->phone ? $user->phone : null,
+                'mobile' => $user->mobile !== $localUser->mobile ? $user->mobile : null,
+                'picture' => $user->picture !== $localUser->picture ? $user->picture : null,
+            ], fn($value) => $value !== null); // Filtrar solo valores no nulos
 
             if (!empty($updatedData)) {
                 $localUser->update($updatedData);
             }
         } else {
-            // Crear usuario local si no existe
-            $localUser = User::create([
+            $data=[
                 'name' => $user->name,
-                'email' => $userEmail ?? "{$user->name}@softlogydummy.com",
-                'password' => $user->password, // Asegúrate de que esté encriptada si es necesario
                 'realname' => $user->realname,
                 'firstname' => $user->firstname,
-            ]);
+                'email' => $userEmail ?? "{$user->name}@softlogydummy.com",
+                'password' => $user->password, // Asegúrate de que esté encriptada si es necesario
+                'phone' => $user->phone,
+                'mobile' => $user->mobile,
+                'picture' => $user->picture
+            ];
+            // Crear usuario local si no existe
+            $localUser =$this->userRepository->create($data);
         }
 
         // Generar un token de acceso

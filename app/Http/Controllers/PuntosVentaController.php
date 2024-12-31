@@ -30,15 +30,16 @@ class PuntosVentaController extends Controller
 
         // Respuesta exitosa con los datos necesarios
         return response()->json([
-            'id' => $authResult->id,
-            'name' => $authResult->name,
-            'realname' => $authResult->realname,
-            'firstname' => $authResult->firstname,
-            'mobile' => $authResult->mobile,
-            'phone' => $authResult->phone,
-            'is_active' => $authResult->is_active,
+            'id' => $authResult['user']->id,
+            'name' => $authResult['user']->name,
+            'realname' => $authResult['user']->realname,
+            'firstname' => $authResult['user']->firstname,
+            'mobile' => $authResult['user']->mobile,
+            'phone' => $authResult['user']->phone,
+            'is_active' => $authResult['user']->is_active,
             'tickets' => $ticketsCount,
-            'picture' => $authResult->picture,
+            'picture' => $authResult['user']->picture,
+            'token' => $authResult['token'],
             'version' => 1.0, // Incluye la versión actual
         ], 200);
 
