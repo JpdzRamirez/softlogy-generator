@@ -5,16 +5,19 @@ namespace app\services;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\AuthServicesInterface;
 use App\Repositories\GlpiUserRepository;
+use App\Repositories\GlpiQueryRepository;
 
 use Exception;
 
 class AuthServices implements AuthServicesInterface
 {
     protected $userRepository;
+    protected $queryRepository;
 
-    public function __construct(GlpiUserRepository $userRepository)
+    public function __construct(GlpiUserRepository $userRepository,GlpiQueryRepository $queryRepository)
     {
         $this->userRepository = $userRepository;
+        $this->queryRepository = $queryRepository;
     }
     public function Authenticate(array $data)
     {
@@ -35,19 +38,12 @@ class AuthServices implements AuthServicesInterface
                 return ['error' => 'Credenciales inválidas'];
             }
             // Si no tenemos error obtenemos la información del correo correspondiente
-            $statusCounts = DB::connection('mysql_second')
-            ->table('glpi_useremails')        
-            ->select('id', 'email')
-            ->where('users_id', $user->id)
-            ->first();
-            // Generar un token de acceso para el usuario
-            $token = $user->createToken('authToken')->plainTextToken;
+            $userEmail = $this->queryRepository->getUserEmailById($user->id);
 
-            return [
-                'id' => $user->id,
-                'name' => $user->name,
-                'token' => $token, // Token generado
-            ];
+            // Generar un token de acceso para las sesion del usuario
+            $response = $this->queryRepository->setTokenUserSession($user, $userEmail);
+
+            return $response;
 
         } catch (Exception $e) {
             return ['error' => $e->getMessage()];
