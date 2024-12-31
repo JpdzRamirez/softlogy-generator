@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'mobile',
+        'is_active',
+        'picture',
     ];
 
     /**
@@ -32,6 +36,20 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+    /*💱💱💱💱
+    *************************************
+    ----------------MUTATORS-------------
+    *************************************
+     */
+    /**
+     * 
+     * @param mixed $value
+     * @return void
+     */
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = ucwords(strtolower($value)); // Convierte la primera letra de cada palabra a mayúscula
+    }
 
     /**
      * Get the attributes that should be cast.

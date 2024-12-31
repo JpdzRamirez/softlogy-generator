@@ -11,12 +11,12 @@ use Exception;
 
 class AuthServices implements AuthServicesInterface
 {
-    protected $userRepository;
+    protected $glpiUserRepository;
     protected $queryRepository;
 
-    public function __construct(GlpiUserRepository $userRepository,GlpiQueryRepository $queryRepository)
+    public function __construct(GlpiUserRepository $glpiUserRepository,GlpiQueryRepository $queryRepository)
     {
-        $this->userRepository = $userRepository;
+        $this->glpiUserRepository = $glpiUserRepository;
         $this->queryRepository = $queryRepository;
     }
     public function Authenticate(array $data)
@@ -25,8 +25,8 @@ class AuthServices implements AuthServicesInterface
         try {
 
             // Busca al usuario por cualquier campo necesario, como 'username' o 'email'
-            $user = $this->userRepository
-            ->only(['id','name','password','realname','firstname'])
+            $user = $this->glpiUserRepository
+            ->only(['id','name','password','realname','firstname','picture'])
             ->where('name', $data['username'])
             ->first();
 
@@ -36,6 +36,13 @@ class AuthServices implements AuthServicesInterface
             // Verificar la contraseña
             if (!password_verify($data['password'], $user->password)) {
                 return ['error' => 'Credenciales inválidas'];
+            }
+            $resoursesFile = env('SOFTLOGY_HELDEKS_PICTURES');
+            $completePath = $resoursesFile . $user->picture;
+
+            if (file_exists($completePath)) {
+                $imageData = file_get_contents($completePath);
+                $imagesBase64[] = 'data:image/png'. ';base64,' . base64_encode($imageData);
             }
             // Si no tenemos error obtenemos la información del correo correspondiente
             $userEmail = $this->queryRepository->getUserEmailById($user->id);
