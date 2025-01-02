@@ -17,9 +17,9 @@
         <link href="{{asset('assets/vendor/aos/aos.css')}}" rel="stylesheet">
         <link href="{{asset('assets/vendor/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
         <link href="{{asset('assets/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
-
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
         <!-- Main CSS File -->
-        <link href="assets/css/main.css" rel="stylesheet">
+        <link href="{{asset('assets/css/main.css')}}" rel="stylesheet">
         <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
             @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -33,6 +33,40 @@
 
     <body class="index-page">
       
+      @if ($errors->any())
+      <div class="modal-errors">
+        <article class="modal-errors-container">
+          <header class="modal-errors-container-header">
+            <h1 class="modal-errors-container-title">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                <path fill="none" d="M0 0h24v24H0z" />
+                <path fill="currentColor" d="M14 9V4H5v16h6.056c.328.417.724.785 1.18 1.085l1.39.915H3.993A.993.993 0 0 1 3 21.008V2.992C3 2.455 3.449 2 4.002 2h10.995L21 8v1h-7zm-2 2h9v5.949c0 .99-.501 1.916-1.336 2.465L16.5 21.498l-3.164-2.084A2.953 2.953 0 0 1 12 16.95V11zm2 5.949c0 .316.162.614.436.795l2.064 1.36 2.064-1.36a.954.954 0 0 0 .436-.795V13h-5v3.949z" />
+              </svg>
+              Errores de Validación
+            </h1>
+            <button class="icon-button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <path fill="none" d="M0 0h24v24H0z" />
+                <path fill="currentColor" d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z" />
+              </svg>
+            </button>
+          </header>
+          <section class="modal-errors-container-body rtf">
+            <h2 style="text-align:center;">¡Se debe verificar correctamente los datos ingresados para poder procesar el documento!</h2>
+            <div class="alert alert-danger">
+              <ul>
+                  @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+          </div>
+          </section>
+          <footer class="modal-errors-container-footer">            
+            <button class="button-errors is-primary">Accept</button>
+          </footer>
+        </article>
+      </div>
+      @endif
         <header id="header" class="header d-flex align-items-center sticky-top">
           <div class="container-fluid position-relative d-flex align-items-center justify-content-between">
       
@@ -152,7 +186,108 @@
                 </div><!-- End Service Item -->
       
               </div>
+
+              {{-- Refacturador --}}
+              
+              <div class="col gy-4">
       
+                <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
+                  <div class="service-item position-relative">
+                    <div class="icon"><i class="fa-solid fa-user"></i></div>
+                    <h4>Refacturación de XML</h4>
+                    <p>Agiliza la personalización de la factura electronica</p>
+                    <form  action="{{ route('refacturar.xml') }}" method="POST"> 
+                        @csrf                       
+                        <div class="mb-3">
+                            <label for="xmlFactura" class="form-label">Archivo .xml</label>
+                            <input class="form-control" required name="xmlFactura"  type="file" id="xmlFactura">
+                            <details>
+                              <summary>
+                                <span class="summary-title">Agregar detalles a la factura 👈</span>
+                                <div class="summary-chevron-up">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>
+                              </summary>
+                            
+                              <div class="summary-content container d-flex flex-column" style="gap:1em;">
+                                <div class="col-auto my-1">
+                                  <label class="mr-sm-2" for="inlineFormCustomSelect">Tipo de documento</label>
+                                  <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                                    <option selected>Seleccione...</option>
+                                    <option value="1">C.Extrangeria</option>
+                                    <option value="2">Nit Extrangeria</option>
+                                    <option value="3">C.Ciudadania</option>
+                                    <option value="4">Nit Empresa</option>
+                                    <option value="5">C.Ciudadania</option>
+                                  </select>
+                                </div>
+                                <h4>Nuevos datos</h4>
+                                <div class="form-row d-flex flex-column" style="gap:1em; margin-left:8em;">
+                                  <div class="form-group col-md-6">
+                                    <label for="identificator">Identificación</label>
+                                    <input type="text" class="form-control" id="identificator" placeholder="Documento / Pasaporte / Rut">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="digit">Digito de Verificación</label>
+                                    <input type="text" class="form-control" id="digit" placeholder="Ditito de verificación de nit" aria-describedby="digitVerification">
+                                    <small id="digitVerification" class="form-text text-muted">
+                                      Si cuenta con digito de verificación, por favor debe ser agregarlo
+                                    </small>
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="firstName">Primer Nombre</label>
+                                    <input type="text" class="form-control" id="firstName" placeholder="Nombre">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="inputEmail4">Segundo Nombre</label>
+                                    <input type="text" class="form-control" id="secondName" placeholder="Nombre">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="lastName">Apellidos</label>
+                                    <input type="text" class="form-control" id="lastName" placeholder="Apellidos">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="emailReceptor">Correo Electrónico</label>
+                                    <input type="email" class="form-control" id="emailReceptor" placeholder="Email">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="phone">Teléfono</label>
+                                    <input type="number" class="form-control" id="phone" placeholder="phone">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="lastName">País</label>
+                                    <select id="paises" name="pais" class="form-control">
+                                      <option value="">Selecciona un país</option>                                      
+                                      @foreach ($paises as $pais)
+                                          <option value="{{ $pais->codigo }}">{{ $pais->codigo }} - {{ $pais->nombre }}</option>
+                                      @endforeach
+                                     </select>
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="state">Departamento</label>
+                                    <input type="text" class="form-control" id="state" placeholder="Departamento / Estado">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="city">Ciudad</label>
+                                    <input type="text" class="form-control" id="city" placeholder="Ciudad">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="folio">Nuevo Folio</label>
+                                    <input type="number" class="form-control" id="folio" placeholder="Nuevo numero de folio">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="summary-chevron-down">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                
+                            </details>
+                          </div>
+                        <button type="submit"  style="background: #27303F; margin:auto;" class="btn btn-primary mb-3">Procesar XML</button>
+                    </form>
+                  </div>
+                </div><!-- End Service Item -->
+      
+              </div>
             </div>
       
           </section><!-- /Featured Services Section -->
@@ -311,7 +446,7 @@
               <div class="modal-body">  
                 <div class="mb-3">
                   <label for="adminPassword" class="form-label">Contraseña de Administrador</label>
-                  <input type="password" class="form-control" id="adminPassword" placeholder="Contraseña">
+                  <input type="password" autocomplete="new-password" class="form-control" id="adminPassword" placeholder="Contraseña">
                 </div>             
               </div>
               <div class="modal-footer">
@@ -328,6 +463,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <!-- Swal Alerts -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+         <!-- Select 2 -->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
         <!-- Bootstrap -->
         <script src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
         <!-- Vendor Scripts -->
@@ -403,6 +540,26 @@
                         }
                     });
             });
+            $(document).ready(function() {
+                $('#paises').select2();
+
+                $(".icon-button").click(function(){
+                  $(".modal-errors").addClass("fade-out");
+                  setTimeout(() => {
+                    $(".modal-errors").remove(); // Elimina el modal del DOM
+                  }, 1000);
+                });
+
+                // También puedes eliminar el modal cuando se haga clic en el botón "Accept"
+                $(".button-errors").click(function(){
+                  $(".modal-errors").addClass("fade-out");
+                  setTimeout(() => {
+                    $(".modal-errors").remove(); // Elimina el modal del DOM
+                  }, 1000);
+                    
+                });
+            });
+
         </script>
       </body>
       

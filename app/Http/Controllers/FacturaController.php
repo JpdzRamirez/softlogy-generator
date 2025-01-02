@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\ValidateXMLRequest;
+use App\Models\Paises;
 
 class FacturaController extends Controller
 {
+    public function index(){
+        $paises = Paises::all();
+        return view('generator-home', compact('paises'));
+    }
     public function obtenerCUFES_Folios(Request $request)
     {
         $prefijo=$request->input("prefijo");
@@ -73,6 +78,12 @@ class FacturaController extends Controller
 
         // Descargar el archivo generado
         return response()->download($outputPath, 'cufes.txt')->deleteFileAfterSend(true);
+    }
+
+    public function refacturarXML(ValidateXMLRequest $request){
+
+            // Ruta del archivo TXT subido
+            $path = $request->file('xmlFactura')->getRealPath();
     }
 }
 
