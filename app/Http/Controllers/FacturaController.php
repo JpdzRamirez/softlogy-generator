@@ -6,8 +6,23 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ValidateXMLRequest;
 use App\Models\Paises;
 
+use App\Contracts\XmlServicesInterface;
+
+use DOMDocument;
+use SimpleXMLElement;
+use Exception;
+
 class FacturaController extends Controller
-{
+{       
+
+    protected $xmlService;
+
+    // Inyección de dependencias
+    public function __construct(XmlServicesInterface $xmlService)
+    {
+        $this->xmlService = $xmlService; // Aquí se inyecta la implementación de la interfaz
+    }
+
     public function index(){
         $paises = Paises::all();
         return view('generator-home', compact('paises'));
@@ -84,6 +99,29 @@ class FacturaController extends Controller
 
             // Ruta del archivo TXT subido
             $path = $request->file('xmlFactura')->getRealPath();
+
+            // Leer el contenido del archivo
+            $xmlContent  = file_get_contents($path);
+
+            // Cargar el contenido en un objeto SimpleXML
+            try {
+                $xml = new SimpleXMLElement($xmlContent);
+
+                $response=$this->xmlService->xmlProcessData($xml, $request);
+
+                // Ruta donde se guardará el archivo
+                $filePath = public_path('storage/documents/xml_modificado.xml');
+
+                $response = $this->xmlService->xmlProcessData($xml, $request);
+                $response->asXML($filePath);
+
+                // Configurar las cabeceras para la descarga del archivo
+                // El archivo se elimina después de enviarlo
+                return response()->download($filePath, 'xml_modificado.xml')->deleteFileAfterSend(true);
+
+            } catch (Exception $e) {
+                return back()->withErrors(['error' => $e->getMessage()]);
+            }
     }
 }
 

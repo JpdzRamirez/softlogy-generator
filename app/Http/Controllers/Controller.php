@@ -8,5 +8,30 @@ namespace App\Http\Controllers;
  */
 abstract class Controller
 {
-    //
+    // Método para verificar si el contenido es XML
+    public function isXML($content)
+    {
+        try {
+            new \SimpleXMLElement($content);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    // Método para convertir TXT a XML
+    public function convertTxtToXml($txtContent)
+    {
+        // Aquí construyes la estructura XML según los datos del TXT
+        $lines = explode("\n", $txtContent);
+        $xml = new \SimpleXMLElement('<root/>');
+
+        foreach ($lines as $line) {
+            if (trim($line)) {
+                $item = $xml->addChild('item', trim($line));
+            }
+        }
+
+        return $xml->asXML();
+    }
 }

@@ -25,17 +25,20 @@ class ValidateXMLRequest extends FormRequest
     {   
         //Reglas de validación para actualización de datos pos-registro
         return [
-            'xmlFactura' => 'required|max:10240', // Archivo XML requerido, máximo 10MB
+            'tipeDocument' => 'required|in:1,2,3,4',
+            'xmlFactura' => 'required|file|max:10240', // Archivo XML requerido, máximo 10MB
             'identificator' => 'required|regex:/^\d+$/', // Identificación: solo números
-            'digit' => 'required|regex:/^\d+$/',
-            'phone' => 'required|numeric|min:15',
+            'digit' => 'nullable|regex:/^\d+$/',
+            'phone' => 'nullable|numeric|min:15',
             'firstName' => 'required|string|max:255', // Primer nombre: solo texto
             'secondName' => 'nullable|string|max:255', // Segundo nombre es opcional
-            'lastName' => 'required|string|max:255', // Apellidos: solo texto
+            'lastName' => 'nullable|string|max:255', // Apellidos: solo texto
             'emailReceptor' => 'required|email|max:255', // Correo electrónico: formato válido
-            'pais' => 'required|exists:paises,codigo', // País: debe existir en la base de datos
-            'state' => 'required|string|max:255', // Departamento/Estado: solo texto
-            'city' => 'required|string|max:255', // Ciudad: solo texto
+            'country' => 'required|exists:paises,codigo', // País: debe existir en la base de datos
+            'state' => 'nullable|string|max:255', // Departamento/Estado: solo texto            
+            'city' => 'nullable|string|max:255', // Ciudad: solo texto
+            'address' => 'nullable|string|max:255', // Dirección específica de residencia
+            'postalCode' => 'nullable|numeric|min:1', // Folio: debe ser numérico y mayor a 0
             'folio' => 'required|numeric|min:1', // Folio: debe ser numérico y mayor a 0
         ];
 

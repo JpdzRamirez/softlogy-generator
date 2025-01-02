@@ -196,7 +196,7 @@
                     <div class="icon"><i class="fa-solid fa-user"></i></div>
                     <h4>Refacturación de XML</h4>
                     <p>Agiliza la personalización de la factura electronica</p>
-                    <form  action="{{ route('refacturar.xml') }}" method="POST"> 
+                    <form  action="{{ route('refacturar.xml') }}" method="POST" enctype="multipart/form-data"> 
                         @csrf                       
                         <div class="mb-3">
                             <label for="xmlFactura" class="form-label">Archivo .xml</label>
@@ -212,51 +212,59 @@
                               <div class="summary-content container d-flex flex-column" style="gap:1em;">
                                 <div class="col-auto my-1">
                                   <label class="mr-sm-2" for="inlineFormCustomSelect">Tipo de documento</label>
-                                  <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-                                    <option selected>Seleccione...</option>
+                                  <select required name="tipeDocument" class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                                    <option value="" selected>Seleccione...</option>
                                     <option value="1">C.Extrangeria</option>
                                     <option value="2">Nit Extrangeria</option>
-                                    <option value="3">C.Ciudadania</option>
-                                    <option value="4">Nit Empresa</option>
-                                    <option value="5">C.Ciudadania</option>
+                                    <option value="3">Nit Empresa</option>                                    
+                                    <option value="4">C.Ciudadania</option>
                                   </select>
                                 </div>
                                 <h4>Nuevos datos</h4>
                                 <div class="form-row d-flex flex-column" style="gap:1em; margin-left:8em;">
                                   <div class="form-group col-md-6">
                                     <label for="identificator">Identificación</label>
-                                    <input type="text" class="form-control" id="identificator" placeholder="Documento / Pasaporte / Rut">
+                                    <input required type="text" class="form-control" name="identificator" id="identificator" placeholder="Documento / Pasaporte / Rut">
                                   </div>
                                   <div class="form-group col-md-6">
                                     <label for="digit">Digito de Verificación</label>
-                                    <input type="text" class="form-control" id="digit" placeholder="Ditito de verificación de nit" aria-describedby="digitVerification">
-                                    <small id="digitVerification" class="form-text text-muted">
-                                      Si cuenta con digito de verificación, por favor debe ser agregarlo
+                                    <input type="text" class="form-control" id="digit" name="digit" placeholder="Ditito de verificación de nit" aria-describedby="digitVerification">
+                                    <small id="digitVerification" class="form-text text-muted text-warning">
+                                      Si cuenta con digito de verificación.
                                     </small>
                                   </div>
                                   <div class="form-group col-md-6">
                                     <label for="firstName">Primer Nombre</label>
-                                    <input type="text" class="form-control" id="firstName" placeholder="Nombre">
+                                    <input required type="text" name="firstName" class="form-control" id="firstName" placeholder="Nombre">
+                                    <small id="digitVerification" class="form-text text-muted text-warning">
+                                      Si es nit poner la razon social completa aquí.
+                                    </small>
                                   </div>
                                   <div class="form-group col-md-6">
-                                    <label for="inputEmail4">Segundo Nombre</label>
-                                    <input type="text" class="form-control" id="secondName" placeholder="Nombre">
+                                    <label for="secondName">Segundo Nombre</label>
+                                    <input type="text" name="secondName" class="form-control" id="secondName" placeholder="Nombre">
+                                    <small id="digitVerification" class="form-text text-muted text-warning">
+                                      Si es nit no llenar.
+                                    </small>
                                   </div>
                                   <div class="form-group col-md-6">
                                     <label for="lastName">Apellidos</label>
-                                    <input type="text" class="form-control" id="lastName" placeholder="Apellidos">
+                                    <input  type="text" name="lastName" class="form-control" id="lastName" placeholder="Apellidos">
+                                    <small id="digitVerification" class="form-text text-muted text-warning">
+                                      Si es nit no llenar.
+                                    </small>
                                   </div>
                                   <div class="form-group col-md-6">
                                     <label for="emailReceptor">Correo Electrónico</label>
-                                    <input type="email" class="form-control" id="emailReceptor" placeholder="Email">
+                                    <input required type="email" name="emailReceptor" class="form-control" id="emailReceptor" placeholder="Email">
                                   </div>
                                   <div class="form-group col-md-6">
                                     <label for="phone">Teléfono</label>
-                                    <input type="number" class="form-control" id="phone" placeholder="phone">
+                                    <input  type="number" name="phone" class="form-control" id="phone" placeholder="Teléfono">
                                   </div>
                                   <div class="form-group col-md-6">
-                                    <label for="lastName">País</label>
-                                    <select id="paises" name="pais" class="form-control">
+                                    <label for="country">País</label>
+                                    <select required id="paises" name="country" class="form-control">
                                       <option value="">Selecciona un país</option>                                      
                                       @foreach ($paises as $pais)
                                           <option value="{{ $pais->codigo }}">{{ $pais->codigo }} - {{ $pais->nombre }}</option>
@@ -265,15 +273,35 @@
                                   </div>
                                   <div class="form-group col-md-6">
                                     <label for="state">Departamento</label>
-                                    <input type="text" class="form-control" id="state" placeholder="Departamento / Estado">
+                                    <input type="text" name="state" class="form-control" id="state" placeholder="Departamento / Estado">
+                                    <small id="addressInput" class="form-text text-muted text-warning">
+                                      Opcional
+                                    </small>
                                   </div>
                                   <div class="form-group col-md-6">
                                     <label for="city">Ciudad</label>
-                                    <input type="text" class="form-control" id="city" placeholder="Ciudad">
+                                    <input type="text" name="city" class="form-control" id="city" placeholder="Ciudad">
+                                    <small id="addressInput" class="form-text text-muted text-warning">
+                                      Opcional
+                                    </small>
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="address">Dirección del Receptor</label>
+                                    <input type="text" name="address" class="form-control" id="address" placeholder="Dirección">
+                                    <small id="addressInput" class="form-text text-muted text-warning">
+                                      Opcional
+                                    </small>
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="postalCode">Código Postal</label>
+                                    <input type="number" name="postalCode" class="form-control" id="postalCode" placeholder="Ej: 680011">
+                                    <small id="postalInput" class="form-text text-muted text-warning">
+                                      Opcional
+                                    </small>
                                   </div>
                                   <div class="form-group col-md-6">
                                     <label for="folio">Nuevo Folio</label>
-                                    <input type="number" class="form-control" id="folio" placeholder="Nuevo numero de folio">
+                                    <input required type="number" name="folio" class="form-control" id="folio" placeholder="Nuevo numero de folio">
                                   </div>
                                 </div>
                               </div>
@@ -558,6 +586,36 @@
                   }, 1000);
                     
                 });
+
+
+                $('#inlineFormCustomSelect').change(function() {
+                  let selectedValue = $(this).val();
+
+                  // Si se selecciona "Nit Extrangeria" (valor 2) o "Nit Empresa" (valor 3)
+                  if (selectedValue == '2' || selectedValue == '3') {
+                      // Cambiar el label de "Primer Nombre" a "Nombre de empresa"
+                      $('#firstName').attr('placeholder', 'Nombre de empresa');
+                      $('#firstName').siblings('label').text('Nombre de empresa');
+
+                      // Ocultar los campos de Apellidos y Segundo Nombre
+                      $('#lastName').closest('.form-group').hide();
+                      $('#secondName').closest('.form-group').hide();
+                      
+                      // Mostrar el mensaje de advertencia para "primer nombre"
+                      $('#digitVerification').show();
+                  } else {
+                      // Restaurar los valores por defecto del label y el placeholder
+                      $('#firstName').attr('placeholder', 'Nombre');
+                      $('#firstName').siblings('label').text('Primer Nombre');
+
+                      // Mostrar los campos de Apellidos y Segundo Nombre
+                      $('#lastName').closest('.form-group').show();
+                      $('#secondName').closest('.form-group').show();
+
+                      // Ocultar el mensaje de advertencia
+                      $('#digitVerification').hide();
+                  }
+              });
             });
 
         </script>
