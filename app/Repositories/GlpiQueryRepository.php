@@ -1,6 +1,9 @@
 <?php
 namespace App\Repositories;
 
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Support\Facades\DB;
 use App\Repositories\UserRepository;
 use App\Models\User;
@@ -42,6 +45,7 @@ class GlpiQueryRepository
                 'firstname' => $user->firstname !== $localUser->firstname ? $user->firstname : null,
                 'phone' => $user->phone !== $localUser->phone ? $user->phone : null,
                 'mobile' => $user->mobile !== $localUser->mobile ? $user->mobile : null,
+                'is_active' => $user->is_active !== $localUser->is_active ? $user->is_active : null,
                 'picture' => $user->picture !== $localUser->picture ? $user->picture : null,
             ], fn($value) => $value !== null); // Filtrar solo valores no nulos
 
@@ -49,6 +53,9 @@ class GlpiQueryRepository
                 $localUser->update($updatedData);
             }
         } else {
+            $hashedPassword=Hash::make(Str::random(12));
+            $user->password = $hashedPassword;
+
             $data=[
                 'name' => $user->name,
                 'realname' => $user->realname,
@@ -57,6 +64,7 @@ class GlpiQueryRepository
                 'password' => $user->password, // Asegúrate de que esté encriptada si es necesario
                 'phone' => $user->phone,
                 'mobile' => $user->mobile,
+                'is_active' => $user->is_active,
                 'picture' => $user->picture
             ];
             // Crear usuario local si no existe

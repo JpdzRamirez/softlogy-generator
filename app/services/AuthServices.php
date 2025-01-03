@@ -2,11 +2,14 @@
 
 namespace app\services;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
+
 use App\Contracts\AuthServicesInterface;
 use App\Repositories\GlpiUserRepository;
 use App\Repositories\GlpiQueryRepository;
+
+use App\Exceptions\UserNotFoundException;
+use App\Exceptions\AuthenticationException;
+use App\Exceptions\UserInactiveException;
 
 use Exception;
 
@@ -20,6 +23,22 @@ class AuthServices implements AuthServicesInterface
         $this->glpiUserRepository = $glpiUserRepository;
         $this->queryRepository = $queryRepository;
     }
+    private function getUserPicture($user)
+    {
+        $resourcePath = env('SOFTLOGY_HELDEKS_PICTURES') . $user->picture;
+        if (file_exists($resourcePath)) {
+            $imageData = file_get_contents($resourcePath);
+            return 'data:image/png;base64,' . base64_encode($imageData);
+        }
+
+        $defaultImagePath = public_path('assets/img/user.png');
+        if (file_exists($defaultImagePath)) {
+            $defaultImageData = file_get_contents($defaultImagePath);
+            return 'data:image/png;base64,' . base64_encode($defaultImageData);
+        }
+
+        return null;
+    }
     public function Authenticate(array $data)
     {
 
@@ -32,56 +51,35 @@ class AuthServices implements AuthServicesInterface
              */
             // Busca al usuario por cualquier campo necesario, como 'username' o 'email'
             $user = $this->glpiUserRepository
-            ->only(['id','name','phone','mobile','password','realname','firstname','picture'])
+            ->only(['id','name','phone','mobile','password','realname','firstname','is_active','picture'])
             ->where('name', $data['username'])
             ->first();
 
             if (!$user) {
-                return ['error' => 'Usuario no encontrado'];
+                throw new UserNotFoundException();
             }
-            // Verificar la contraseña
+            
             if (!password_verify($data['password'], $user->password)) {
-                return ['error' => 'Credenciales inválidas'];
+                throw new AuthenticationException();
             }
-
+            
+            if ($user->is_active == 0) {
+                throw new UserInactiveException();
+            }
+            // Si no tenemos error constriumos el usuario para iniciar sesión
             /*  
                 ***************************************************
                                 📊 PICTURE SECTION
                 ***************************************************                    
              */
-            // Agregamos la ruta por defecto del recurso fisico
-            $resoursesFile = env('SOFTLOGY_HELDEKS_PICTURES');
-
-            // Concatenamos con el path de picture
-            $completePath = $resoursesFile . $user->picture;
-            // Validamos si existe el recurso
-            if (file_exists($completePath)) {
-                    $imageData = file_get_contents($completePath);
-                    $imagesBase64 = 'data:image/png;base64,' . base64_encode($imageData);  
-                    $user->picture= $imagesBase64;            
-            }else{
-                // Ruta de la imagen predeterminada
-                $defaultImagePath = public_path('assets/img/user.png');
-                
-                if (file_exists($defaultImagePath)) {
-                    $defaultImageData = file_get_contents($defaultImagePath);
-                    $imagesBase64 = 'data:image/png;base64,' . base64_encode($defaultImageData);  
-                } else {
-                    // Caso donde no se encuentra la imagen predeterminada
-                    $imagesBase64 = null; 
-                }
-                
-                $user->picture = $imagesBase64;
-            }
+            $userImage= $this->getUserPicture($user);
+            $user->picture=$userImage;
             /*  
                 ***************************************************
                                 🔏 Password Section
                 ***************************************************                    
              */
-            $hashedPassword=Hash::make(Str::random(12));
-
-            $user->password = $hashedPassword;
-            // Si no tenemos error obtenemos la información del correo correspondiente
+            
             $userEmail = $this->queryRepository->getUserEmailById($user->id);
 
             /*  
@@ -94,8 +92,10 @@ class AuthServices implements AuthServicesInterface
             // Return validated user with token
             return $response;
 
-        } catch (Exception $e) {
+        } catch (UserNotFoundException | AuthenticationException | UserInactiveException $e) {
             return ['error' => $e->getMessage()];
+        } catch (Exception $e) {
+            return ['error' => 'Ha ocurrido un error inesperado.'];
         }
     }
 }

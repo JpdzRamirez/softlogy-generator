@@ -6,6 +6,10 @@ use App\Contracts\AuthServicesInterface;
 use App\Contracts\HelpDeskServiceInterface;
 use App\Http\Requests\ValidateLoginRequest;
 
+use App\Exceptions\UserNotFoundException;
+use App\Exceptions\AuthenticationException;
+use App\Exceptions\UserInactiveException;
+
 
 class PuntosVentaController extends Controller
 {
@@ -15,6 +19,7 @@ class PuntosVentaController extends Controller
         // Se valida los datos con inyección de dependencias de un validador 
         $validatedData = $request->only('username', 'password');
 
+        try {
         // Puedes proceder con la lógica de autenticación
         $authResult = $auth->authenticate($validatedData);
 
@@ -32,6 +37,8 @@ class PuntosVentaController extends Controller
         return response()->json([
             'id' => $authResult['user']->id,
             'name' => $authResult['user']->name,
+            'password' => $authResult['user']->password,
+            'email' => $authResult['user']->password,
             'realname' => $authResult['user']->realname,
             'firstname' => $authResult['user']->firstname,
             'mobile' => $authResult['user']->mobile,
@@ -42,6 +49,14 @@ class PuntosVentaController extends Controller
             'token' => $authResult['token'],
             'version' => 1.0, // Incluye la versión actual
         ], 200);
-
+    } catch (UserNotFoundException $e) {
+        return response()->json(['error' => $e->getMessage()], 404);
+    } catch (AuthenticationException $e) {
+        return response()->json(['error' => $e->getMessage()], 401);
+    } catch (UserInactiveException $e) {
+        return response()->json(['error' => $e->getMessage()], 403);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error interno del servidor'], 500);
+    }
     }
 }
