@@ -24,18 +24,22 @@ class BackendController extends Controller
     {
         // Definir las reglas a subclasificar
         $categoriasReglas = [
-            'calculos' => ['Regla: CAU14','Regla: FAU14'],
-            'errorImpuesto' => ['Regla: FAS07'],            
+            'calculos' => ['Regla: CAU14','Regla: FAU14','Regla: CAU04','Regla: FAW03','Regla: CAU08','Regla: FBE08','Regla: FAU08'],
+            'errorImpuesto' => ['Regla: FAS07','Regla: CAU02','Regla: FAU02','Regla: FAX07','Regla: FAX05'], 
+            'errorCamposReceptor' => ['Regla: FAJ44b'],
+            'duplicidadDocumento' => ['Regla: 90'],           
             'valorBruto' => ['Regla: FAU06'],
+            'errorXML' => ['Regla: FAX11','Regla: FAX09'],
             'id' => ['Regla: FAK44'],
+            'errorComunicacion' => ['Regla: ZE02','Regla: FAB27b','Regla: FAD09e','Regla: FAJ26'],
             'errorReferencia' => ['Regla: NOTREFPLGNS'],
         ];
     
         // Definir las categorías de errores y palabras clave asociadas
         $categorias = [
-            'vencimiento' => ['resolucion vencida', 'está vencida', 'error la resolución'],
-            'email' => ['mail','null Error el dato Mail Receptor'],
+            'vencimiento' => ['resolucion vencida', 'está vencida', 'error la resolución'],            
             'tag' => ['no existe TAG_NAME'],
+            'datosFactura'=> ['el dato Tipo Impuesto','al dato Nombre Receptor es obligatorio','el dato Mail Receptor es obligatorio'],
             'calculos' => ['campos mandatorios'],
             'sin_resolucion' => ['sin resolución','error no se encuentra ninguna resolucion'],
             'nombre' => ['nombre', 'error al dato nombre'],
