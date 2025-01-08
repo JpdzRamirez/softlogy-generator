@@ -25,7 +25,10 @@ class AuthServices implements AuthServicesInterface
     }
     private function getUserPicture($user)
     {
-        $resourcePath = env('SOFTLOGY_HELDEKS_PICTURES') . $user->picture;
+        // For unix linux
+        // $resourcePath = env('SOFTLOGY_HELDEKS_PICTURES') . $user->picture;
+        // For windos enviroment
+        $resourcePath = str_replace('/', '\\', env('SOFTLOGY_HELDEKS_PICTURES') . $user->picture);
         if (file_exists($resourcePath)) {
             $imageData = file_get_contents($resourcePath);
             return 'data:image/png;base64,' . base64_encode($imageData);
@@ -87,7 +90,7 @@ class AuthServices implements AuthServicesInterface
                                 🔑 Token Access Section
                 ***************************************************                    
              */
-            $response = $this->queryRepository->setTokenUserSession($user, $userEmail);
+            $response = $this->queryRepository->setTokenUserSession($user, $userEmail->email);
 
             // Return validated user with token
             return $response;

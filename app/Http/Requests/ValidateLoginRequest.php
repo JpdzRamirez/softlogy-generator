@@ -26,7 +26,10 @@ class ValidateLoginRequest extends FormRequest
         //Reglas de validación para actualización de datos pos-registro
         return [            
             'username' => 'required|string|not_regex:/^\s*$/',
-            'password' => 'required|string|not_regex:/^\s*$/',         
+            'password' => 'required|string|not_regex:/^\s*$/',      
+            'plataforma' => 'required',
+            'iddroid' => 'required',
+            'app' => 'required',   
         ];
 
     }

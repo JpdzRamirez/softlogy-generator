@@ -17,7 +17,7 @@ class PuntosVentaController extends Controller
     {
                 
         // Se valida los datos con inyección de dependencias de un validador 
-        $validatedData = $request->only('username', 'password');
+        $validatedData = $request->only(['username', 'password', 'plataforma', 'iddroid', 'app']);
 
         try {
         // Puedes proceder con la lógica de autenticación

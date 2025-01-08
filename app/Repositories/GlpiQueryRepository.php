@@ -26,7 +26,7 @@ class GlpiQueryRepository
             ->first();
     }
 
-    public function setTokenUserSession($user, $userEmail){
+    public function setTokenUserSession($user, $email){
 
         /*
             **************************
@@ -34,13 +34,13 @@ class GlpiQueryRepository
             **************************
          */
         // Buscar usuario local por nombre
-        $localUser = User::where('name', $user->name)->first();
+        $localUser = $this->userRepository->findByName($user->name);
 
         // Si existe el usuario
         if ($localUser) {
             // Preparar los datos a actualizar solo si hay cambios
             $updatedData = array_filter([
-                'email' => $userEmail ?? "{$user->name}@example.com",
+                'email' => $email ?? "{$user->name}@example.com",
                 'realname' => $user->realname !== $localUser->realname ? $user->realname : null,
                 'firstname' => $user->firstname !== $localUser->firstname ? $user->firstname : null,
                 'phone' => $user->phone !== $localUser->phone ? $user->phone : null,
@@ -50,7 +50,7 @@ class GlpiQueryRepository
             ], fn($value) => $value !== null); // Filtrar solo valores no nulos
 
             if (!empty($updatedData)) {
-                $localUser->update($updatedData);
+                $this->userRepository->update($localUser->id, $updatedData);                
             }
         } else {
             $hashedPassword=Hash::make(Str::random(12));
@@ -60,7 +60,7 @@ class GlpiQueryRepository
                 'name' => $user->name,
                 'realname' => $user->realname,
                 'firstname' => $user->firstname,
-                'email' => $userEmail ?? "{$user->name}@softlogydummy.com",
+                'email' => $email ?? "{$user->name}@softlogydummy.com",
                 'password' => $user->password, // Asegúrate de que esté encriptada si es necesario
                 'phone' => $user->phone,
                 'mobile' => $user->mobile,

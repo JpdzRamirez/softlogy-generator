@@ -27,13 +27,21 @@ class UserRepository
         $this->model = new User();
     }
     /**
-     *  Find an user from user table
-     * @param mixed $id
-     * @return \Illuminate\Database\Eloquent\Collection
+     * 
+     * @param int $id
+     * @return TModel
      */
-    public function find($id)
-    {
+    public function findById(int $id){
         return $this->model->findOrFail($id);
+    }
+    /**
+     * /
+     * @param string $name
+     * @return TModel
+     */
+    public function findByName(string $name)
+    {
+        return $this->model->where('name', $name)->firstOrFail();
     }
     /**
      *  Create an User on local database
@@ -46,11 +54,11 @@ class UserRepository
     }
     /**
      *  Update information of an user
-     * @param mixed $id
+     * @param int $id
      * @param array $data
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function update($id, array $data)
+    public function update(int $id, array $data)
     {
         $user = $this->model->findOrFail($id);
         $user->update($data);
@@ -58,10 +66,10 @@ class UserRepository
     }
     /**
      *  Delete user from database
-     * @param mixed $id
+     * @param int $id
      * @return void
      */
-    public function delete($id)
+    public function delete(int $id)
     {
         $presentation = $this->model->findOrFail($id);
         $presentation->delete();
