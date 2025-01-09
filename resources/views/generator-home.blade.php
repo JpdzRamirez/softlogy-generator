@@ -195,7 +195,13 @@
                   <div class="service-item position-relative">
                     <div class="icon"><i class="fa-solid fa-user"></i></div>
                     <h4>Refacturación de XML</h4>
-                    <p>Agiliza la personalización de la factura electrónica</p>
+                    <p>Agiliza la personalización de la factura electrónica, los unicos campos obligatorios son:</p>
+                    <ul>
+                      <li>Archivo xml</li>
+                      <li>Tipo de Documento</li>
+                      <li>País</li>
+                    </ul>
+                    <small>Si no se ingresan los otros datos los campos no se modificarán</small>
                     <form  action="{{ route('refacturar.xml') }}" method="POST" enctype="multipart/form-data"> 
                         @csrf                       
                         <div class="mb-3">
@@ -329,7 +335,9 @@
               <p>Herramienta Integral para la Gestión de Reportes y Datos XML Relacionados con la DIAN
                 SOFTLOGY-GENERATOR es una solución tecnológica diseñada para facilitar la gestión de reportes y la consulta de datos en formatos XML, 
                 con un enfoque especializado en los procesos regulatorios exigidos por la Dirección de Impuestos y Aduanas Nacionales de Colombia (DIAN). 
-                Este software también Contiene una API RESTFUL que comunica la mesa de ayuda con SoftlogyMobile para la gestión de solicitudes, incidentes y problemas.</p>
+                </p>
+                <br>
+                <code>Este software también Contiene una API RESTFUL que comunica la mesa de ayuda con SoftlogyMobile para la gestión de solicitudes, incidentes y problemas.</code>
             </div><!-- End Section Title -->
       
             <div class="container" data-aos="fade-up">
