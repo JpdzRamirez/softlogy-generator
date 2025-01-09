@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>SoftLogy- Gnerator SoftWare</title>
+        <title>SoftLogy-MICRO</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -73,7 +73,7 @@
             <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
               <!-- Uncomment the line below if you also wish to use an image logo -->
               <!-- <img src="assets/img/logo.png" alt=""> -->
-              <h1 class="sitename">Softlogy-TOOLS</h1>
+              <h1 class="sitename">Softlogy-MICRO</h1>
               <span>.</span>
             </a>
       
@@ -96,8 +96,8 @@
       
             <div class="container d-flex flex-column justify-content-center align-items-center text-center position-relative" data-aos="zoom-out">
               <img src="{{asset('assets/img/hero-img.svg')}}" class="img-fluid animated" alt="">
-              <h1>Bienvenido a <span>Softlogy Generator</span></h1>
-              <p>Aquí podrás agilizar gestiones de soporte.</p>
+              <h1>Bienvenido a <span>Softlogy MICRO</span></h1>
+              <p>Aquí podrás agilizar gestiones de soporte en facturación electrónica.</p>
               <div class="d-flex">
                 <a href="#featured-services" class="btn-get-started scrollto">Servicios</a>                
               </div>
@@ -134,7 +134,7 @@
                             <div class="col-sm-10">
                               <input type="text" name="nitEmisor" required class="form-control" id="nitEmisor" placeholder="Ejemplo: 123546879">
                             </div>
-                            <div class="form-text" id="basic-addon4">Sin numero de verificacion.</div>
+                            <div class="form-text" id="basic-addon4">Sin número de verificación.</div>
                           </div>
                         <button type="submit" style="background: #27303F; margin:auto;" class="btn btn-primary mb-3">Procesar TXT</button>
                     </form>
@@ -195,7 +195,7 @@
                   <div class="service-item position-relative">
                     <div class="icon"><i class="fa-solid fa-user"></i></div>
                     <h4>Refacturación de XML</h4>
-                    <p>Agiliza la personalización de la factura electronica</p>
+                    <p>Agiliza la personalización de la factura electrónica</p>
                     <form  action="{{ route('refacturar.xml') }}" method="POST" enctype="multipart/form-data"> 
                         @csrf                       
                         <div class="mb-3">
@@ -214,10 +214,10 @@
                                   <label class="mr-sm-2" for="inlineFormCustomSelect">Tipo de documento</label>
                                   <select required name="tipeDocument" class="custom-select mr-sm-2" id="inlineFormCustomSelect">
                                     <option value="" selected>Seleccione...</option>
-                                    <option value="1">C.Extrangeria</option>
-                                    <option value="2">Nit Extrangeria</option>
+                                    <option value="1">C.Extrangería</option>
+                                    <option value="2">Nit Extrangería</option>
                                     <option value="3">Nit Empresa</option>                                    
-                                    <option value="4">C.Ciudadania</option>
+                                    <option value="4">C.Ciudadanía</option>
                                   </select>
                                 </div>
                                 <h4>Nuevos datos</h4>
@@ -237,7 +237,7 @@
                                     <label for="firstName">Primer Nombre</label>
                                     <input required type="text" name="firstName" class="form-control" id="firstName" placeholder="Nombre">
                                     <small id="digitVerification" class="form-text text-muted text-warning">
-                                      Si es nit poner la razon social completa aquí.
+                                      Si es nit poner la razón social completa aquí.
                                     </small>
                                   </div>
                                   <div class="form-group col-md-6">
@@ -325,11 +325,11 @@
       
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
-              <h2>SOFTLOGY-GENERATOR</h2>
+              <h2>SOFTLOGY-MICRO</h2>
               <p>Herramienta Integral para la Gestión de Reportes y Datos XML Relacionados con la DIAN
                 SOFTLOGY-GENERATOR es una solución tecnológica diseñada para facilitar la gestión de reportes y la consulta de datos en formatos XML, 
                 con un enfoque especializado en los procesos regulatorios exigidos por la Dirección de Impuestos y Aduanas Nacionales de Colombia (DIAN). 
-                Este software también está orientado a facilitar el proceso de verificación de errores en la facturación electrónica.</p>
+                Este software también Contiene una API RESTFUL que comunica la mesa de ayuda con SoftlogyMobile para la gestión de solicitudes, incidentes y problemas.</p>
             </div><!-- End Section Title -->
       
             <div class="container" data-aos="fade-up">
