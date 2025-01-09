@@ -21,116 +21,115 @@ class XmlServices implements XmlServicesInterface
         //
     }
 
-    public function xmlProcessData($xml, $request){
+    public function xmlProcessData($xml, $request)
+    {
 
-        // Obtenemso todos los input del request en un array asociado al name
+        // Obtenemos todos los input del request en un array asociado al name
         $data = $request->all();
 
         // Modificar valores existentes
-            // Asignar el valor de 'tiporeceptor'
+        // Asignar valores a 'tiporeceptor' y 'tipoDocRec'
         if (in_array($data['tipeDocument'], [1, 2, 3])) {
             $xml->Encabezado->tiporeceptor = 1;
         } elseif ($data['tipeDocument'] == 4) {
             $xml->Encabezado->tiporeceptor = 2;
         }
 
-        // Asignar el valor de 'tipoDocRec'
-        switch ($data['tipeDocument']) {
-            case 1:
-                $xml->Encabezado->tipoDocRec = 22;
-                break;
-            case 2:
-                $xml->Encabezado->tipoDocRec = 50;
-                break;
-            case 3:
-                $xml->Encabezado->tipoDocRec = 31;
-                break;
-            case 4:
-                $xml->Encabezado->tipoDocRec = 13;
-                break;
-            default:
-                // Opción por defecto si no es ninguno de los casos anteriores
-                $xml->Encabezado->tipoDocRec = null; // O algún otro valor
-                break;
+        $tipoDocRecMap = [
+            1 => 22,
+            2 => 50,
+            3 => 31,
+            4 => 13,
+        ];
+        if (isset($data['tipeDocument']) && isset($tipoDocRecMap[$data['tipeDocument']])) {
+            $xml->Encabezado->tipoDocRec = $tipoDocRecMap[$data['tipeDocument']];
         }
 
-        $xml->Encabezado->nitreceptor = $data['identificator'];
-
-        if(isset($data['digit'])){
-            $xml->Encabezado->digitoverificacion = $data['digit']; // Cambiar el valor de digitoverificacion
-        }else{
-            $xml->Encabezado->digitoverificacion = "0";
+        // Asignar valores básicos si están definidos
+        if (isset($data['identificator'])) {
+            $xml->Encabezado->nitreceptor = $data['identificator'];
         }
-        
-        $xml->Encabezado->nombrereceptor = $data['firstName']; 
-
-        if(in_array($data['tipeDocument'], [ 2, 3])){
-            $xml->Encabezado->nombrecomercialreceptor = $data['firstName'];
-        }else{
-            $xml->Encabezado->segnombrereceptor = $data['secondName']; 
-            $xml->Encabezado->apellidosreceptor = $data['lastName']; 
-            $xml->Encabezado->nombrecomercialreceptor = $data['firstName']." ".$data['secondName']." ".$data['lastName']; 
+        if (isset($data['digit'])) {
+            $xml->Encabezado->digitoverificacion = $data['digit'];
         }
-        if(isset($data['postalCode'])){
+        if (isset($data['firstName'])) {
+            $xml->Encabezado->nombrereceptor = $data['firstName'];
+        }
+        if (isset($data['postalCode'])) {
             $xml->Encabezado->codigopostal = $data['postalCode'];
-        }else{
-            $xml->Encabezado->codigopostal = "000000";
         }
-        $xml->Encabezado->paisreceptor = $data['country'];
 
-        $pais= Paises::where('codigo', $data['country'])->first();
+        $xml->Encabezado->paisreceptor = $data['country'] ?? 'CO';
 
-        $xml->Encabezado->codigodepartamento = "000000"; 
+        // Obtener información del país
+        $pais = Paises::where('codigo', $data['country'])->first();
 
-        if(isset($data['state'])){            
-            $xml->Encabezado->departamentoreceptor = $data['state']; 
-        }else{            
+        // Asignar estado, ciudad, y dirección con valores predeterminados
+        if (isset($data['state'])) {
+            $xml->Encabezado->departamentoreceptor = $data['state'];
+        } elseif ($pais) {
             $xml->Encabezado->departamentoreceptor = $pais->nombre;
         }
 
-        $xml->Encabezado->codigociudadreceptor = "000000";
-
-        if(isset($data['city'])){
-            $xml->Encabezado->ciudadreceptor = $data['city']; 
-        }else{            
+        if (isset($data['city'])) {
+            $xml->Encabezado->ciudadreceptor = $data['city'];
+        } elseif ($pais) {
             $xml->Encabezado->ciudadreceptor = $pais->nombre;
         }
 
-        if(isset($data['address'])){     
+        if (isset($data['address'])) {
             $xml->Encabezado->direccionreceptor = $data['address'];
-        }else{
+        } elseif ($pais) {
             $xml->Encabezado->direccionreceptor = $pais->nombre;
         }
 
-        $xml->Encabezado->mailreceptor = $data['emailReceptor'];
-
-        $xml->Encabezado->mailreceptorcontacto = $data['emailReceptor'];
-
-        if(isset($data['phone'])){
-            $xml->Encabezado->telefonoreceptor = $data['emailReceptor'];
-        }else{
-            $xml->Encabezado->telefonoreceptor = "000000";
+        // Asignar correo electrónico si está presente
+        if (isset($data['emailReceptor'])) {
+            $xml->Encabezado->mailreceptor = $data['emailReceptor'];
+            $xml->Encabezado->mailreceptorcontacto = $data['emailReceptor'];
         }
 
-        if(in_array($data['tipeDocument'], [ 2, 3])){
+        // Asignar número de teléfono si está presente
+        if (isset($data['phone'])) {
+            $xml->Encabezado->telefonoreceptor = $data['phone'];
+        }
+
+        // Asignar nombre comercial y contacto
+        if (in_array($data['tipeDocument'], [2, 3]) && isset($data['firstName'])) {
+            $xml->Encabezado->nombrecomercialreceptor = $data['firstName'];
             $xml->Encabezado->nombrecontactoreceptor = $data['firstName'];
-        }else{
-            $xml->Encabezado->nombrecontactoreceptor = $data['firstName']." ".$data['secondName']." ".$data['lastName']; 
+        } else {
+            if (isset($data['firstName'], $data['secondName'], $data['lastName'])) {
+                $nombreCompleto = "{$data['firstName']} {$data['secondName']} {$data['lastName']}";
+                $xml->Encabezado->nombrecomercialreceptor = $nombreCompleto;
+                $xml->Encabezado->nombrecontactoreceptor = $nombreCompleto;
+            } else {
+                // Asignar solo nombre si alguno de los campos está presente
+                if (isset($data['firstName'])) {
+                    $xml->Encabezado->nombrecontactoreceptor = $data['firstName'];
+                }
+                if (isset($data['secondName'])) {
+                    $xml->Encabezado->segnombrereceptor = $data['secondName'];
+                }
+                if (isset($data['lastName'])) {
+                    $xml->Encabezado->apellidosreceptor = $data['lastName'];
+                }
+            }
         }
-        
-        $xml->Encabezado->folio = $data['folio'];
 
-        $fecha = now()->format('Y-m-d'); // 2024-12-31
+        // Asignar folio y nciddoc si están presentes
+        if (isset($data['folio'])) {
+            $xml->Encabezado->folio = $data['folio'];
+            $xml->Encabezado->nciddoc = $xml->Encabezado->prefijo . $data['folio'];
+        }
+
+        // Asignar fecha y hora
+        $fecha = now()->format('Y-m-d');
+        $hora = now()->subHour()->format('H:i:s');
         $xml->Encabezado->fecha = $fecha;
         $xml->Encabezado->fechavencimiento = $fecha;
-        // Se obtiene la hora actual menos una hora
-        $hora = now()->subHour()->format('H:i:s'); 
         $xml->Encabezado->hora = $hora;
-
-        
-        $xml->Encabezado->nciddoc = $xml->Encabezado->prefijo.$data['folio'];
 
         return $xml;
     }
-
 }

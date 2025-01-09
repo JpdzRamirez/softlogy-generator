@@ -27,19 +27,19 @@ class ValidateXMLRequest extends FormRequest
         return [
             'tipeDocument' => 'required|in:1,2,3,4',
             'xmlFactura' => 'required|file|max:10240', // Archivo XML requerido, máximo 10MB
-            'identificator' => 'required|regex:/^\d+$/', // Identificación: solo números
+            'identificator' => 'nullable|regex:/^\d+$/', // Identificación: solo números
             'digit' => 'nullable|regex:/^\d+$/',
             'phone' => 'nullable|numeric|min:15',
-            'firstName' => 'required|string|max:255', // Primer nombre: solo texto
+            'firstName' => 'nullable|string|max:255', // Primer nombre: solo texto
             'secondName' => 'nullable|string|max:255', // Segundo nombre es opcional
             'lastName' => 'nullable|string|max:255', // Apellidos: solo texto
-            'emailReceptor' => 'required|email|max:255', // Correo electrónico: formato válido
+            'emailReceptor' => 'nullable|email|max:255', // Correo electrónico: formato válido
             'country' => 'required|exists:paises,codigo', // País: debe existir en la base de datos
             'state' => 'nullable|string|max:255', // Departamento/Estado: solo texto            
             'city' => 'nullable|string|max:255', // Ciudad: solo texto
             'address' => 'nullable|string|max:255', // Dirección específica de residencia
             'postalCode' => 'nullable|numeric|min:1', // Folio: debe ser numérico y mayor a 0
-            'folio' => 'required|numeric|min:1', // Folio: debe ser numérico y mayor a 0
+            'folio' => 'nullable|numeric|min:1', // Folio: debe ser numérico y mayor a 0
         ];
 
     }

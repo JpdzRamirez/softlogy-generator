@@ -37,7 +37,7 @@ class BackendController extends Controller
     
         // Definir las categorías de errores y palabras clave asociadas
         $categorias = [
-            'vencimiento' => ['resolucion vencida', 'está vencida', 'error la resolución'],            
+            'resolucion_vencida' => ['resolucion vencida', 'está vencida', 'error la resolución'],            
             'tag' => ['no existe TAG_NAME'],
             'datosFactura'=> ['el dato Tipo Impuesto','al dato Nombre Receptor es obligatorio','el dato Mail Receptor es obligatorio'],
             'calculos' => ['campos mandatorios'],
