@@ -196,8 +196,8 @@ class BackendController extends Controller
 
                 // Número de filas en la hoja
                 $filas = $hoja->getHighestRow();
-                $procesado=$filas;
-                $filasNoProcesadas=[];
+                $filasNoProcesadas = [];
+                $filasProcesadas = 0;
                 // Procesar filas si hay más de una (asumiendo que la primera es encabezado)
                 if ($filas > 1) {
                     for ($i = 7; $i <= $filas; $i++) { // Comienza en 2 si la fila 1 es encabezado
@@ -234,26 +234,23 @@ class BackendController extends Controller
                         // Creamos la Ubicación del Punto
                         $locationId=$helpdeskService->createLocation($dataInput);
                         // Cargamos en el arreglo para crear la tienda
-                        if($locationId){
-                            $dataInput['location_id']=$locationId;
-                        }else{
-                            $dataInput['location_id']=201;
-                        }
+                        $dataInput['location_id'] = $locationId ?: 201;
+
                         $response = $helpdeskService->createEntiti( $dataInput);
 
-                        $notProcessedRows = count($filasNoProcesadas) > 0 ? implode(', ', $filasNoProcesadas) : 'Ninguna fila fue ignorada';
-
-                        // Si la respuesta no es exitosa, false anotamos fila como no procesada
-                        if(!$response){
+                        // Si la respuesta no es exitosa, anotamos la fila como no procesada
+                        if (!$response) {
                             $filasNoProcesadas[] = $i;
+                        } else {
+                            $filasProcesadas++; // Incrementamos el contador si la fila fue procesada correctamente
                         }
 
                     }
-                    $diferencia= $procesado-count($filasNoProcesadas);
+                    $notProcessedRows = count($filasNoProcesadas) > 0 ? implode(', ', $filasNoProcesadas) : 'Ninguna fila fue ignorada';
                     // Ending request 
                     return response()->json([
                         'status' => true,
-                        'records'=>$diferencia,
+                        'records'=>count($filasNoProcesadas),
                         'notProcess'=>$notProcessedRows,
                         'title' => 'Usuarios Creados Exitosamente'
                     ], 200); // Código HTTP 401 (No Autorizado)
