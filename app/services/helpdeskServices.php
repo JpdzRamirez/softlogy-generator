@@ -150,7 +150,7 @@ class HelpdeskServices implements HelpDeskServiceInterface
         }catch (Exception $e) {
             // Si ocurre un error, revertir los cambios
             DB::connection('mysql_second')->rollBack();
-            return   "ERROR DE INTEGRACION".$e->getMessage();
+            throw $e;
         }
     }
     public function createEntiti(array $data)
@@ -259,7 +259,7 @@ class HelpdeskServices implements HelpDeskServiceInterface
         } catch (Exception $e) {
             // Si ocurre un error, revertir los cambios
             DB::connection('mysql_second')->rollBack();
-            return FALSE;
+            throw $e;
         }
     }
     public function getTicketsCount(int $idUser)    {  

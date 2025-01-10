@@ -202,8 +202,7 @@ class BackendController extends Controller
                 if ($filas > 1) {
                     for ($i = 7; $i <= $filas; $i++) { // Comienza en 2 si la fila 1 es encabezado
                         $isvalid = $hoja->getCell("A$i")->getValue() ?: false;
-                        if (!$isvalid) {
-                            $filasNoProcesadas[] = $i;
+                        if (!$isvalid) {                            
                             continue;
                         }
                         $dataInput= [
@@ -250,7 +249,7 @@ class BackendController extends Controller
                     // Ending request 
                     return response()->json([
                         'status' => true,
-                        'records'=>count($filasNoProcesadas),
+                        'records'=>$filasProcesadas,
                         'notProcess'=>$notProcessedRows,
                         'title' => 'Usuarios Creados Exitosamente'
                     ], 200); // Código HTTP 401 (No Autorizado)
@@ -261,7 +260,7 @@ class BackendController extends Controller
             return response()->json([
                 'error' => true,
                 'title'=>'Error en HelpDesk Services, Status: 500',
-                'message' => "Algo salio mal en el momento de crear los puntos de venta. ERROR: {$e->getMessage()}, Fila: {$e->getLine()}."
+                'message' => "Algo salió mal al crear los puntos de venta. ERROR: {$e->getMessage()}, Archivo: {$e->getFile()}, Línea: {$e->getLine()}."
             ], 500); // Código HTTP 401 (No Autorizado)            
         }
 
