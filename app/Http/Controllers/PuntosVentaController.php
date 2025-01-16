@@ -10,6 +10,7 @@ use App\Exceptions\UserNotFoundException;
 use App\Exceptions\AuthenticationException;
 use App\Exceptions\UserInactiveException;
 
+use Exception;
 
 class PuntosVentaController extends Controller
 {
@@ -17,7 +18,7 @@ class PuntosVentaController extends Controller
     {
                 
         // Se valida los datos con inyección de dependencias de un validador 
-        $validatedData = $request->only(['username', 'password', 'plataforma', 'iddroid', 'app']);
+        $validatedData = $request->only(['username', 'password', 'plataform', 'iddroid', 'app']);
 
         try {
         // Puedes proceder con la lógica de autenticación
@@ -26,37 +27,63 @@ class PuntosVentaController extends Controller
 
         // Validar resultado
         if (isset($authResult['error'])) {
-            return response()->json(['error' => $authResult['error']], 400); // Error de autenticación
+            if($validatedData['plataform']=="WEB"){
+                return redirect()->back()->withErrors(['error' => $authResult['error']]);
+            }else{
+                return response()->json(['error' => $authResult['error']], 400); // Error de autenticación
+            }                
         }
-
 
         // Obtenemos el arreglo de numero de tickets abierto, en curso, cerrado del usuario autenticado
         $ticketsCount= $helpServices->getTicketsCount($authResult->id);
 
         // Respuesta exitosa con los datos necesarios
-        return response()->json([
-            'id' => $authResult['user']->id,
-            'name' => $authResult['user']->name,
-            'password' => $authResult['user']->password,
-            'email' => $authResult['user']->password,
-            'realname' => $authResult['user']->realname,
-            'firstname' => $authResult['user']->firstname,
-            'mobile' => $authResult['user']->mobile,
-            'phone' => $authResult['user']->phone,
-            'is_active' => $authResult['user']->is_active,
-            'tickets' => $ticketsCount,
-            'picture' => $authResult['user']->picture,
-            'token' => $authResult['token'],
-            'version' => 1.0, // Incluye la versión actual
-        ], 200);
+        if($validatedData['plataform']=="WEB"){
+            return redirect()->route('dashboard')->with([
+                'user' => $authResult['user'],
+                'tickets' => $ticketsCount,
+            ]);
+        }else{
+            return response()->json([
+                'id' => $authResult['user']->id,
+                'name' => $authResult['user']->name,
+                'password' => $authResult['user']->password,
+                'email' => $authResult['user']->password,
+                'realname' => $authResult['user']->realname,
+                'firstname' => $authResult['user']->firstname,
+                'mobile' => $authResult['user']->mobile,
+                'phone' => $authResult['user']->phone,
+                'is_active' => $authResult['user']->is_active,
+                'tickets' => $ticketsCount,
+                'picture' => $authResult['user']->picture,
+                'token' => $authResult['token'],
+                'version' => 1.0, // Incluye la versión actual
+            ], 200);
+        }
     } catch (UserNotFoundException $e) {
-        return response()->json(['error' => $e->getMessage()], 404);
+        if($validatedData['plataform']=="WEB"){
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }else{
+            return response()->json(['error' => $e->getMessage()], 404);
+        }        
     } catch (AuthenticationException $e) {
-        return response()->json(['error' => $e->getMessage()], 401);
+        if($validatedData['plataform']=="WEB"){
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }else{
+            return response()->json(['error' => $e->getMessage()], 401);    
+        }        
     } catch (UserInactiveException $e) {
-        return response()->json(['error' => $e->getMessage()], 403);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error interno del servidor'], 500);
+        if($validatedData['plataform']=="WEB"){
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }else{
+            return response()->json(['error' => $e->getMessage()], 403);    
+        }        
+    } catch (Exception $e) {
+        if($validatedData['plataform']=="WEB"){
+            return redirect()->back()->withErrors(['error' => 'Error interno del servidor']);
+        }else{
+            return response()->json(['error' => 'Error interno del servidor'], 500);   
+        }
     }
     }
 }

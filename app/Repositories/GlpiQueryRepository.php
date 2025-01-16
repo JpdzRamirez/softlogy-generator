@@ -6,7 +6,12 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Support\Facades\DB;
 use App\Repositories\UserRepository;
+use App\Models\GlpiUserEntiti;
+use App\Models\GlpiUserLocation;
+use App\Models\GlpiUserTitle;
 use App\Models\User;
+
+use Exception;
 
 class GlpiQueryRepository
 {

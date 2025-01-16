@@ -27,9 +27,8 @@ class ValidateLoginRequest extends FormRequest
         return [            
             'username' => 'required|string|not_regex:/^\s*$/',
             'password' => 'required|string|not_regex:/^\s*$/',      
-            'plataforma' => 'required',
-            'iddroid' => 'required',
-            'app' => 'required',   
+            'plataform' => 'required',
+            'iddroid' => 'nullable',            
         ];
 
     }

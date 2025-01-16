@@ -46,7 +46,6 @@ class AuthServices implements AuthServicesInterface
     {
 
         try {
-
             /*  
                 ***************************************************
                             👩‍💻 Validate Oauth GLPI User
@@ -54,9 +53,11 @@ class AuthServices implements AuthServicesInterface
              */
             // Busca al usuario por cualquier campo necesario, como 'username' o 'email'
             $user = $this->glpiUserRepository
-            ->only(['id','name','phone','mobile','password','realname','firstname','is_active','picture'])
+            ->only(['id','name','phone','mobile','password','realname','firstname','profiles_id','entities_id','usertitles_id','locations_id','is_active','picture'])
             ->where('name', $data['username'])
-            ->first();
+            ->with(['location', 'entiti', 'title'])        
+            ->firstOrFail();
+            
 
             if (!$user) {
                 throw new UserNotFoundException();
@@ -77,6 +78,7 @@ class AuthServices implements AuthServicesInterface
              */
             $userImage= $this->getUserPicture($user);
             $user->picture=$userImage;
+
             /*  
                 ***************************************************
                                 🔏 Password Section
@@ -98,7 +100,7 @@ class AuthServices implements AuthServicesInterface
         } catch (UserNotFoundException | AuthenticationException | UserInactiveException $e) {
             return ['error' => $e->getMessage()];
         } catch (Exception $e) {
-            return ['error' => 'Ha ocurrido un error inesperado.'];
+            return ['error' => "Ha ocurrido un error inesperado. {$e->getMessage()}"];
         }
     }
 }

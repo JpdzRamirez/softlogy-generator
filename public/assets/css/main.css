@@ -3242,3 +3242,167 @@ details summary::-webkit-details-marker {
     opacity: 0;
   }
 }
+
+/*Animation Slide in loggin intro*/
+
+.slide-in-top {
+	-webkit-animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+/**
+ * ----------------------------------------
+ * animation slide-in-top
+ * ----------------------------------------
+ */
+ @-webkit-keyframes slide-in-top {
+  0% {
+    -webkit-transform: translateY(-1000px);
+            transform: translateY(-1000px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes slide-in-top {
+  0% {
+    -webkit-transform: translateY(-1000px);
+            transform: translateY(-1000px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+/*Button login*/
+:root {
+  --dark: 0;
+  --transition: 0.28s;
+  --font-size: 1rem;
+  --bg: hsl(0 0% calc((100 - (var(--dark, 0) * 100)) * 1%));
+  --color: hsl(0 0% calc(var(--dark) * 100%));
+}
+
+
+.login {
+  outline-color: hsl(0 0% calc(var(--dark) * 100%));
+  --padding: calc(var(--font-size) * 0.75);
+  cursor: pointer;
+  letter-spacing: calc(var(--font-size) * 0.02);
+  font-family: sans-serif;
+  font-weight: bold;
+  background: var(--accent-color);
+  font-size: var(--font-size);
+  border-radius: calc(var(--font-size) * 0.5);
+  border:
+    4px
+    solid
+    hsl(0 0% calc((40 + (var(--accent-color) * 20)) * 1%) / calc(0.3 + (var(--hovered, 0) * 0.8)));
+  color: var(--surface-color);
+  position: relative;
+  transition: border-color var(--transition);
+}
+
+.login > span {
+  background: var(--accent-color);
+  padding: calc(var(--font-size) * 0.9) calc(var(--font-size) * 1.36);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns:
+    calc((var(--font-size) * 1.75) * (1 - var(--hovered, 0)))
+    1fr
+    calc((var(--font-size) * 1.75) * var(--hovered, 0));
+  align-items: center;
+  transition: grid-template-columns var(--transition);
+}
+
+.login:after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--font-size) * -0.025);
+  background: var(--accent-color);
+  filter: blur(calc(var(--font-size) * 0.75));
+  scale: var(--hovered, 0);
+  z-index: -1;
+  transition: scale var(--transition);
+}
+
+.login:hover {
+  --hovered: 1;
+}
+
+.login span span:nth-of-type(1) {
+  padding-right: var(--padding);
+  width: var(--font-size);
+}
+
+.login span span:nth-of-type(3) {
+  padding-left: var(--padding);
+  width: var(--font-size);
+}
+
+.login svg {
+  display: inline-block;
+  transition: translate var(--transition) ease-in-out, opacity var(--transition) ease-in-out;
+}
+.login i {
+  display: inline-block;
+  transition: translate var(--transition) ease-in-out, opacity var(--transition) ease-in-out;
+}
+
+
+.login button:is(:focus-visible, :hover) {
+  --hovered: 1;
+}
+
+.login span span:nth-of-type(3) svg {
+  stroke-width: 3;
+  translate: calc((1 - var(--hovered, 0)) * (var(--font-size) * 3)) 8%;
+  width: calc(var(--font-size) * 1);
+  opacity: var(--hovered, 0);
+}
+.login span span:nth-of-type(3) i {
+  stroke-width: 3;
+  translate: calc((1 - var(--hovered, 0)) * (var(--font-size) * 3)) 8%;
+  width: calc(var(--font-size) * 1);
+  opacity: var(--hovered, 0);
+}
+
+.login span span:nth-of-type(1) svg {
+  stroke-width: 3;
+  translate: calc(((var(--hovered, 0) * var(--font-size)) * -3) + 10%) 8%;
+  width: calc(var(--font-size) * 0.8);
+}
+.login span span:nth-of-type(1) i {
+  stroke-width: 3;
+  translate: calc(((var(--hovered, 0) * var(--font-size)) * -3) + 10%) 8%;
+  width: calc(var(--font-size) * 0.8);
+}
+
+.bg-softlogy{
+  background-color: var(--accent-color);
+  color: #fff !important;
+}
+.bg-softlogy:hover{
+  border:
+  4px
+  solid
+  hsl(0 0% calc((40 + (var(--accent-color) * 20)) * 1%) );
+}
+.softlogy-modal .form-check-input:checked{
+  background-color: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;   
+  box-shadow: 0 0 0 .25rem #0ea2bd59 !important;
+}
+.softlogy-modal .form-control:focus {
+  border-color: var(--accent-color) !important;
+  outline: 0;
+  box-shadow: 0 0 0 .25rem #0ea2bd59 !important;
+}

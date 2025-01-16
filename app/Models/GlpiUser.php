@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class GlpiUser extends Model
-{   
+{
     // Especificamos la conexión que usará este modelo
     protected $connection = 'mysql_second';
 
@@ -31,7 +31,7 @@ class GlpiUser extends Model
         'picture',
         'password',
     ];
-    
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -45,4 +45,36 @@ class GlpiUser extends Model
         'cookie_token_date',
     ];
 
+    /*  
+    ***************************************************
+               👚 Complementary Data info
+    ***************************************************                    
+    */
+    /**
+     * location Name
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function location()
+    {
+        return $this->belongsTo(GlpiUserLocation::class, 'locations_id');
+    }
+
+    
+    /**
+     * Entitie name
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function entiti()
+    {
+        return $this->belongsTo(GlpiUserEntiti::class, 'entities_id');
+    }
+
+    /**
+     * Title name
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function title()
+    {
+        return $this->belongsTo(GlpiUserTitle::class, 'usertitles_id');
+    }
 }
