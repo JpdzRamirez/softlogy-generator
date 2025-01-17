@@ -586,7 +586,7 @@
                   }, 1000);
                 });
 
-                // También puedes eliminar el modal cuando se haga clic en el botón "Accept"
+                // Eliminar el modal cuando se haga clic en el botón "Accept"
                 $(".button-errors").click(function(){
                   $(".modal-errors").addClass("fade-out");
                   setTimeout(() => {

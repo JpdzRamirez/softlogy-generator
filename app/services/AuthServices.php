@@ -53,9 +53,11 @@ class AuthServices implements AuthServicesInterface
              */
             // Busca al usuario por cualquier campo necesario, como 'username' o 'email'
             $user = $this->glpiUserRepository
-            ->only(['id','name','phone','mobile','password','realname','firstname','profiles_id','entities_id','usertitles_id','locations_id','is_active','picture'])
+            ->only(
+                ['id', 'name', 'phone', 'mobile', 'password', 'realname', 'firstname', 'profiles_id', 'entities_id', 'usertitles_id', 'locations_id', 'is_active', 'picture'],
+                ['location', 'entiti', 'title', 'email']
+            )
             ->where('name', $data['username'])
-            ->with(['location', 'entiti', 'title'])        
             ->firstOrFail();
             
 
@@ -81,18 +83,18 @@ class AuthServices implements AuthServicesInterface
 
             /*  
                 ***************************************************
-                                🔏 Password Section
-                ***************************************************                    
-             */
-            
-            $userEmail = $this->queryRepository->getUserEmailById($user->id);
-
-            /*  
-                ***************************************************
                                 🔑 Token Access Section
                 ***************************************************                    
              */
-            $response = $this->queryRepository->setTokenUserSession($user, $userEmail->email);
+            $expiration=false;
+            if($data['plataform'] == "WEB"){
+                $expiration = $data['session'] ? true : false;
+            }else{
+                $expiration = $data['session'] ? null : now()->addMinutes(config('sanctum.expiration', 60));
+            }
+            
+
+            $response = $this->queryRepository->setTokenUserSession($user, $expiration,$data['plataform']);
 
             // Return validated user with token
             return $response;

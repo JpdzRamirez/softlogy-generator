@@ -28,7 +28,8 @@ class ValidateLoginRequest extends FormRequest
             'username' => 'required|string|not_regex:/^\s*$/',
             'password' => 'required|string|not_regex:/^\s*$/',      
             'plataform' => 'required',
-            'iddroid' => 'nullable',            
+            'iddroid' => 'nullable',  
+            'session'=>'nullable'          
         ];
 
     }

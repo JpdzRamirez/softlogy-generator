@@ -27,36 +27,40 @@ class UserRepository
         $this->model = new User();
     }
     /**
+     * Find a user by their ID.
      * 
      * @param int $id
-     * @return TModel
+     * @return User
      */
     public function findById(int $id){
         return $this->model->findOrFail($id);
     }
     /**
-     * /
+     * Find a user by their name.
+     * 
      * @param string $name
-     * @return TModel
+     * @return User
      */
     public function findByName(string $name)
     {
         return $this->model->where('name', $name)->firstOrFail();
     }
     /**
-     *  Create an User on local database
+     * Create a user in the local database.
+     * 
      * @param array $data
-     * @return TModel
+     * @return User
      */
     public function create(array $data)
     {
         return $this->model->create($data);
     }
     /**
-     *  Update information of an user
+     * Update user information.
+     * 
      * @param int $id
      * @param array $data
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return User
      */
     public function update(int $id, array $data)
     {
@@ -65,7 +69,8 @@ class UserRepository
         return $user;
     }
     /**
-     *  Delete user from database
+     * Delete a user from the database.
+     * 
      * @param int $id
      * @return void
      */

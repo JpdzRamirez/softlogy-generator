@@ -77,4 +77,9 @@ class GlpiUser extends Model
     {
         return $this->belongsTo(GlpiUserTitle::class, 'usertitles_id');
     }
+
+    public function email()
+    {
+        return $this->hasOne(GlpiUserEmail::class, 'users_id');
+    }
 }

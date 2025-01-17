@@ -18,7 +18,7 @@ class PuntosVentaController extends Controller
     {
                 
         // Se valida los datos con inyección de dependencias de un validador 
-        $validatedData = $request->only(['username', 'password', 'plataform', 'iddroid', 'app']);
+        $validatedData = $request->only(['username', 'password','session' ,'plataform', 'iddroid', 'app']);
 
         try {
         // Puedes proceder con la lógica de autenticación
@@ -35,7 +35,7 @@ class PuntosVentaController extends Controller
         }
 
         // Obtenemos el arreglo de numero de tickets abierto, en curso, cerrado del usuario autenticado
-        $ticketsCount= $helpServices->getTicketsCount($authResult->id);
+        $ticketsCount= $helpServices->getTicketsCount($authResult['user']->glpi_id);
 
         // Respuesta exitosa con los datos necesarios
         if($validatedData['plataform']=="WEB"){

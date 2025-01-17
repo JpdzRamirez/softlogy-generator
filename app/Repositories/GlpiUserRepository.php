@@ -6,7 +6,7 @@ namespace App\Repositories;
 use App\Models\GlpiUser;
 
 
-class GlpiUserRepository 
+class GlpiUserRepository
 {
     protected $model;
 
@@ -47,7 +47,7 @@ class GlpiUserRepository
         $presentation = $this->model->findOrFail($id);
         $presentation->delete();
     }
-    
+
     /**
      * Obtiene todos los usuarios.
      *
@@ -59,12 +59,20 @@ class GlpiUserRepository
     }
 
     /**
-     * Obtiene solo ciertas columnas
+     * Obtiene solo ciertas columnas y carga relaciones
      * @param array $columns
+     * @param array $relations
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function only(array $columns = ['*'])
+    public function only(array $columns = ['*'], array $relations = [])
     {
-        return $this->model->select($columns)->get();
+        $query = $this->model->select($columns);
+
+        // Cargar las relaciones si existen
+        if (!empty($relations)) {
+            $query->with($relations);
+        }
+
+        return $query->get();
     }
 }
