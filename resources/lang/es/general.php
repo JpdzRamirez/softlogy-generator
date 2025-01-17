@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title'=>'Psicolombia',
+    'title'=>'Softlogy-Micro',
     'welcome' => 'Bienvenido',
     'help'=> 'Ayuda',
     'license'=> 'Licenciamiento',

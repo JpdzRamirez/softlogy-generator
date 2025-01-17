@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\ValidateXMLRequest;
-use App\Models\Paises;
+
 
 use App\Contracts\XmlServicesInterface;
 
-use DOMDocument;
 use SimpleXMLElement;
 use Exception;
 
@@ -23,10 +22,6 @@ class FacturaController extends Controller
         $this->xmlService = $xmlService; // Aquí se inyecta la implementación de la interfaz
     }
 
-    public function index(){
-        $paises = Paises::all();
-        return view('generator-home', compact('paises'));
-    }
     public function obtenerCUFES_Folios(Request $request)
     {
         $prefijo=$request->input("prefijo");

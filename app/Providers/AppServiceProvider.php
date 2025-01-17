@@ -16,6 +16,8 @@ use App\Services\AuthServices;
 use App\Services\helpdeskServices;
 use App\Services\XmlServices;
 
+use Illuminate\Support\Facades\Blade;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -39,6 +41,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Blade::component('components.layout.app', 'app-layout');
     }
 }

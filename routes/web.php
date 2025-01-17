@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SoftlogyMicro;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\BackendController;
-
 use App\Http\Controllers\PuntosVentaController;
 
 /*🏠
@@ -14,16 +14,31 @@ use App\Http\Controllers\PuntosVentaController;
 Route::get('/', function () {
     return view('auth-login');
 })->name('home');
-
+/*🔏
+-----------------------------------------------
+*****************Authentication zone*************
+-----------------------------------------------
+ */
 Route::post('/microservicios/softlogy/login', [PuntosVentaController::class, 'loginOAuth'])->name('login.oauth');
 
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/dashboard', [FacturaController::class, 'index'])->name('dashboard');
+/*📊
+-----------------------------------------------
+*****************MICRO Services*************
+-----------------------------------------------
+ */
+Route::middleware(['auth'])->group(function () {
 
-    Route::post('/cufes-folios', [FacturaController::class, 'obtenerCUFES_Folios'])->name('obtener.cufes');
-    Route::post('/refacturar-xml', [FacturaController::class, 'refacturarXML'])->name('refacturar.xml');
-    Route::post('/errores-json', [BackendController::class, 'obtenerErrores_JSON'])->name('obtener.errores');
-    Route::post('/cargar-clientes', [BackendController::class, 'cargarClientes_xlsx'])->name('cargar.clientes');
+    Route::get('/dashboard', [SoftlogyMicro::class, 'index'])->name('dashboard');
 
-    Route::get('/descargar-formatos', [BackendController::class, 'descargarFormatoClientes_xlsx'])->name('descargar.formatos');
+    Route::get('/softlogy-tickets', [SoftlogyMicro::class, 'tickets'])->name('softlogy.tickets');    
+    
+    Route::middleware(['profile:4,5,9,10'])->group(function () {        
+        Route::get('/softlogy-tools', [SoftlogyMicro::class, 'tools'])->name('softlogy.tools');
+        Route::get('/descargar-formatos', [BackendController::class, 'descargarFormatoClientes_xlsx'])->name('descargar.formatos');        
+        Route::post('/cufes-folios', [FacturaController::class, 'obtenerCUFES_Folios'])->name('obtener.cufes');
+        Route::post('/refacturar-xml', [FacturaController::class, 'refacturarXML'])->name('refacturar.xml');
+        Route::post('/errores-json', [BackendController::class, 'obtenerErrores_JSON'])->name('obtener.errores');
+        Route::post('/cargar-clientes', [BackendController::class, 'cargarClientes_xlsx'])->name('cargar.clientes');       
+    });
+
 });

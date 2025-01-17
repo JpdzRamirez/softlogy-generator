@@ -34,16 +34,15 @@ class PuntosVentaController extends Controller
             }                
         }
 
-        // Obtenemos el arreglo de numero de tickets abierto, en curso, cerrado del usuario autenticado
-        $ticketsCount= $helpServices->getTicketsCount($authResult['user']->glpi_id);
-
         // Respuesta exitosa con los datos necesarios
         if($validatedData['plataform']=="WEB"){
             return redirect()->route('dashboard')->with([
-                'user' => $authResult['user'],
-                'tickets' => $ticketsCount,
+                'user' => $authResult['user']
             ]);
         }else{
+            // Para la aplicación mobil se envía el ticket count directamente
+            $ticketsCount= $helpServices->getTicketsCount($authResult['user']->glpi_id);
+
             return response()->json([
                 'id' => $authResult['user']->id,
                 'name' => $authResult['user']->name,

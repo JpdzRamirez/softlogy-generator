@@ -30,6 +30,7 @@ class User extends Authenticatable
         'title',
         'location',
         'glpi_id',
+        'profile_id',
         'is_active',
         'picture',
     ];

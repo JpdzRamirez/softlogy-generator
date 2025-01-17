@@ -46,6 +46,7 @@ class GlpiQueryRepository
                     'title' => $user->title->name !== $localUser->title ? $user->title->name : null,
                     'location' => $user->location->name !== $localUser->location ? $user->location->name : null,
                     'glpi_id' => $user->id !== $localUser->glpi_id ? $user->id : null,
+                    'profile_id' => $user->profiles_id !== $localUser->profile_id ? $user->profiles_id : null,
                     'is_active' => $user->is_active !== $localUser->is_active ? $user->is_active : null,
                     'picture' => $user->picture !== $localUser->picture ? $user->picture : null,
                 ], fn($value) => $value !== null); // Filtrar solo valores no nulos
@@ -69,6 +70,7 @@ class GlpiQueryRepository
                     'title' => $user->title->name,
                     'location' => $user->location->name,
                     'glpi_id' => $user->id,
+                    'profile_id' => $user->id,
                     'is_active' => $user->is_active,
                     'picture' => $user->picture
                 ];

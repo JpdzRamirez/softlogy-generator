@@ -5,6 +5,8 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
+use App\Http\Middleware\CheckProfile;
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
@@ -16,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Registrar middleware globales
         $middleware->alias([
             'auth:sactum' => EnsureFrontendRequestsAreStateful::class,
+            'profile' => CheckProfile::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
