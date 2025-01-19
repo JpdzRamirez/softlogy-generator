@@ -14,6 +14,10 @@ use App\Http\Controllers\PuntosVentaController;
 Route::get('/', function () {
     return view('auth-login');
 })->name('home');
+// Default auth middleware route
+Route::get('/login', function () {
+    return redirect('/'); // Redirige a la vista principal
+})->name('login');
 /*🔏
 -----------------------------------------------
 *****************Authentication zone*************

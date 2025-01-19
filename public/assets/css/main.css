@@ -64,8 +64,17 @@ body {
   color: var(--default-color);
   background-color: var(--background-color);
   font-family: var(--default-font);
+  height: 100vh;
+  width: 100vw;
 }
-
+main{
+  position: relative;
+}
+@media (max-width:720px) {
+  main{
+    top:10vh;
+  }
+}
 a {
   color: var(--accent-color);
   text-decoration: none;
@@ -270,10 +279,6 @@ h6 {
 }
 
 @media (max-width: 1200px) {
-  .header .logo {
-    order: 1;
-  }
-
   .header .btn-getstarted {
     order: 2;
     margin: 0 15px 0 0;
@@ -296,6 +301,7 @@ h6 {
 @media (min-width: 1200px) {
   .navmenu {
     padding: 0;
+    margin-right: auto;
   }
 
   .navmenu ul {
@@ -435,7 +441,6 @@ h6 {
     cursor: pointer;
     transition: color 0.3s;
   }
-
   .navmenu {
     padding: 0;
     z-index: 9997;
@@ -811,7 +816,7 @@ section,
 .section {
   color: var(--default-color);
   background-color: var(--background-color);
-  padding: 60px 0;
+  padding: 0 0 60px 0;
   scroll-margin-top: 100px;
   overflow: clip;
 }
@@ -842,7 +847,6 @@ section,
 .section-title p {
   margin-bottom: 0;
 }
-
 /*--------------------------------------------------------------
 # Hero Section
 --------------------------------------------------------------*/
@@ -850,11 +854,13 @@ section,
   width: 100%;
   min-height: 50vh;
   position: relative;
-  padding: 120px 0 60px 0;
   display: flex;
+  gap: 1em;
   align-items: center;
-  background: url("../img/hero-bg.png") center center;
+  background: url(../img/hero-bg.png) center center;
   background-size: cover;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .hero h1 {
@@ -917,13 +923,13 @@ section,
 }
 
 .hero .animated {
-  margin-bottom: 60px;
+  margin-top: 10px;
   animation: up-down 2s ease-in-out infinite alternate-reverse both;
 }
 
 @media (min-width: 992px) {
   .hero .animated {
-    max-width: 45%;
+    max-width: 30%;
   }
 }
 
@@ -966,6 +972,7 @@ section,
     transform: translateY(-10px);
   }
 }
+
 
 /*--------------------------------------------------------------
 # Featured Services Section
@@ -3359,6 +3366,9 @@ details summary::-webkit-details-marker {
 
 
 .login button:is(:focus-visible, :hover) {
+  --hovered: 1;
+}
+.login a:is(:focus-visible, :hover) {
   --hovered: 1;
 }
 

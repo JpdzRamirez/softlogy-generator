@@ -9,15 +9,54 @@
                 <span>.</span>
             </a>
     
-            <nav id="navmenu" class="navmenu me-auto">
+            <nav id="navmenu" class="navmenu">
                 <ul>
-                    <li><a href="#hero" class="active">Home<br></a></li>
-                    <li><a href="#featured-services">Services</a></li>
-                    <li><a href="#about">About</a></li>
+                    <li>
+                        <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">
+                            <i class="fa-solid fa-house"></i> Home<br>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                            <i class="fa-solid fa-swatchbook"></i> Dashboard<br>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="confirmLogout" id="confirmLogout2">
+                            <i class="fa-solid fa-right-from-bracket"></i> Log Out<br>
+                        </a>
+                    </li>
                 </ul>
+                
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
-    
+            <div class="logout-container">
+                <a class="button" id="confirmLogout">
+                    <img src="{{ Auth::user()->picture ? Auth::user()->picture : asset('assets/img/USER.png') }}" alt="User Picture">
+                    <div class="logout">Log Out</div>
+                </a>
+            </div>
         </div>
     </header>
 </div>
+@push('scripts')
+    <script>
+        $("#confirmLogout, #confirmLogout2").click(function (e) { 
+            e.preventDefault();
+            Swal.fire({
+            title: "¿Estás seguro de cerrar sesión?",
+            text: "Se cerrará tu sesión actual",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            cancelButtonText:"Cancelar",
+            confirmButtonText: "Sí, confirmar"
+            }).then((result) => {
+            if (result.isConfirmed) {
+                Livewire.dispatch('confirmLogout');
+            }
+            });
+        });
+    </script>
+@endpush

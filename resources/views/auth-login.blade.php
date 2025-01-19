@@ -83,7 +83,7 @@
                 <span>.</span>
             </a>
 
-            <nav id="navmenu" class="navmenu me-auto">
+            <nav id="navmenu" class="navmenu">
                 <ul>
                     <li><a href="#login" class="active">Login<br></a></li>
                 </ul>
@@ -104,21 +104,43 @@
                 <h1>Bienvenido a <span>Softlogy MICRO</span></h1>
                 <p>Portal de servicios empresariales.</p>
                 <div class="d-flex">
-                    <button class="login" data-bs-toggle="modal" data-bs-target="#auth">
-                        <span>
-                            <span aria-hidden=true>
-                                <i class="fa-solid fa-lock"></i>
+                    @guest
+                        <!-- Mostrar el botón para iniciar sesión cuando el usuario no esté autenticado -->
+                        <button class="login" data-bs-toggle="modal" data-bs-target="#auth">
+                            <span>
+                                <span aria-hidden="true">
+                                    <i class="fa-solid fa-lock"></i>
+                                </span>
+                                <span>Iniciar Sesión</span>
+                                <span aria-hidden="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+                                    </svg>
+                                </span>
                             </span>
-                            <span>Iniciar Sessión</span>
-                            <span aria-hidden=true>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
-                                </svg>
+                        </button>
+                    @endguest
+                
+                    @auth
+                        <!-- Mostrar el botón que redirige al dashboard cuando el usuario está autenticado -->
+                        <a style="color:#fff" class="login" href="{{ route('dashboard') }}" >
+                            <span>
+                                <span aria-hidden="true">
+                                    <i class="fa-solid fa-swatchbook"></i>
+                                </span>
+                                <span>Ir al Dashboard</span>
+                                <span aria-hidden="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+                                    </svg>
+                                </span>
                             </span>
-                        </span>
-                    </button>
+                        </a>
+                    @endauth
                 </div>
             </div>
         </section><!-- /Hero Section -->

@@ -1,0 +1,54 @@
+@use "../../utils" as *;
+
+.confirmLogout{
+  visibility: hidden;
+  cursor: pointer;
+}
+.logout-container{
+    margin-right: 1em;
+      .button {
+        cursor: pointer;
+        text-decoration: none;
+        float: right;
+        padding: 1px 12px;
+        color: var(--surface-color);
+        display: flex;
+        width: 3em;
+        background-color: var(--accent-color);
+        transition: width .35s;
+        border-radius: 0 1em;
+        -webkit-transition: width .35s;
+        overflow: hidden;
+        flex-direction: row;
+        align-items: center;
+        img{
+            width: 25px;
+            border-radius: 50px;
+            float: left;
+        }
+        .logout {
+            font-size: .8em;
+              position: relative;
+            right: -18px;
+            overflow: hidden;
+            letter-spacing: 3px;
+            opacity: 0;
+            transition: opacity .45s;
+            -webkit-transition: opacity .35s;
+            
+          }
+      }
+      
+      a:hover {
+        width: 100px;
+      }
+      
+      a:hover .logout{
+        opacity: .9;
+      }
+      
+      a {
+        text-decoration: none;
+      }
+      
+}
