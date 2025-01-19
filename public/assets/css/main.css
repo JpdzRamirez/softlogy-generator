@@ -70,11 +70,7 @@ body {
 main{
   position: relative;
 }
-@media (max-width:720px) {
-  main{
-    top:10vh;
-  }
-}
+
 a {
   color: var(--accent-color);
   text-decoration: none;
@@ -816,7 +812,7 @@ section,
 .section {
   color: var(--default-color);
   background-color: var(--background-color);
-  padding: 0 0 60px 0;
+  padding: 60px 0 60px 0;
   scroll-margin-top: 100px;
   overflow: clip;
 }
@@ -857,8 +853,6 @@ section,
   display: flex;
   gap: 1em;
   align-items: center;
-  background: url(../img/hero-bg.png) center center;
-  background-size: cover;
   flex-wrap: wrap;
   justify-content: center;
 }

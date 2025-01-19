@@ -51,6 +51,7 @@
         opacity: 1;
         transition: opacity 500ms ease-in;
         transition-delay: 1000ms;
+        margin: 0;
     }
 
     .card:hover .card__title::after,

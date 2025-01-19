@@ -2,15 +2,17 @@
 
 :root {
     /* Colors */
-    --brand-color: hsl(46, 100%, 50%);
+    --brand-color: var(--accent-color);
     --black: hsl(0, 0%, 0%);
     --white: hsl(0, 0%, 100%);
     /* Fonts */
-    --font-title: "Montserrat", sans-serif;
-    --font-text: "Lato", sans-serif;
+    --font-title: inherit;
+    --font-text: inherit;
   }
 /* CARD COMPONENT */
-
+#menu-cards{
+    background-size: cover;
+}
 .card {
     display: grid;
     place-items: center;
@@ -44,10 +46,9 @@
         --flow-space: 0.9375rem;
         display: flex;
         flex-direction: column;
+        gap: 0.5em;
         justify-content: space-between;
-        align-self: flex-end;
-        height: 55%;
-        padding: 12% 1.25rem 1.875rem;
+        padding:10% 0.35rem 2.675rem;
         background: linear-gradient(
             180deg,
             hsla(0, 0%, 0%, 0) 0%,
@@ -76,11 +77,12 @@
                 font-size: 1rem;
                 line-height: 1.5;
                 color: var(--white);
+                margin-bottom: 15px;
             }
         }
 
         .card__button {
-            padding: 0.75em 1.6em;
+            padding: 6px;
             width: fit-content;
             width: -moz-fit-content; /* Prefijo necesario para Firefox  */
             font-variant: small-caps;
@@ -90,7 +92,8 @@
             background-color: var(--brand-color);
             font-family: var(--font-title);
             font-size: 1.125rem;
-            color: var(--black);
+            color: var(--surface-color);
+            margin: 0;
         }
         .card__button:focus {
             outline: 2px solid black;
