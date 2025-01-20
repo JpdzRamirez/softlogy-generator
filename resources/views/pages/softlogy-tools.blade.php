@@ -1,36 +1,12 @@
-<x-layout-app>
-  <main class="main">
-      @livewire('pages.softlogy-tools')    
-  </main>
-</x-layout-app>
-@push('modals')
-      <!-- Modal Form-AdminUsers -->
-      <div class="modal fade" id="adminUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-      aria-labelledby="adminUserModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="adminUserModalLabel"><i style="color:#0EA2BD"
-                          class="fa-solid fa-circle-exclamation"></i> Aceso Restringido</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <form id="adminFormModal">
-                  <div class="modal-body">
-                      <div class="mb-3">
-                          <label for="adminPassword" class="form-label">Contraseña de Administrador</label>
-                          <input type="password" autocomplete="new-password" class="form-control"
-                              id="adminPassword" placeholder="Contraseña">
-                      </div>
-                  </div>
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                      <button type="button" id="submitAdminPassword" class="btn btn-primary">Enviar</button>
-                  </div>
-              </form>
-          </div>
-      </div>
-  </div>
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/dashboard.min.css') }}">
 @endpush
+@section('title', 'Tools')
+<x-app-layout>
+  <main class="main">
+        @livewire('pages.softlogy-tools', ['paises' => $paises])
+  </main>
+</x-app-layout>
 @push('scripts')
     @routes
     <script>

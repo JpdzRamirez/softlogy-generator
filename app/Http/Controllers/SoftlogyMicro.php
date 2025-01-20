@@ -22,7 +22,7 @@ class SoftlogyMicro extends Controller
     }
     public function tickets(){  
         $ticketsCount=$this->helpdeskServices->getTicketsCount(Auth::user()->profile_id);      
-        return view('pages.softlogy-tools', compact('ticketsCount'));
+        return view('pages.softlogy-tickets', compact('ticketsCount'));
     }
     public function tools(){
         $paises = Paises::all();
