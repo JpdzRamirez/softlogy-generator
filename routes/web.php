@@ -38,9 +38,11 @@ Route::middleware(['auth'])->group(function () {
     
     Route::middleware(['profile:4,5,9,10'])->group(function () {        
         Route::get('/softlogy-tools', [SoftlogyMicro::class, 'tools'])->name('softlogy.tools');
+        Route::get('/softlogy-tools-back', [SoftlogyMicro::class, 'backTools'])->name('back.tools');
         Route::get('/descargar-formatos', [BackendController::class, 'descargarFormatoClientes_xlsx'])->name('descargar.formatos');        
         Route::post('/cufes-folios', [FacturaController::class, 'obtenerCUFES_Folios'])->name('obtener.cufes');
         Route::post('/refacturar-xml', [FacturaController::class, 'refacturarXML'])->name('refacturar.xml');
+        Route::post('/remplazar-folios', [FacturaController::class, 'remplazarFolios'])->name('remplazar.folios');    
         Route::post('/errores-json', [BackendController::class, 'obtenerErrores_JSON'])->name('obtener.errores');
         Route::post('/cargar-clientes', [BackendController::class, 'cargarClientes_xlsx'])->name('cargar.clientes');       
     });

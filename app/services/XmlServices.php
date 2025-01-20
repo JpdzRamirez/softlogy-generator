@@ -6,6 +6,7 @@ namespace app\services;
 use App\Contracts\XmlServicesInterface;
 use App\Models\Paises;
 
+use SimpleXMLElement;
 use Exception;
 
 class XmlServices implements XmlServicesInterface
@@ -131,5 +132,29 @@ class XmlServices implements XmlServicesInterface
         $xml->Encabezado->hora = $hora;
 
         return $xml;
+    }
+    public function xmlCambiarFolio($rowText, $nuevoFolio)
+    {
+        try {
+            // Limpiar la cadena de entrada
+            $rowText = str_replace(';NULL;', '', $rowText); // Eliminar ;NULL;
+            $rowText = str_replace(';', '', $rowText);
+            // armar el xml
+            $rowText = '<?xml version="1.0" encoding="UTF-8"?>' . $rowText;
+
+            $xml = simplexml_load_string($rowText);
+            // Cambiamos el folio
+            $xml->Encabezado->folio = $nuevoFolio;
+            $xml->Encabezado->nciddoc = $xml->Encabezado->prefijo.$nuevoFolio;
+            $fecha = now()->format('Y-m-d');
+            $hora = now()->subHour()->format('H:i:s');
+            $xml->Encabezado->fecha = $fecha;
+            $xml->Encabezado->fechavencimiento = $fecha;
+            $xml->Encabezado->hora = $hora;
+            // Retornar el XML como texto
+            return $xml->asXML();
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 }

@@ -73,7 +73,7 @@
                 </div><!-- End Service Item -->
 
             </div>
-
+            {{-- Cergue de clientes HelpDesk--}}
             <div class="col gy-4">
 
                 <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
@@ -91,11 +91,11 @@
                         </div>
                         <form id="formUsersFile">
                             <div class="mb-3">
-                                <label for="usersFile" class="form-label">Archivo Excel Formato- XLSS</label>
+                                <label for="usersFile" class="form-label">Archivo Excel Formato- XlsX</label>
                                 <input class="form-control" required name="usersFile" type="file" id="usersFile">
                             </div>
                             <button type="button" id="usersFileButton" style="background: #27303F; margin:auto;"
-                                class="btn btn-primary mb-3">Procesar TXT</button>
+                                class="btn btn-primary mb-3">Procesar XlsX</button>
                         </form>
                     </div>
                 </div><!-- End Service Item -->
@@ -271,6 +271,45 @@
                 </div><!-- End Service Item -->
 
             </div>
+            {{-- End Refacturación--}}
+
+            {{-- Remplzar folios facturas --}}
+            <div class="col gy-4">
+
+                <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
+                    <div class="service-item position-relative">
+                        <div class="icon"><i class="fa-solid fa-user"></i></div>
+                        <h4>Remplazar folios de facturas pisadas</h4>
+                        <p>Su uso está pensado para la Solucionar de forma masiva el cambiod e folio en facturas electrónicas
+                        </p>
+                        <form method="POST" action="{{route('remplazar.folios')}}" enctype="multipart/form-data">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="foliosPisados" class="form-label">Archivo Excel Formato- XlsX</label>
+                                <input class="form-control" required name="foliosPisados" type="file" id="foliosPisados">
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="inicioFolio" class="col-sm-2 col-form-label">Inicio</label>
+                                <div class="col-sm-10">
+                                    <input type="number" name="inicio" required class="form-control" id="inicioFolio"
+                                        placeholder="Ejemplo: 301">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="finFolio" class="col-sm-2 col-form-label">Fin</label>
+                                <div class="col-sm-10">
+                                    <input type="number" name="fin" required class="form-control" id="finFolio"
+                                        placeholder="Ejemplo: 1520">
+                                </div>
+                            </div>
+                            <button type="submit" style="background: #27303F; margin:auto;"
+                                class="btn btn-primary mb-3">Procesar XlsX</button>
+                        </form>
+                    </div>
+                </div><!-- End Service Item -->
+
+            </div>
+
         </div>
 
     </section><!-- /Featured Services Section -->

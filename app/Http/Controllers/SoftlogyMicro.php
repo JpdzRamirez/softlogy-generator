@@ -28,4 +28,8 @@ class SoftlogyMicro extends Controller
         $paises = Paises::all();
         return view('pages.softlogy-tools', compact('paises'));
     }
+    public function backTools(){
+        $paises = Paises::all();
+        return view('pages.softlogy-tools', compact('paises'));
+    }
 }
