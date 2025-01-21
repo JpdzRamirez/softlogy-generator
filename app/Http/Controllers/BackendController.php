@@ -265,4 +265,14 @@ class BackendController extends Controller
         }
 
     }
+    public function descargarFoliosPisados($filename)
+    {
+        $path = storage_path("app/public/{$filename}");
+
+        if (file_exists($path)) {
+            return response()->download($path);
+        }
+
+        abort(404, "El archivo no existe.");
+    }
 }

@@ -140,7 +140,6 @@ class XmlServices implements XmlServicesInterface
             $rowText = str_replace(';NULL;', '', $rowText); // Eliminar ;NULL;
             $rowText = str_replace(';', '', $rowText);
             // armar el xml
-            $rowText = '<?xml version="1.0" encoding="UTF-8"?>' . $rowText;
 
             $xml = simplexml_load_string($rowText);
             // Cambiamos el folio
@@ -151,8 +150,13 @@ class XmlServices implements XmlServicesInterface
             $xml->Encabezado->fecha = $fecha;
             $xml->Encabezado->fechavencimiento = $fecha;
             $xml->Encabezado->hora = $hora;
-            // Retornar el XML como texto
-            return $xml->asXML();
+
+            $xmlString = $xml->asXML();
+            // Eliminar la primera línea (declaración XML) si existe
+            $xmlString = preg_replace('/^<\?xml.*\?>\s*/', '', $xmlString);
+
+            // Retornar el XML como texto sin la declaración
+            return $xmlString;
         } catch (Exception $e) {
             throw $e;
         }

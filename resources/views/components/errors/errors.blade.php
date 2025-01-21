@@ -63,17 +63,19 @@
       </div>
       <hr>
       <div class="alert alert-success">
-        <ul>
-          @foreach (session('response_process') as $fila)
-              <li>Fila {{ $fila }}</li>
-          @endforeach
-        </ul>
+        @if (!empty(session('response_process')))
+          <ul>         
+              @foreach (session('response_process') as $fila)
+                  <li>Fila {{ $fila }}</li>
+              @endforeach          
+          </ul>
+        @endif
     </div>
-    @if (session('response_file'))
-        <a href="{{ asset('storage/' . session('response_file')) }}" class="btn btn-info">
+      @if (session('response_file'))
+        <a href="{{ route('descargar.pisados', session('response_file')) }}" class="btn btn-info">
             Descargar archivo procesado
         </a>
-    @endif
+      @endif
     </section>
     <footer class="modal-errors-container-footer">            
       <button class="button-errors is-primary">Accept</button>

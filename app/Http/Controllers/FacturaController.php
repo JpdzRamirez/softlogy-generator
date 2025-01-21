@@ -127,10 +127,12 @@ class FacturaController extends Controller
             'inicio' => 'required|integer',
             'fin' => 'required|integer',
         ]);
-        
-        $nuevoFolio=$request['inicio'];
+    
+        $nuevoFolio = $request['inicio'];
         $filasNoProcesadas = []; // Inicializamos el array para las filas no procesadas.
-        $filePath = null; // Inicializamos la ruta del archivo procesado.
+        $responses = []; // Almacena los responses como cadenas.
+        $fileName = 'responses.txt'; // Nombre del archivo generado.
+        $filePath = storage_path("app/public/{$fileName}"); // Ruta completa del archivo.
     
         try {
             // Cargar el archivo y leer la hoja principal
@@ -141,14 +143,13 @@ class FacturaController extends Controller
     
             // Verificar y procesar las filas
             if ($filas > 1) {
-                for ($i = 1; $i <= $filas; $i++) { // Comienza en la fila 7
-
+                for ($i = 2; $i <= $filas; $i++) {
                     if ($nuevoFolio > $request['fin']) {
                         break; // Detenemos el proceso si alcanzamos el fin del rango
                     }
-
+    
                     $dataInput = [
-                        'factura' => $hoja->getCell("A$i")->getValue() ?: '',
+                        'factura' => $hoja->getCell("M$i")->getValue() ?: '',
                     ];
     
                     if (empty($dataInput['factura'])) {
@@ -157,31 +158,26 @@ class FacturaController extends Controller
                     } else {
                         // Convertir la celda a XML y procesar                        
                         $response = $this->xmlService->xmlCambiarFolio($dataInput['factura'], $nuevoFolio);
-                        $hoja->setCellValue("B$i", $response); // Ejemplo de guardar cambios en columna B                        
+                        $responses[] = $response; // Agregar el response al array con el número de fila
                         $nuevoFolio++;
                     }
                 }
     
-                // Guardar el Excel procesado en una ubicación temporal
-                $filePath = storage_path('app/public/Formato_Cargue_Procesado.xlsx');
-                $writer = IOFactory::createWriter($excel, 'Xlsx');
-                $writer->save($filePath);
+                // Crear el archivo TXT con los responses
+                file_put_contents($filePath, implode('', $responses));
             }
     
             // Redirigir con mensajes en la sesión
             return redirect()->route('back.tools')->with([
                 'response_process' => $filasNoProcesadas,
                 'mensage_session' => 'El archivo ha sido procesado correctamente.',
-                'response_file' => 'Formato_Cargue_Procesado.xlsx',
+                'response_file' => $fileName,
             ]);
+    
         } catch (Exception $e) {
             // En caso de error, redirigir con mensaje de error
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
-        } finally {
-            // Eliminar el archivo temporal si existe
-            if ($filePath && file_exists($filePath)) {
-                unlink($filePath);
-            }
         }
     }
+    
 }
