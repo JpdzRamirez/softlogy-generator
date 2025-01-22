@@ -1,22 +1,43 @@
 <div>
     <div class="container">
+        {{-- HEADER TICKET LIST SECTION --}}
         <div class="row">
-            <div class="header-list-actions">
-                <div class="col-lg-10 mx-auto mb-4">
-                    <div class="section-title text-center ">
-                        <h3 class="top-c-sep">Gestiona tus tickets de forma inmediata</h3>
-                        <p>Crea, busca y accede a soporte técnico a un solo click</p>
+                <div class="card-tickets-title">
+                    <div class="header-ticket-title clearfix">
+                        <div class="thumbnail"><img class="left" src="https://herothemes.com/wp-content/uploads/how-to-create-a-support-ticket-form2x-1200x600.png" /></div>
+                        <div class="right">
+                            <h1>¿Cómo crear tus tickets de soporte?</h1>
+                            <div class="author"><img src="https://randomuser.me/api/portraits/men/95.jpg" />
+                                <h2>SoftlogyTech</h2>
+                            </div>
+                            <div class="separator"></div>
+                            <p>
+                                Crear una solicitud de soporte no puede ser más fácil. Solo necesitas seguir unos pocos pasos para encontrar ayuda inmediata y especializada. Nuestro equipo está siempre disponible para resolver tus consultas y garantizar una solución eficiente a tus problemas.                                
+                            </p>
+                        </div>
                     </div>
+                    <div class="group-ticket-actions">
+                        <div class="date-ticket">
+                            <div class="date">
+                                <h5>22</h5>
+                                <span>ENERO</span>
+                            </div>                                 
+                        </div>                   
+                        <div class="buttons-actions">
+                            <div class="multi-button">
+                                <button class="button" id="cut"><span>      Cut</span></button>
+                                <button class="button" id="copy"></><span>      Copy</span></button>
+                                <button class="button" id="paste"><span>      Paste</span></button>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="fab"><i class="fa fa-arrow-down fa-3x"> </i></div>
                 </div>
-                <div class="header-list-buttons">
-                    {{-- <button class="button" id="cut"><span> </span></button> --}}
-                    <button class="button" id="copy"></><span> Crear ticket</span></button>
-                    {{-- <button class="button" id="paste"><span> Paste</span></button> --}}
-                </div>
-
-            </div>
         </div>
+        {{-- END HEADER TICKET LIST SECTION --}}
 
+
+        {{-- TICKET LIST SECTION --}}
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <div class="career-search mb-60">
@@ -49,10 +70,9 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-lg-3 my-3">
-                                <button type="button" class="btn btn-lg btn-block btn-light btn-custom"
-                                    id="contact-submit">
-                                    Search
+                            <div class="col-md-6 col-lg-3 my-3 inline-flex">
+                                <button type="button" id="search" class="button btn btn-lg btn-block btn-light btn-custom">
+                                    <span>      Seacrh</span>
                                 </button>
                             </div>
                         </div>
@@ -187,6 +207,7 @@
                 <!-- END Pagination -->
             </div>
         </div>
+        {{-- END TICKET LIST SECTION --}}
 
     </div>
 </div>

@@ -1,14 +1,14 @@
 @use "../../utils" as *;
-.header-list-actions {
-    background-color: white;
-    border: 1px solid white;
-    border-radius: 14px;
-    padding: 7px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 15px 0 rgba(0, 0, 0, 0.1);
-    place-items: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.buttons-actions {
+    // background-color: white;
+    // border: 1px solid white;
+    // border-radius: 14px;
+    // padding: 7px;
+    // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 15px 0 rgba(0, 0, 0, 0.1);
+    // place-items: center;
+    // display: flex;
+    // flex-direction: column;
+    // align-items: center;
     #cut {
         background-color: var(--accent-color);
         border: 1px solid var(--accent-color);
@@ -35,10 +35,10 @@
       
       .button { 
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.09), 0 6px 15px 0 rgba(0, 0, 0, 0.09);
-        padding: 10px 17px 10px 17px;
-          font: 15px Ubuntu;
+        padding: 10px 17px 10px 17px;          
         color: white;
         border-radius: 7px;
+        width: 5.5em;
       }
       
       .button span {

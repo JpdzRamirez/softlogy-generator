@@ -5,13 +5,54 @@
     background-color: var(--accent-color);
     border-radius: 5px;
     padding: 0 16px;
+    #keywords:focus{
+      box-shadow: 0 0 0 .25rem rgba(255, 255, 255, 0.25) !important;      
+      border-color: #ffffff !important;
+      border: 1px solid !important;
+    }
+    #search {
+      background-color: rgb(39,166,75);
+      border: 1px solid rgb(39,166,75);
+    }
+    #search span:after {
+      font-family: FontAwesome;
+      content: "\f002";
+    }
+    .button { 
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.09), 0 6px 15px 0 rgba(0, 0, 0, 0.09);
+      padding: 10px 17px 10px 17px;
+      color: white;
+      border-radius: 7px;
+      width: 6.5em;
+    height: -webkit-fill-available;
+    }
+    .button span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      transition: 0.5s;
+    }
+    .button:hover span {
+      padding-right: 25px;
+    }
+    .button span:after {
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      right: -20px;
+      transition: 0.5s;
+    }
+    .button:hover span:after {
+      opacity: 1;
+      right: 0;
+    }
   }
   
   .career-form .form-control {
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 0;
+    background-color: rgba(255, 255, 255, 0.2);    
     padding: 12px 15px;
     color: #fff;
+    border: 0;
   }
   
   .career-form .form-control::-webkit-input-placeholder {
@@ -44,6 +85,10 @@
     text-align: left;
     height: auto;
     background-image: none;
+    appearance: none; 
+    option{
+      color:#333;
+    }
   }
   
   .career-form .custom-select:focus {
@@ -59,10 +104,10 @@
     position: absolute;
     right: 15px;
     top: calc(50% - 14px);
+    font-family: FontAwesome;
     font-size: 18px;
     color: #ffffff;
-    content: '\F2F9';
-    font-family: "Material-Design-Iconic-Font";
+    content: '\f0d7';    
   }
   
   .filter-result .job-box {
