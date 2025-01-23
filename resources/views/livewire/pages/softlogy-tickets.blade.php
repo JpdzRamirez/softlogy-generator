@@ -38,7 +38,7 @@
 
 
         {{-- TICKET LIST SECTION --}}
-        <div class="row">
+        <div class="row" id="listTicket" >
             <div class="col-lg-10 mx-auto">
                 <div class="career-search mb-60">
 
@@ -70,7 +70,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-lg-3 my-3 inline-flex">
+                            <div class="col-md-6 col-lg-3 my-3 d-inline-flex justify-content-center">
                                 <button type="button" id="search" class="button btn btn-lg btn-block btn-light btn-custom">
                                     <span>      Seacrh</span>
                                 </button>
