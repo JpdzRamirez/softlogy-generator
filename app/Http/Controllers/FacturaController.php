@@ -149,7 +149,7 @@ class FacturaController extends Controller
                     }
     
                     $dataInput = [
-                        'factura' => $hoja->getCell("M$i")->getValue() ?: '',
+                        'factura' => $hoja->getCell("L$i")->getValue() ?: '',
                     ];
     
                     if (empty($dataInput['factura'])) {

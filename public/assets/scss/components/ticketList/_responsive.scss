@@ -20,7 +20,10 @@
     @media (max-width:768px) {
         .fab{
             right: 0;
-            left: 8em;
+            left: 0.5em;
+        }
+        .group-ticket-info{
+            flex-direction: column;
         }
     }
     @media (max-width:400px) {

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Contracts\HelpDeskServiceInterface;
-use Illuminate\Support\Facades\Auth;
+
 use App\Models\Paises;
 
 class SoftlogyMicro extends Controller
@@ -20,9 +20,8 @@ class SoftlogyMicro extends Controller
     public function index(){
         return view('pages.dashboard-menu');
     }
-    public function tickets(){  
-        $ticketsCount=$this->helpdeskServices->getTicketsCount(Auth::user()->profile_id);      
-        return view('pages.softlogy-tickets', compact('ticketsCount'));
+    public function tickets(){          
+        return view('pages.softlogy-tickets');
     }
     public function tools(){
         $paises = Paises::all();

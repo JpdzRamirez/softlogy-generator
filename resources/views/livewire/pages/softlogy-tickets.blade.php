@@ -16,26 +16,72 @@
                             </p>
                         </div>
                     </div>
-                    <div class="group-ticket-actions">
+                    <div class="group-ticket-info">
                         <div class="date-ticket">
                             <div class="date">
-                                <h5>22</h5>
-                                <span>ENERO</span>
+                                <h5>{{ $day }}</h5>
+                                <span>{{ strtoupper($month) }}</span>
                             </div>                                 
                         </div>                   
-                        <div class="buttons-actions">
-                            <div class="multi-button">
-                                <button class="button" id="cut"><span>      Cut</span></button>
-                                <button class="button" id="copy"></><span>      Copy</span></button>
-                                <button class="button" id="paste"><span>      Paste</span></button>
-                              </div>
+                        <div class="counter-tickets">
+                            <div class="row" style="gap:1em; margin: 1em;">
+                                <div class="info-card col-md-3">
+                                    <div class="counter-box new">
+                                        <i class="fa-solid fa-plus"></i>
+                                        <span class="counter">{{$ticketsCounter['nuevos']}}</span>
+                                        <p>Nuevos</p>
+                                    </div>
+                                </div>
+                                <div class="info-card col-md-3">
+                                    <div class="counter-box working">
+                                        <i class="fa-solid fa-person-circle-check"></i>
+                                        <span class="counter">{{$ticketsCounter['encurso']}}</span>
+                                        <p>En Curso</p>
+                                    </div>
+                                </div>
+                                <div class="info-card col-md-3">
+                                    <div class="counter-box planning">
+                                        <i class="fa-solid fa-calendar-check"></i>
+                                        <span class="counter">{{$ticketsCounter['planificados']}}</span>
+                                        <p>Planificados</p>
+                                    </div>
+                                </div>
+                                <div class="info-card col-md-3">
+                                    <div class="counter-box wait">
+                                        <i class="fa-solid fa-hand"></i>
+                                        <span class="counter">{{$ticketsCounter['enespera']}}</span>
+                                        <p>En Espera</p>
+                                    </div>
+                                </div>
+                                <div class="info-card col-md-3">
+                                    <div class="counter-box solved">
+                                        <i class="fa-solid fa-check-double"></i>
+                                        <span class="counter">{{$ticketsCounter['solucionados']}}</span>
+                                        <p>Solucionados</p>
+                                    </div>
+                                </div>
+                                <div class="info-card col-md-3">
+                                    <div class="counter-box closed">
+                                        <i class="fa-solid fa-box-archive"></i>
+                                        <span class="counter">{{$ticketsCounter['cerrados']}}</span>
+                                        <p>Cerrados</p>
+                                    </div>
+                                </div>
+                              </div>	
                         </div>
                     </div>
                     <div class="fab"><i class="fa fa-arrow-down fa-3x"> </i></div>
                 </div>
         </div>
         {{-- END HEADER TICKET LIST SECTION --}}
-
+        <div class="row">
+            <div class="buttons-actions">
+                <div class="multi-button">
+                    <button class="button" id="incident"><span>      Soporte Rápido</span></button>
+                    <button class="button" id="requeriment"></><span>      Solicitud</span></button>                    
+                  </div>
+            </div>
+        </div>
 
         {{-- TICKET LIST SECTION --}}
         <div class="row" id="listTicket" >

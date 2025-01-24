@@ -39,7 +39,7 @@
             transform: translate(-50%, -50%);
         }
     } /*object-fit: cover;*/
-    .group-ticket-actions {
+    .group-ticket-info {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -55,16 +55,6 @@
                     font-size: 2rem;
                     color: #c3c3c3;
                 }
-            }
-        }
-        .buttons-actions {
-            margin-left: 10em;
-            /* Those futur buttons */
-            li {
-                display: inline;
-                list-style: none;
-                padding-right: 40px;
-                color: #7b7b7b;
             }
         }
     }
