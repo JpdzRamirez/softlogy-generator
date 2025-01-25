@@ -3,9 +3,6 @@
 .confirmLogout{
   visibility: hidden;
   cursor: pointer;
-  & ~ li{
-
-  }
 }
 .logout-container{
     margin-right: 1em;

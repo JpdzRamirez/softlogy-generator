@@ -43,7 +43,7 @@ class UserRepository
      */
     public function findByName(string $name)
     {
-        return $this->model->where('name', $name)->firstOrFail();
+        return $this->model->where('name', $name)->first();
     }
     /**
      * Create a user in the local database.

@@ -274,7 +274,7 @@ h6 {
   background: color-mix(in srgb, var(--accent-color), transparent 15%);
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 999px) {
   .header .btn-getstarted {
     order: 2;
     margin: 0 15px 0 0;
@@ -363,6 +363,9 @@ h6 {
     visibility: visible;
     width: 100%;
   }
+  .logout-list{
+    display: none;
+  }
 
   .navmenu li:hover>a,
   .navmenu .active,
@@ -428,7 +431,7 @@ h6 {
 }
 
 /* Mobile Navigation */
-@media (max-width: 1199px) {
+@media (max-width: 1200px) {
   .mobile-nav-toggle {
     color: var(--nav-color);
     font-size: 28px;
@@ -446,7 +449,7 @@ h6 {
     display: none;
     list-style: none;
     position: absolute;
-    inset: 60px 20px 20px 20px;
+    inset: 60px 10em 40em 10em;
     padding: 10px 0;
     margin: 0;
     border-radius: 6px;

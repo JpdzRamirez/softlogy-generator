@@ -21,7 +21,19 @@
                             <i class="fa-solid fa-swatchbook"></i> Dashboard<br>
                         </a>
                     </li>
+                    @if (in_array(Auth::user()->profile_id, [4, 5, 7, 9]))
                     <li>
+                        <a href="{{ route('softlogy.tools') }}" class="{{ request()->routeIs('softlogy.tools') ? 'active' : '' }}">
+                            <i class="fa-solid fa-screwdriver-wrench"></i> Tools<br>
+                        </a>
+                    </li>
+                    @endif
+                    <li>
+                        <a href="{{ route('softlogy.tickets') }}" class="{{ request()->routeIs('softlogy.tickets') ? 'active' : '' }}">
+                            <i class="fa-solid fa-ticket"></i> Tickets<br>
+                        </a>
+                    </li>
+                    <li class="logout-list">
                         <a class="confirmLogout" id="confirmLogout2">
                             <i class="fa-solid fa-right-from-bracket"></i> Log Out<br>
                         </a>
