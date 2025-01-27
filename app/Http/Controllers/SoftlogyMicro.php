@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Contracts\HelpDeskServiceInterface;
 
 use App\Models\Paises;
 
 class SoftlogyMicro extends Controller
 {   
-    protected $helpdeskServices;
 
     // Inyección de dependencias
-    public function __construct(HelpDeskServiceInterface $helpdeskServices)
+    public function __construct()
     {
-        $this->helpdeskServices = $helpdeskServices; // Aquí se inyecta la implementación de la interfaz
+        
     }
 
     public function index(){

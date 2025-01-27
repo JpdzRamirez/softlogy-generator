@@ -82,4 +82,17 @@ class GlpiUser extends Model
     {
         return $this->hasOne(GlpiUserEmail::class, 'users_id');
     }
+            /*  
+    ***************************************************
+               👚 Complementary Data info
+    ***************************************************                    
+    */
+    /**
+     * location Name
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function tickets()
+    {
+        return $this->belongsTo(GlpiTicket::class, 'users_id_recipient');
+    }
 }
