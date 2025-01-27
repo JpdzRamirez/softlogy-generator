@@ -1,0 +1,100 @@
+@use "../../utils" as *;
+
+$base-color: #0ea2bd;
+$modified-value: 40 + (lightness($base-color) * 20);
+$opacity: 0.3 + (1 * 0.8);
+
+.tutorialButton{
+    outline-color: hsl(0 0% calc(0 * 100%));
+    --padding: calc(var(--font-size)* 0.75);
+    cursor: pointer;
+    letter-spacing: calc(var(--font-size)* 0.02);
+    font-family: sans-serif;
+    font-weight: bold;
+    background: var(--accent-color);
+    font-size: var(--font-size);
+    border-color: transparent;
+    border-radius: 1em;
+    color: var(--surface-color);
+    position: relative;
+    transition: border-color var(--transition);
+    max-width: 20em;
+    position: absolute;
+    z-index: 1;
+    top: 1em;
+}
+.tutorialButton > span{
+        background: var(--accent-color);
+        padding: calc(var(--font-size)* 0.9) calc(var(--font-size)* 1.36);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: calc((var(--font-size)* 1.75)*(1 - var(--hovered, 0))) 1fr calc((var(--font-size)* 1.75)* var(--hovered, 0));
+        align-items: center;
+        transition: grid-template-columns var(--transition);
+}
+  
+  .tutorialButton:after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--font-size) * -0.025);
+    background: var(--accent-color);
+    filter: blur(calc(var(--font-size) * 0.75));
+    scale: var(--hovered, 0);
+    z-index: -1;
+    transition: scale var(--transition);
+  }
+  
+  .tutorialButton:hover {
+    --hovered: 1;
+  }
+  
+  .tutorialButton span span:nth-of-type(1) {
+    padding-right: var(--padding);
+    width: var(--font-size);
+  }
+  
+  .tutorialButton span span:nth-of-type(3) {
+    padding-left: var(--padding);
+    width: var(--font-size);
+  }
+  
+  .tutorialButton svg {
+    display: inline-block;
+    transition: translate var(--transition) ease-in-out, opacity var(--transition) ease-in-out;
+  }
+  .tutorialButton i {
+    display: inline-block;
+    transition: translate var(--transition) ease-in-out, opacity var(--transition) ease-in-out;
+  }
+  
+  
+  .tutorialButton button:is(:focus-visible, :hover) {
+    --hovered: 1;
+  }
+  .tutorialButton a:is(:focus-visible, :hover) {
+    --hovered: 1;
+  }
+  
+  .tutorialButton span span:nth-of-type(3) svg {
+    stroke-width: 3;
+    translate: calc((1 - var(--hovered, 0)) * (var(--font-size) * 3)) 8%;
+    width: calc(var(--font-size) * 1);
+    opacity: var(--hovered, 0);
+  }
+  .tutorialButton span span:nth-of-type(3) i {
+    stroke-width: 3;
+    translate: calc((1 - var(--hovered, 0)) * (var(--font-size) * 3)) 8%;
+    width: calc(var(--font-size) * 1);
+    opacity: var(--hovered, 0);
+  }
+  
+  .tutorialButton span span:nth-of-type(1) svg {
+    stroke-width: 3;
+    translate: calc(((var(--hovered, 0) * var(--font-size)) * -3) + 10%) 8%;
+    width: calc(var(--font-size) * 0.8);
+  }
+  .tutorialButton span span:nth-of-type(1) i {
+    stroke-width: 3;
+    translate: calc(((var(--hovered, 0) * var(--font-size)) * -3) + 10%) 8%;
+    width: calc(var(--font-size) * 0.8);
+  }

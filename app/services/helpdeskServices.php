@@ -5,7 +5,6 @@ namespace app\services;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\HelpDeskServiceInterface;
 
-use DOMDocument;
 use Exception;
 
 class HelpdeskServices implements HelpDeskServiceInterface
@@ -397,6 +396,12 @@ class HelpdeskServices implements HelpDeskServiceInterface
             return ['error' => "ERROR DE INTEGRACION: " . $e->getMessage()];
         }
         
+    }
+
+    public function createTicket(array $ticketData){
+        // Aseguramos que no haya límites de tiempo y memoria
+        set_time_limit(0);  // Sin límite de tiempo de ejecución
+        ini_set("memory_limit", -1);  // Sin límite de memoria
     }
 
 }

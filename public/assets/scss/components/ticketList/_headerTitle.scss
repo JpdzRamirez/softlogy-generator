@@ -10,11 +10,22 @@
     -moz-box-shadow: 10px 10px 93px 0px rgba(0, 0, 0, 0.75);
     box-shadow: 10px 10px 93px 0px rgba(0, 0, 0, 0.75);
 
-    .header-ticket-title {
+    .header-ticket-title {        
         display: grid;
         grid-template-columns: 1.5fr 1fr;
         grid-template-rows: 1fr;
         gap: 0px 0px;
+        transition: grid-template-columns var(--transition);
+        .icon-button{
+            position: absolute;
+            right: -0.8em;
+            top: -2em;
+            height: 30px;
+            background-color: #e90a0a75;        
+        }
+        .icon-button:hover{
+            background-color: #868686cb;        
+        }
     }
     /* Image on the left side */
     .thumbnail {
@@ -106,6 +117,7 @@
     /* Floating action button */
     .fab {
         position: absolute;
+        cursor: pointer;
         right: 50px;
         bottom: -40px;
         box-sizing: border-box;

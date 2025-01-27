@@ -11,4 +11,5 @@ interface HelpDeskServiceInterface
 
     public function getTicketsUser(int $idUser);
     
+    public function createTicket(array $ticketData);
 }

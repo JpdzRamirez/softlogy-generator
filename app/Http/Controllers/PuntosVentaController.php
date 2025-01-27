@@ -10,10 +10,17 @@ use App\Exceptions\UserNotFoundException;
 use App\Exceptions\AuthenticationException;
 use App\Exceptions\UserInactiveException;
 
+use Illuminate\Http\Request;
+
 use Exception;
 
 class PuntosVentaController extends Controller
-{
+{   
+    protected $helpDeskServiceInterface;
+    public function __construct(HelpDeskServiceInterface $helpDeskServiceInterface)
+    {
+        $this->helpDeskServiceInterface = $helpDeskServiceInterface;
+    }
     public function loginOAuth(ValidateLoginRequest $request, AuthServicesInterface $auth,HelpDeskServiceInterface $helpServices )
     {
                 
@@ -84,5 +91,11 @@ class PuntosVentaController extends Controller
             return response()->json(['error' => 'Error interno del servidor'], 500);   
         }
     }
+    }
+
+    public function createFastTicket(Request $request)
+    {
+        // Lógica para crear un ticket rápido
+        $this->helpDeskServiceInterface->createTicket($request->all());
     }
 }

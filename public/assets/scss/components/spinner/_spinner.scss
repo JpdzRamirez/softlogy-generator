@@ -1,0 +1,80 @@
+/*     SPINNER     */
+.spinner {
+    position: fixed;
+    top: 40vh;
+    left: 45vw;
+    z-index: 10;
+    width: 150px;
+    height: 150px;
+    background: transparent;
+    border: 3px solid #3c3c3c;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 150px;
+    font-family: sans-serif;
+    font-weight: bolder;
+    font-size: 20px;
+    color: var( --accent-color);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px var( --accent-color);
+    box-shadow: 0 0 20px rgba(0, 0, 0, .5);
+  
+    span {
+      display: block;
+      position: absolute;
+      top: calc(50% - 2px);
+      left: 50%;
+      width: 50%;
+      height: 4px;
+      background: transparent;
+      transform-origin: left;
+      animation: animate 2s linear infinite;
+    }
+  
+    span:before {
+      content: '';
+      position: absolute;
+      width: 16px;
+      z-index: 3;
+      height: 16px;
+      border-radius: 50%;
+      background: var( --accent-color);
+      top: -6px;
+      right: -8px;
+      box-shadow: 0 0 20px  var( --accent-color);
+    }
+  }
+  
+  .spinner:before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    width: 105%;
+    height: 105%;
+    border: 4px solid rgba(0, 0, 0, 0);
+    border-top: 4px solid var(--accent-color);
+    border-right: 4px solid var(--accent-color);
+    border-radius: 50%;
+    animation: animateC 2s linear infinite;
+  }
+  
+  .spinner:after {
+    content: '';
+    position: inherit;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: -1;
+    height: 100vh;
+    backdrop-filter: blur(2px);
+    background-color: var(--scrollbar-bg);
+  }
+  
+  .spinner.hidden {
+    opacity: 0;
+    display: none;
+    pointer-events: none;
+    /* Evitar que interactúe */
+  }

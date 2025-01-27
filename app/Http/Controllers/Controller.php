@@ -34,4 +34,12 @@ abstract class Controller
 
         return $xml->asXML();
     }
+    public function convertBase64($imageData)
+    {
+        if (file_exists($imageData)) {
+            $imageData = file_get_contents($imageData);
+            return 'data:image/png;base64,' . base64_encode($imageData);
+        }
+        return null;
+    }
 }

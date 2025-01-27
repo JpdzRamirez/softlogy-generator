@@ -34,7 +34,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard', [SoftlogyMicro::class, 'index'])->name('dashboard');
 
-    Route::get('/softlogy-tickets', [SoftlogyMicro::class, 'tickets'])->name('softlogy.tickets');    
+    Route::get('/softlogy-tickets', [SoftlogyMicro::class, 'tickets'])->name('softlogy.tickets');
+
+    Route::post('/submit-ticket', [PuntosVentaController::class, 'createFastTicket'])->name('create.fastTickets');    
     
     Route::middleware(['profile:4,5,9,10'])->group(function () {        
         Route::get('/softlogy-tools', [SoftlogyMicro::class, 'tools'])->name('softlogy.tools');

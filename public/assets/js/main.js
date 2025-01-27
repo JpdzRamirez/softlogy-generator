@@ -252,9 +252,11 @@
     window.addEventListener("load", navmenuScrollspy);
     document.addEventListener("scroll", navmenuScrollspy);
 
+    /*
+        TOOLS PAGE
+    */
     $("#usersFileButton").on("click", function () {
         // Mostrar el modal con el id 'adminUserModal'
-        console.log("clickedFileButton");
         let adminModal = new bootstrap.Modal(
             document.getElementById("adminUserModal")
         );
@@ -270,15 +272,99 @@
         // Limpiar los campos del formulario
         $("#authFormModal")[0].reset();
     });
-    $('.counter').each(function() {
-        $(this).prop('Counter', 0).animate({
-            Counter: $(this).text()
-        }, {
-            duration: 4000,
-            easing: 'swing',
-            step: function(now) {
-                $(this).text(Math.ceil(now));
+    $(".counter").each(function () {
+        $(this)
+            .prop("Counter", 0)
+            .animate(
+                {
+                    Counter: $(this).text(),
+                },
+                {
+                    duration: 4000,
+                    easing: "swing",
+                    step: function (now) {
+                        $(this).text(Math.ceil(now));
+                    },
+                }
+            );
+    });
+
+    /*
+        TICKET PAGE
+    */
+    const openTutorialButton = $("#openTutorial");
+    const closeTutorialButton = $("#closeTutorial");
+    const headerTicket = $(".header-ticket-title");
+
+    const openTicketList =$("#openTicketList");
+    const listTickets =$("#listTickets");
+
+    openTicketList.on("click", function () {
+        if(listTickets.css("display") === "flex") {
+            listTickets.css("animation", "slide-out-top 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both");           
+            setTimeout(() => {
+                listTickets.css("display", "none");
+            },600);
+        }else{
+            listTickets.css("animation", "slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both");
+            listTickets.css("display", "flex");
+        }        
+    });
+
+    // Función para aplicar estilos según media query
+    function applyResponsiveStyles() {
+        if (window.matchMedia("(max-width: 991px)").matches) {
+            // Estilos para pantallas pequeñas
+            if (headerTicket.css("display") !== "none") {
+                headerTicket.css({
+                    display: "flex",
+                    "flex-direction": "column",
+                    "align-items": "center",
+                });
             }
-        });
+        } else {
+            // Estilos para pantallas grandes
+            if (headerTicket.css("display") !== "none") {
+                headerTicket.css({
+                    display: "grid",
+                });
+            }
+        }
+    }
+
+    // Mostrar el tutorial y ocultar el botón "Tutorial"
+    openTutorialButton.click(function () {
+        if (window.matchMedia("(max-width: 991px)").matches) {
+            headerTicket.css({
+                display: "flex",
+                "flex-direction": "column",
+                "align-items": "center",
+            }); // Mostrar el tutorial en pantallas pequeñas
+        } else {
+            headerTicket.css("display", "grid"); // Mostrar el tutorial en pantallas grandes
+        }
+        openTutorialButton.css("display", "none"); // Ocultar el botón "Tutorial"
+    });
+
+    // Ocultar el tutorial y mostrar el botón "Tutorial"
+    closeTutorialButton.click(function () {
+        headerTicket.css("display", "none"); // Ocultar el tutorial
+        openTutorialButton.css("display", "block"); // Mostrar el botón "Tutorial"
+    });
+
+    // Escuchar cambios en el tamaño de la ventana
+    $(window).resize(function () {
+        applyResponsiveStyles();
+    });
+
+    // Aplicar estilos inicialmente al cargar la página
+    applyResponsiveStyles();
+
+    $("#incident").on("click", function () {
+        // Mostrar el modal con el id 'fastTicketModal'
+        let adminModal = new bootstrap.Modal(
+            document.getElementById("fastTicketModal")
+        );
+        adminModal.show();
     });
 })();

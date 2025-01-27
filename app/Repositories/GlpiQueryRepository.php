@@ -60,19 +60,19 @@ class GlpiQueryRepository
 
                 $data = [
                     'name' => $user->name,
-                    'realname' => $user->realname,
-                    'firstname' => $user->firstname,
+                    'realname' => $user->realname ? $user->name : null ,
+                    'firstname' => $user->firstname ? $user->fistname : null,
                     'email' => $user->email->email ?? "{$user->name}@softlogydummy.com",
                     'password' => $user->password, // Asegúrate de que esté encriptada si es necesario
-                    'phone' => $user->phone,
-                    'mobile' => $user->mobile,
+                    'phone' => $user->phone ? $user->phone : null,
+                    'mobile' => $user->mobile ? $user->mobile : null,
                     'entiti' => $user->entiti->name,
-                    'title' => $user->title->name,
-                    'location' => $user->location->name,
+                    'title' => $user->title->name ?? 'Sin título',
+                    'location' => $user->location->name ?? 'Sin ubicación',
                     'glpi_id' => $user->id,
                     'profile_id' => $user->id,
                     'is_active' => $user->is_active,
-                    'picture' => $user->picture
+                    'picture' => $user->picture ?? null,
                 ];
                 // Crear usuario local si no existe
                 $localUser = $this->userRepository->create($data);
