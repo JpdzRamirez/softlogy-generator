@@ -5,24 +5,27 @@ namespace app\services;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\HelpDeskServiceInterface;
 
+use App\Repositories\GlpiTicketsRepository;
+
 use Exception;
 
 class HelpdeskServices implements HelpDeskServiceInterface
 {
 
+    protected $glpiTicketRepository;
     /**
      * Create a new class instance.
      */
-    public function __construct()
+    public function __construct(GlpiTicketsRepository $glpiTicketRepository)
     {
-        //
+        $this->glpiTicketRepository = $glpiTicketRepository;
     }
     private function curlRequest($url)
     {
         $maxRetries = 3;
         $attempts = 0;
         $responseData = null;
-    
+
         while ($attempts < $maxRetries) {
             try {
                 $ch = curl_init();
@@ -31,85 +34,83 @@ class HelpdeskServices implements HelpDeskServiceInterface
                 curl_setopt($ch, CURLOPT_VERBOSE, true);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-    
+
                 $response = curl_exec($ch);
-    
+
                 if (curl_errno($ch)) {
                     throw new Exception('cURL Error: ' . curl_error($ch));
                 }
-    
+
                 curl_close($ch);
-    
+
                 // Eliminar caracteres "&" que no son entidades HTML
                 $response = preg_replace('/&(?![a-z0-9#]+;)/i', '', $response);
-    
+
                 // Decodificar JSON y verificar errores
                 $responseData = json_decode($response, true);
                 if (json_last_error() !== JSON_ERROR_NONE) {
                     throw new Exception('Error en la decodificación de JSON: ' . json_last_error_msg());
                 }
-    
+
                 return $responseData;
-    
             } catch (Exception $e) {
                 error_log("Error en intento $attempts: " . $e->getMessage());
                 $attempts++;
                 usleep(500000); // Esperar 0.5 segundos antes de intentar nuevamente
             }
         }
-    
+
         // Retornar null si no se pudo obtener una respuesta válida después de los intentos
         return null;
     }
 
     public function createLocation(array $location)
-    {   
+    {
         // Aseguramos que no haya límites de tiempo y memoria
         set_time_limit(0);  // Sin límite de tiempo de ejecución
         ini_set("memory_limit", -1);  // Sin límite de memoria
         // Iniciar la transacción
         DB::connection('mysql_second')->beginTransaction();
         // Consulta 
-        try{
-        //En caso de no tener ciudad  la obtenemos de la direccion, siempre debe haber direccion
-        if(empty($location['ciudad']) || $location['ciudad'] == '#N/A'){
-            $api_key=env('GOOGLE_KEY');
-            $address = $location['direccion'];
-            $encodedAddress = urlencode($address);
-            $url="https://maps.googleapis.com/maps/api/geocode/json?address={$encodedAddress}&language=ES&key={$api_key}";           
-            $ubicacion=$this->curlRequest($url);
-            if ($ubicacion && $ubicacion['status'] === 'OK') {
-                // Obtener el primer resultado
-                $result = $ubicacion['results'][0];;
-    
-                foreach ($result['address_components'] as $component) {
-                    if (in_array('locality', $component['types'])) {
-                        $location['ciudad'] = $component['long_name'];
-                    }
-                    if (in_array('administrative_area_level_1', $component['types'])) {
-                        $location['departamento'] = $component['long_name'];
-                    }
-                    if (in_array('postal_code', $component['types'])) {
-                        $location['codigo_postal'] = $component['long_name'];
+        try {
+            //En caso de no tener ciudad  la obtenemos de la direccion, siempre debe haber direccion
+            if (empty($location['ciudad']) || $location['ciudad'] == '#N/A') {
+                $api_key = env('GOOGLE_KEY');
+                $address = $location['direccion'];
+                $encodedAddress = urlencode($address);
+                $url = "https://maps.googleapis.com/maps/api/geocode/json?address={$encodedAddress}&language=ES&key={$api_key}";
+                $ubicacion = $this->curlRequest($url);
+                if ($ubicacion && $ubicacion['status'] === 'OK') {
+                    // Obtener el primer resultado
+                    $result = $ubicacion['results'][0];;
+
+                    foreach ($result['address_components'] as $component) {
+                        if (in_array('locality', $component['types'])) {
+                            $location['ciudad'] = $component['long_name'];
+                        }
+                        if (in_array('administrative_area_level_1', $component['types'])) {
+                            $location['departamento'] = $component['long_name'];
+                        }
+                        if (in_array('postal_code', $component['types'])) {
+                            $location['codigo_postal'] = $component['long_name'];
+                        }
                     }
                 }
-    
-            } 
-        }
-        //Obtenemos el ultimo ID de locations
-        $lastIdResult= DB::connection('mysql_second')
-        ->table('glpi_locations')
-        ->orderBy('id', 'desc') 
-        ->limit(1)
-        ->lockForUpdate() // Bloqueamos la fila seleccionada para evitar que otros la modifiquen
-        ->value('id');
-        // Acceder al ID y agregamos el siguiente valor
-        $lastId = $lastIdResult+1;
-        //Casting variables
-        $ancestorsCache = json_encode([$lastId => $lastId]);
-        $nombreDireccion = trim($location['nombre']); // Eliminar espacios al principio y al final
-        $nombreDireccion = str_replace(' ', '_', $nombreDireccion); // Reemplazar los espacios por _
-        $queryCreateLocation="INSERT INTO glpi_locations (entities_id,is_recursive,name,locations_id,completename,comment,`level`,ancestors_cache,sons_cache,address,postcode,town,state,country,building,room,latitude,longitude,altitude,date_mod,date_creation) 
+            }
+            //Obtenemos el ultimo ID de locations
+            $lastIdResult = DB::connection('mysql_second')
+                ->table('glpi_locations')
+                ->orderBy('id', 'desc')
+                ->limit(1)
+                ->lockForUpdate() // Bloqueamos la fila seleccionada para evitar que otros la modifiquen
+                ->value('id');
+            // Acceder al ID y agregamos el siguiente valor
+            $lastId = $lastIdResult + 1;
+            //Casting variables
+            $ancestorsCache = json_encode([$lastId => $lastId]);
+            $nombreDireccion = trim($location['nombre']); // Eliminar espacios al principio y al final
+            $nombreDireccion = str_replace(' ', '_', $nombreDireccion); // Reemplazar los espacios por _
+            $queryCreateLocation = "INSERT INTO glpi_locations (entities_id,is_recursive,name,locations_id,completename,comment,`level`,ancestors_cache,sons_cache,address,postcode,town,state,country,building,room,latitude,longitude,altitude,date_mod,date_creation) 
         VALUES
             (0,1,
             '{$nombreDireccion}',0,
@@ -119,34 +120,33 @@ class HelpdeskServices implements HelpDeskServiceInterface
             '{$location['codigo_postal']}',
             '{$location['ciudad']}',
             '{$location['departamento']}',
-            'Colombia','','','','','','2024-12-18 12:46:53','2024-12-18 12:46:53');"; 
-    
-        // Retorna un arreglo vacío si el archivo falla
-        // Ejecutar la consulta
-        DB::connection('mysql_second')->insert($queryCreateLocation);
+            'Colombia','','','','','','2024-12-18 12:46:53','2024-12-18 12:46:53');";
 
-        // Obtener el último ID insertado
-        $lastInsertedId =  DB::connection('mysql_second')
-        ->table('glpi_locations')
-        ->orderBy('id', 'desc') 
-        ->limit(1)
-        ->value('id');
+            // Retorna un arreglo vacío si el archivo falla
+            // Ejecutar la consulta
+            DB::connection('mysql_second')->insert($queryCreateLocation);
 
-        $ancestorsCache = json_encode([$lastInsertedId => $lastInsertedId]);
+            // Obtener el último ID insertado
+            $lastInsertedId =  DB::connection('mysql_second')
+                ->table('glpi_locations')
+                ->orderBy('id', 'desc')
+                ->limit(1)
+                ->value('id');
 
-        $updateSonCache="UPDATE glpi_locations
+            $ancestorsCache = json_encode([$lastInsertedId => $lastInsertedId]);
+
+            $updateSonCache = "UPDATE glpi_locations
         SET sons_cache='{$ancestorsCache}'
-        WHERE id={$lastInsertedId};"; 
+        WHERE id={$lastInsertedId};";
 
-        // Ejecutar la consulta
-        DB::connection('mysql_second')->update($updateSonCache);
+            // Ejecutar la consulta
+            DB::connection('mysql_second')->update($updateSonCache);
 
-        // Confirmar la transacción si todo fue bien
-        DB::connection('mysql_second')->commit();
+            // Confirmar la transacción si todo fue bien
+            DB::connection('mysql_second')->commit();
 
-        return $lastInsertedId;
-
-        }catch (Exception $e) {
+            return $lastInsertedId;
+        } catch (Exception $e) {
             // Si ocurre un error, revertir los cambios
             DB::connection('mysql_second')->rollBack();
             throw $e;
@@ -157,10 +157,10 @@ class HelpdeskServices implements HelpDeskServiceInterface
         // Aseguramos que no haya límites de tiempo y memoria
         set_time_limit(0);  // Sin límite de tiempo de ejecución
         ini_set("memory_limit", -1);  // Sin límite de memoria
-    
+
         // Iniciar la transacción
         DB::connection('mysql_second')->beginTransaction();
-    
+
         try {
             // Uso de lockForUpdate() para bloquear registros mientras se hacen operaciones
             // Esto se aplica para realizar una consulta sobre un registro que no se desea que otras peticiones cambien
@@ -170,10 +170,10 @@ class HelpdeskServices implements HelpDeskServiceInterface
                 ->limit(1)
                 ->lockForUpdate()  // Aquí bloqueamos la fila para que no sea modificada mientras estamos en la transacción
                 ->value('id');
-    
+
             // Incrementamos el último ID obtenido
             $lastId = $lastIdResult + 1;
-    
+
             // Preparar el primer query de inserción para crear el usuario
             $queryCreateUser = "INSERT INTO glpi_users (name,password,password_last_update,phone,phone2,mobile,realname,firstname,locations_id,`language`,use_mode,list_limit,is_active,comment,auths_id,authtype,last_login,date_mod,date_sync,is_deleted,profiles_id,entities_id,usertitles_id,usercategories_id,date_format,number_format,names_format,csv_delimiter,is_ids_visible,use_flat_dropdowntree,show_jobs_at_login,priority_1,priority_2,priority_3,priority_4,priority_5,priority_6,followup_private,task_private,default_requesttypes_id,password_forget_token,password_forget_token_date,user_dn,user_dn_hash,registration_number,show_count_on_tabs,refresh_views,set_default_tech,personal_token,personal_token_date,api_token,api_token_date,cookie_token,cookie_token_date,display_count_on_home,notification_to_myself,duedateok_color,duedatewarning_color,duedatecritical_color,duedatewarning_less,duedatecritical_less,duedatewarning_unit,duedatecritical_unit,display_options,is_deleted_ldap,pdffont,picture,begin_date,end_date,keep_devices_when_purging_item,privatebookmarkorder,backcreated,task_state,palette,page_layout,fold_menu,fold_search,savedsearches_pinned,timeline_order,itil_layout,richtext_layout,set_default_requester,lock_autolock_mode,lock_directunlock_notification,date_creation,highcontrast_css,plannings,sync_field,groups_id,users_id_supervisor,timezone,default_dashboard_central,default_dashboard_assets,default_dashboard_helpdesk,default_dashboard_mini_ticket,default_central_tab,nickname,timeline_action_btn_layout,timeline_date_format,use_flat_dropdowntree_on_search_result) 
                 VALUES
@@ -220,17 +220,17 @@ class HelpdeskServices implements HelpDeskServiceInterface
                     ,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
                     '{$data['nit']}',
                     NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'2024-12-01 12:00:00',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2024-12-18 10:05:03',0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL);";
-    
+
             // Insertamos los datos del usuario
             DB::connection('mysql_second')->insert($queryCreateUser);
-    
+
             // Obtener el último ID de usuario insertado
             $lastIdResult = DB::connection('mysql_second')
                 ->table('glpi_users')
                 ->orderBy('id', 'desc')
                 ->limit(1)
                 ->value('id');
-    
+
             // Realizar la segunda inserción con el correo electrónico
             $queryCreateEmail = "INSERT INTO glpi_useremails (users_id,is_default,is_dynamic,email) 
                 VALUES
@@ -239,9 +239,9 @@ class HelpdeskServices implements HelpDeskServiceInterface
 
             // Insertar el email
             DB::connection('mysql_second')->insert($queryCreateEmail);
-            
+
             // Realizar la Tercera inserción en perfiles relacionando la entidad, entidad, perfil etc
-            $queryEntitiRelation="INSERT INTO glpi_profiles_users (users_id,profiles_id,entities_id,is_recursive,is_dynamic,is_default_profile) 
+            $queryEntitiRelation = "INSERT INTO glpi_profiles_users (users_id,profiles_id,entities_id,is_recursive,is_dynamic,is_default_profile) 
             VALUES
 	        ({$lastId},1,
             20,
@@ -254,15 +254,15 @@ class HelpdeskServices implements HelpDeskServiceInterface
             DB::connection('mysql_second')->commit();
 
             return TRUE;
-    
         } catch (Exception $e) {
             // Si ocurre un error, revertir los cambios
             DB::connection('mysql_second')->rollBack();
             throw $e;
         }
     }
-    public function getTicketsCount(int $idUser)    {  
-         try{
+    public function getTicketsCount(int $idUser)
+    {
+        try {
             $tickets = [
                 "nuevos" => 0,
                 "encurso" => 0,
@@ -273,14 +273,14 @@ class HelpdeskServices implements HelpDeskServiceInterface
             ];
             // Obtenemos el numero de tickets del usuario
             $statusCounts = DB::connection('mysql_second')
-            ->table('glpi_tickets')
-            ->join('glpi_tickets_users', 'glpi_tickets.id', '=', 'glpi_tickets_users.tickets_id')
-            ->select('glpi_tickets.status', DB::raw('COUNT(*) as total'))
-            ->where('glpi_tickets_users.users_id', $idUser)
-            ->groupBy('glpi_tickets.status')
-            ->orderBy('glpi_tickets.status')
-            ->get();
-        
+                ->table('glpi_tickets')
+                ->join('glpi_tickets_users', 'glpi_tickets.id', '=', 'glpi_tickets_users.tickets_id')
+                ->select('glpi_tickets.status', DB::raw('COUNT(*) as total'))
+                ->where('glpi_tickets_users.users_id', $idUser)
+                ->groupBy('glpi_tickets.status')
+                ->orderBy('glpi_tickets.status')
+                ->get();
+
             // Iterar sobre los resultados de la consulta para asignar los valores al arreglo
             foreach ($statusCounts as $statusCount) {
                 switch ($statusCount->status) {
@@ -305,103 +305,54 @@ class HelpdeskServices implements HelpDeskServiceInterface
                 }
             }
             return $tickets;
-         }catch(Exception $e){
-            return ['error' => "ERROR DE INTEGRACION: " . $e->getMessage()];
-         }
-    }
-    public function getTicketsUser(int $idUser)    {   
-        
-        // Consulta 
-        try {
-            $ticketsResponse = [];
-            // Obtenemos lista de tickets del usuario
-            $ticketsList = DB::connection('mysql_second')
-                ->table('glpi_tickets_users')
-                ->orderBy('id', 'desc')
-                ->select('id', 'tickets_id', 'users_id')
-                ->where('users_id', $idUser)
-                ->get();
-        
-            if (!$ticketsList) {
-                return ['empty' => "Sin Tickets"];
-            }
-        
-            // Iteramos cada ticket
-            foreach ($ticketsList as $ticket) {
-                $ticketInfo = DB::connection('mysql_second')
-                    ->table('glpi_tickets')
-                    ->select('id', 'name', 'status', 'type', 'content', 'date_creation', 'date', 'closedate', 'solvedate')
-                    ->where('id', $ticket->tickets_id)
-                    ->first();
-        
-                if (!$ticketInfo) {
-                    throw new Exception("Error al obtener información del ticket ID: " . $ticket->tickets_id);
-                }
-        
-                // Procesar contenido del ticket principal
-                $text = "";
-                $imagesBase64 = [];
-        
-                if ($ticketInfo->content) {
-                    // Decodificar contenido HTML
-                    $decodedContent = htmlspecialchars_decode($ticketInfo->content);
-        
-                    // Extraer texto limpio
-                    $text = strip_tags($decodedContent);
-        
-                    // Extraer valores de docid de imágenes
-                    preg_match_all('/docid=(\d+)/', $decodedContent, $matches);
-                    $docIds = !empty($matches[1]) ? $matches[1] : [];
-        
-                    foreach ($docIds as $idImage) {
-                        $image = DB::connection('mysql_second')
-                            ->table('glpi_documents')
-                            ->select('id', 'name', 'filename', 'filepath', 'mime', 'sha1sum')
-                            ->where('id', $idImage)
-                            ->first();
-        
-                        if ($image) {
-                            $resoursesFile = env('SOFTLOGY_HELDEKS_RESOURCES');
-                            $completePath = $resoursesFile . $image->filepath;
-        
-                            if (file_exists($completePath)) {
-                                $imageData = file_get_contents($completePath);
-                                $imagesBase64[] = 'data:' . $image->mime . ';base64,' . base64_encode($imageData);
-                            }
-                        }
-                    }
-                }
-                // Follows zone
-
-                // Construir respuesta para este ticket
-                $ticketsResponse[] = [
-                    'id' => $ticketInfo->id,
-                    'name' => $ticketInfo->name,
-                    'status' => $ticketInfo->status,
-                    'type' => $ticketInfo->type,
-                    'content' => [
-                        'text' => $text,
-                        'images' => $imagesBase64
-                    ],
-                    'date_creation' => $ticketInfo->date_creation,
-                    'date' => $ticketInfo->date,
-                    'closedate' => $ticketInfo->closedate,
-                    'solvedate' => $ticketInfo->solvedate
-                ];
-            }
-        
-            // Devuelve la respuesta estructurada
-            return ['data' => $ticketsResponse];
         } catch (Exception $e) {
             return ['error' => "ERROR DE INTEGRACION: " . $e->getMessage()];
         }
-        
+    }
+    public function getTicketsUser(int $idUser)
+    {
+        // Consulta 
+        try {
+            $ticketsList = $this->glpiTicketRepository->getAllTicketsUser($idUser);
+
+            if (!$ticketsList) {
+                return null;
+            }
+
+            // Iteramos cada ticket
+            foreach ($ticketsList as $ticket) {
+                $ticket->ticketContent;
+                // Procesar contenido del ticket principal
+                $decodedContent = htmlspecialchars_decode($ticket->ticketContent->content);
+                // Extraer texto limpio
+                $textCleaned = strip_tags($decodedContent);
+
+                $ticket->ticketContent->content=$textCleaned;
+
+                $imagesBase64 = [];
+
+                foreach ($ticket->ticketContent->documents as $document) {
+                    $resoursesFile = env('SOFTLOGY_HELDEKS_RESOURCES');
+                    $completePath = $resoursesFile . DIRECTORY_SEPARATOR . $document->filepath;
+
+                    if (file_exists($completePath)) {
+                        $imageData = file_get_contents($completePath);
+                        $imagesBase64[] = 'data:' . $document->mime . ';base64,' . base64_encode($imageData);
+                    }
+                }
+            }
+
+            // Devuelve la respuesta estructurada
+            return $ticketsList;
+        } catch (Exception $e) {
+            return ['error' => "ERROR DE INTEGRACION: " . $e->getMessage()];
+        }
     }
 
-    public function createTicket(array $ticketData){
+    public function createTicket(array $ticketData)
+    {
         // Aseguramos que no haya límites de tiempo y memoria
         set_time_limit(0);  // Sin límite de tiempo de ejecución
         ini_set("memory_limit", -1);  // Sin límite de memoria
     }
-
 }

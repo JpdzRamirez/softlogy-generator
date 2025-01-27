@@ -15,11 +15,14 @@ class SoftlogyTickets extends Component
     public $day;
     public $month;
 
+    public $listTickets;
+
     public function mount(HelpDeskServiceInterface $helpdeskServices){
         $date = Carbon::now();
         $this->day = $date->format('d'); // Día (ej: 22)
         $this->month = $date->translatedFormat('F'); // Mes en texto (ej: Enero)
-        $this->ticketsCounter=$helpdeskServices->getTicketsCount(Auth::user()->glpi_id);          
+        $this->ticketsCounter=$helpdeskServices->getTicketsCount(Auth::user()->glpi_id);     
+        $this->listTickets=$helpdeskServices->getTicketsUser(Auth::user()->glpi_id);
     }
     public function render()
     {
