@@ -309,11 +309,12 @@ class HelpdeskServices implements HelpDeskServiceInterface
             return ['error' => "ERROR DE INTEGRACION: " . $e->getMessage()];
         }
     }
-    public function getTicketsUser(int $idUser)
+    
+    public function getTicketsUser(int $idUser,int $perPage)
     {
         // Consulta 
         try {
-            $ticketsList = $this->glpiTicketRepository->getAllTicketsUser($idUser);
+            $ticketsList = $this->glpiTicketRepository->getAllTicketsUser($idUser,$perPage);
             
             if (!$ticketsList) {
                 return null;
@@ -324,27 +325,30 @@ class HelpdeskServices implements HelpDeskServiceInterface
                 
                 $recipients=$this->glpiTicketRepository->getAllRecipients($ticket->tickets_id);
 
-                // Verificar si hay destinatarios
+                // Verificar quienes son los actores del caso
                 if ($recipients) {
                     // Inicializar las variables para técnicos y observadores
                     $tecnicos = [];
                     $observadores = [];
-
+                    $observadoresTooltip=null;
                     // Recorrer los destinatarios y asignarlos a la propiedad correspondiente
                     foreach ($recipients as $recipient) {
                         // Comprobar el tipo de destinatario
                         if ($recipient->type == 2) {
                             // Agregar a los técnicos
-                            $tecnicos[] = $recipient->name;
+                            $tecnicos[] = $recipient->firstname ." ". $recipient->realname;
                         } elseif ($recipient->type == 3) {
                             // Agregar a los observadores
-                            $observadores[] = $recipient->name;
+                            $observadores[] = $recipient->firstname ." ". $recipient->realname;
                         }
                     }
-
+                    // Crear el tooltip para observadores
+                    if (!empty($observadores)) {
+                        $observadoresTooltip = implode(', ', $observadores);
+                    }              
                     // Asignar los resultados a las propiedades dinámicas del ticket
                     $ticket->tecnicos = $tecnicos;
-                    $ticket->observadores = $observadores;
+                    $ticket->observadores = $observadoresTooltip;
                 }
                 // Procesar contenido del ticket principal
                 $decodedContent = htmlspecialchars_decode($ticket->ticketContent->content);

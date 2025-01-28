@@ -1,25 +1,47 @@
-
-.career-search{
+@use "../../utils" as *;
+.career-search {
     div.online-indicator {
         display: inline-block;
         width: 15px;
         height: 15px;
         margin-right: 10px;
-        
-        background-color: #0fcc45;
         border-radius: 50%;
-        
         position: relative;
-      }
-      span.blink {
+    }
+    span.blink {
         display: block;
         width: 15px;
         height: 15px;
-        
-        background-color: #0fcc45;
         opacity: 0.7;
         border-radius: 50%;
-        
         animation: blink 1s linear infinite;
-      }
+    }
+    div.online-indicator.new {
+        background: $new;
+    }
+    div.online-indicator.oncurse {
+      background: $oncurse;
+    }
+    div.online-indicator.planning {        
+        border: 3px $planning solid;
+    }
+    div.online-indicator.wait {
+        background: $wait;
+    }
+    div.online-indicator.solved {
+        border: 3px $solved-bg solid;
+    }
+    div.online-indicator.closed {
+        background: $closed;
+    }
+    div.online-indicator.new  span.blink {
+        background-color: $new;
+    }
+    div.online-indicator.oncurse  span.blink {
+      background-color: $oncurse;
+    }
+    div.online-indicator.wait  span.blink {
+        background-color: $wait;
+    }
+
 }

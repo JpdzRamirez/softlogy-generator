@@ -30,12 +30,14 @@ class GlpiTicketsRepository
         return $this->model->findOrFail($id);
     }
 
+
     /**
      * 
      * @param int $userId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param mixed $perPage
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getAllTicketsUser(int $userId){
+    public function getAllTicketsUser(int $userId,$perPage){
         return $this->model
         ->where('users_id', $userId)
         ->where('type', 1)
@@ -43,7 +45,7 @@ class GlpiTicketsRepository
             $query->where('is_deleted', '!=', 1); // Filtra los tickets no eliminados
         })
         ->select('tickets_id', 'users_id', 'type')
-        ->get();
+        ->paginate($perPage); 
     }
 
      /**
@@ -60,8 +62,9 @@ class GlpiTicketsRepository
         ->select(
             'glpi_tickets_users.tickets_id',
             'glpi_tickets_users.users_id',
-            'glpi_tickets_users.type',
-            'glpi_users.name' 
+            'glpi_tickets_users.type',            
+            'glpi_users.firstname',
+            'glpi_users.realname',
         )
         ->get();
         return $recipients;

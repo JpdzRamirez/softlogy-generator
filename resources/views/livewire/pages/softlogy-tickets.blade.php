@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <div class="info-card col-md-3">
-                                <div class="counter-box working">
+                                <div class="counter-box oncurse">
                                     <i class="fa-solid fa-person-circle-check"></i>
                                     <span class="counter">{{ $ticketsCounter['encurso'] }}</span>
                                     <p>En Curso</p>
@@ -148,42 +148,120 @@
                             <div class="col-md-6 col-lg-3 my-3 d-inline-flex justify-content-center">
                                 <button type="button" id="search"
                                     class="button btn btn-lg btn-block btn-light btn-custom">
-                                    <span> Seacrh</span>
+                                    <span> Buscar</span>
                                 </button>
                             </div>
                         </div>
                     </form>
 
                     <div class="filter-result">
-                        <p class="mb-30 ff-montserrat">Total Job Openings : 89</p>
-
+                        <p class="mb-30 ff-montserrat">Total casos :  {{ array_sum($ticketsCounter)}}</p>
+                        @foreach ($listTickets as $ticket)
                         <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-                            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+                            <div class="job-left my-4 d-md-flex align-items-center flex-wrap ticket-info">
                                 <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
-                                    8256
+                                   <span class="has-tooltip">{{$ticket->ticketContent->id}}</span>
+                                   <div class='field'>                                        
+                                            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                                            <div class="toast-header">
+                                                <img src="{{asset('assets/img/clients/softlogy-logo.png')}}" style="max-width: 1.2em;" class="rounded me-2" alt="Ticket Preview">
+                                                <strong class="me-auto">Ticket: {{$ticket->ticketContent->id}}</strong>
+                                                <small>{{$ticket->ticketContent->date}}</small>
+                                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                              </div>
+                                              <div class="toast-body">
+                                                {{$ticket->ticketContent->content}}
+                                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident ratione neque amet, non excepturi, in deleniti soluta veniam quod corporis odio nesciunt, 
+                                                voluptas vitae impedit! Quo temporibus aliquid dolores veritatis.
+                                                @if($ticket->ticketContent->resources && count($ticket->ticketContent->resources) > 0)
+                                                    @foreach ($ticket->ticketContent->resources as $resource)
+                                                        <img src="{{ $resource }}" />
+                                                    @endforeach
+                                                @endif                                          
+                                              </div>
+                                            </div>                                            
+                                    </div>
                                 </div>
                                 <div class="job-content">
-                                    <h5 style="margin-left: 2em;">Test de prueba de caso ItilConstruction</h5>
+                                    <h5 style="margin-left: 1.5em;">{{$ticket->ticketContent->name}}</h5>
                                     <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans" style="gap:1em;">
                                         <li class="mr-md-4">
-                                            <div class="online-indicator">
-                                                <span class="blink"></span>
-                                              </div>
-                                              <span>Estado: En Curso</span> 
+                                            @switch($ticket->ticketContent->status)
+                                                @case(1)
+                                                <div class="online-indicator new">
+                                                    <span class="blink"></span>
+                                                </div>
+                                                <span>Estado: Nuevo</span> 
+                                                    @break
+                                                @case(2)
+                                                    <div class="online-indicator oncurse">
+                                                        <span class="blink"></span>
+                                                    </div>
+                                                    <span>Estado: En Curso</span> 
+                                                    @break
+                                                @case(3)
+                                                <div class="online-indicator planning">
+                                                    <span class="blink"></span>
+                                                </div>
+                                                <span>Estado: Planificado</span> 
+                                                    @break
+                                                @case(4)
+                                                <div class="online-indicator wait">
+                                                    <span class="blink"></span>
+                                                </div>
+                                                <span>Estado: En Espera</span> 
+                                                    @break
+                                                @case(5)
+                                                <div class="online-indicator solved" >
+                                                    <span class="blink"></span>
+                                                </div>
+                                                <span>Estado: Solucionado</span> 
+                                                    @break
+                                                @case(6)
+                                                <div class="online-indicator closed">
+                                                    <span class="blink"></span>
+                                                </div>
+                                                <span>Estado: Cerrado</span> 
+                                                    @break
+                                                @default                                                    
+                                            @endswitch                                            
                                         </li>
                                         <li class="mr-md-4">
-                                            <i class="zmdi zmdi-time mr-2"></i> Fecha de apertura: 27/01/2025
-                                        </li>
-                                        <li class="mr-md-4">
-                                             Tecnico asignado: Jeremy Pedraza
+                                            @if (!$ticket->ticketContent->solvedate)
+                                            <i class="zmdi zmdi-time mr-2"></i> Fecha de apertura: {{$ticket->ticketContent->date}}
+                                                @else
+                                                <i class="zmdi zmdi-time mr-2"></i> Fecha de solución: {{$ticket->ticketContent->solvedate}}
+                                            @endif                                            
                                         </li>
                                     </ul>
+                                    <p style="margin-left: 2em;"><i class="fa-solid fa-user-gear"></i> Tecnicos asignados: 
+                                        @if($ticket->tecnicos && count($ticket->tecnicos) > 0)
+                                                @foreach ($ticket->tecnicos as $tecnico)
+                                                    <span>{{$tecnico}}</span>
+                                                @endforeach
+                                            @else
+                                            <span>Sin Tecnicos Asignados</span>
+                                        @endif
+                                        @if ($ticket->observadores)
+                                            <i class="fa-solid fa-eye" data-bs-toggle="tooltip" data-bs-placement="top"
+                                            data-bs-custom-class="custom-tooltip"
+                                            data-bs-title="{{$ticket->observadores}}"></i>                                            
+                                        @endif
+                                    </p>
                                 </div>
                             </div>
-                            <div class="job-right my-4 flex-shrink-0">
-                                <a href="#" class="btn d-block w-100 d-sm-inline-block btn-light">Ver Caso</a>
+                            <div class="job-right my-4 flex-shrink-0 ticket-buttom">
+                                <div class="col">
+                                    <a class="btn d-block w-100 d-sm-inline-block" href="#">
+                                      <span class="text">Ver Caso</span>
+                                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.66669 11.3334L11.3334 4.66669" stroke="white" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.66669 4.66669H11.3334V11.3334" stroke="white" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    </a>
+                                  </div>
+                                {{-- <a href="#" class="btn d-block w-100 d-sm-inline-block btn-light">Ver Caso</a> --}}
                             </div>
                         </div>
+                        @endforeach
+
                     </div>
                 </div>
 
@@ -302,7 +380,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" data-bs-target="#sopportDataModal" data-bs-toggle="modal" class="btn btn-primary">Continuar</button>
+                        <button type="button" data-bs-target="#sopportDataModal" data-bs-toggle="modal" style="color:#fff" class="btn btn-info">Continuar</button>
                     </div>                
             </div>
         </div>
@@ -330,9 +408,9 @@
                 </form>
             </div>
             <div class="modal-footer">
-              <button class="btn btn-primary" data-bs-target="#fastTicketModal" data-bs-toggle="modal">Regresar</button>
+              <button class="btn btn-info" data-bs-target="#fastTicketModal" style="color:#fff" data-bs-toggle="modal">Regresar</button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="button" onclick="submitTicketForm()" class="btn btn-primary">Enviar</button>
+              <button type="button" onclick="submitTicketForm()" style="color:#fff"  class="btn btn-info">Enviar</button>
             </div>
           </div>
         </div>
@@ -375,7 +453,7 @@
             for (let pair of formData.entries()) {
                 console.log(pair[0], pair[1]);
             }
-
+            showSpinner(true);
             // // Enviar peticiones a la ruta
             // $.ajax({
             //     type: "POST",

@@ -251,6 +251,12 @@
     }
     window.addEventListener("load", navmenuScrollspy);
     document.addEventListener("scroll", navmenuScrollspy);
+    const spinner = $(".spinner");
+
+    // Exponer la función al ámbito global
+    window.showSpinner = function (show) {
+        spinner.css("display", show ? "block" : "none");
+    };
 
     /*
         TOOLS PAGE
@@ -296,19 +302,25 @@
     const closeTutorialButton = $("#closeTutorial");
     const headerTicket = $(".header-ticket-title");
 
-    const openTicketList =$("#openTicketList");
-    const listTickets =$("#listTickets");
+    const openTicketList = $("#openTicketList");
+    const listTickets = $("#listTickets");
 
     openTicketList.on("click", function () {
-        if(listTickets.css("display") === "flex") {
-            listTickets.css("animation", "slide-out-top 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both");           
+        if (listTickets.css("display") === "flex") {
+            listTickets.css(
+                "animation",
+                "slide-out-top 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both"
+            );
             setTimeout(() => {
                 listTickets.css("display", "none");
-            },600);
-        }else{
-            listTickets.css("animation", "slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both");
+            }, 600);
+        } else {
+            listTickets.css(
+                "animation",
+                "slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both"
+            );
             listTickets.css("display", "flex");
-        }        
+        }
     });
 
     // Función para aplicar estilos según media query
@@ -367,4 +379,28 @@
         );
         adminModal.show();
     });
+
+    /*
+    
+            LIST TICKET EVENTS
+    
+    */
+    $(".has-tooltip").on("click", function (e) {
+        // Verifica si el mismo elemento fue clickeado
+        if ($(this).hasClass("active")) {
+            $(this).removeClass("active"); // Remueve la clase si ya está activa
+        } else {
+            $(".has-tooltip").removeClass("active"); // Remueve "active" de otros elementos
+            $(this).addClass("active"); // Agrega "active" al elemento clicado
+        }
+        e.stopPropagation(); // Evita que el clic se propague al documento
+    });
+
+    // Eliminar la clase "active" si se hace clic fuera de un .has-tooltip
+    $(document).on("click", function () {
+        $(".has-tooltip").removeClass("active");
+    });
+    // Initializar tooltips
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 })();
