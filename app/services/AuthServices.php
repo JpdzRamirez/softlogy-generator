@@ -6,6 +6,7 @@ namespace app\services;
 use App\Contracts\AuthServicesInterface;
 use App\Repositories\GlpiUserRepository;
 
+use App\Repositories\UserRepository;
 
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\AuthenticationException;
@@ -16,10 +17,12 @@ use Exception;
 class AuthServices implements AuthServicesInterface
 {
     protected $glpiUserRepository;
+    protected $userRepository;
 
-    public function __construct(GlpiUserRepository $glpiUserRepository)
+    public function __construct(GlpiUserRepository $glpiUserRepository, UserRepository $userRepository)
     {
         $this->glpiUserRepository = $glpiUserRepository;
+        $this->userRepository = $userRepository;
     }
     private function getUserPicture($user)
     {
@@ -56,7 +59,7 @@ class AuthServices implements AuthServicesInterface
                 ['location', 'entiti', 'title', 'email']
             )
             ->where('name', $data['username'])
-            ->firstOrFail();
+            ->first();
             
 
             if (!$user) {
@@ -92,7 +95,7 @@ class AuthServices implements AuthServicesInterface
             }
             
 
-            $response = $this->glpiUserRepository->setTokenUserSession($user, $expiration,$data['plataform']);
+            $response = $this->glpiUserRepository->setTokenUserSession($user, $expiration,$data['plataform'],$this->userRepository);
 
             // Return validated user with token
             return $response;

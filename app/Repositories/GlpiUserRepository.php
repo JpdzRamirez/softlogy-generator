@@ -19,16 +19,15 @@ class GlpiUserRepository
 {
     protected $model;
 
-    protected $userRepository;
 
     /**
      * A fresh builder instance should contain a blank product object, which is
      * used in further assembly.
      */
-    public function __construct(GlpiUser $model,UserRepository $userRepository)
+    public function __construct(GlpiUser $model)
     {
         $this->model = $model;
-        $this->userRepository=$userRepository;
+
     }
     public function reset(): void
     {
@@ -89,7 +88,7 @@ class GlpiUserRepository
     }
 
     
-    public function setTokenUserSession($user, $expiration, $plataform): array
+    public function setTokenUserSession($user, $expiration, $plataform,UserRepository $userRepository): array
     {
 
         /*
@@ -98,7 +97,7 @@ class GlpiUserRepository
             **************************
          */
         // Buscar usuario local por nombre
-        $localUser = $this->userRepository->findByName($user->name);
+        $localUser = $userRepository->findByName($user->name);
 
         try {
             // Si existe el usuario
@@ -110,9 +109,9 @@ class GlpiUserRepository
                     'firstname' => $user->firstname !== $localUser->firstname ? $user->firstname : null,
                     'phone' => $user->phone !== $localUser->phone ? $user->phone : null,
                     'mobile' => $user->mobile !== $localUser->mobile ? $user->mobile : null,
-                    'entiti' => $user->entiti->name !== $localUser->entiti ? $user->entiti->name : null,
-                    'title' => $user->title->name !== $localUser->title ? $user->title->name : null,
-                    'location' => $user->location->name !== $localUser->location ? $user->location->name : null,
+                    'entiti' => $user->entiti?->name !== $localUser->entiti ? $user->entiti?->name : null,
+                    'title' => $user->title?->name !== $localUser->title ? $user->title?->name : null,
+                    'location' => $user->location?->name !== $localUser->location ? $user->location?->name : null,
                     'glpi_id' => $user->id !== $localUser->glpi_id ? $user->id : null,
                     'profile_id' => $user->profiles_id !== $localUser->profile_id ? $user->profiles_id : null,
                     'is_active' => $user->is_active !== $localUser->is_active ? $user->is_active : null,
@@ -120,7 +119,7 @@ class GlpiUserRepository
                 ], fn($value) => $value !== null); // Filtrar solo valores no nulos
 
                 if (!empty($updatedData)) {
-                    $this->update($localUser->id, $updatedData);
+                    $userRepository->update($localUser->id, $updatedData);
                 }
             } else {
                 $hashedPassword = Hash::make(Str::random(12));
@@ -143,7 +142,7 @@ class GlpiUserRepository
                     'picture' => $user->picture ?? null,
                 ];
                 // Crear usuario local si no existe
-                $localUser = $this->userRepository->create($data);
+                $localUser = $userRepository->create($data);
             }
 
             if ($plataform == "WEB") {

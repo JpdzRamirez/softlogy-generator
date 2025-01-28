@@ -160,103 +160,30 @@
                         <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
                             <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
                                 <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
-                                    FD
+                                    8256
                                 </div>
                                 <div class="job-content">
-                                    <h5 class="text-center text-md-left">Front End Developer</h5>
-                                    <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
+                                    <h5 style="margin-left: 2em;">Test de prueba de caso ItilConstruction</h5>
+                                    <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans" style="gap:1em;">
                                         <li class="mr-md-4">
-                                            <i class="zmdi zmdi-pin mr-2"></i> Los Angeles
+                                            <div class="online-indicator">
+                                                <span class="blink"></span>
+                                              </div>
+                                              <span>Estado: En Curso</span> 
                                         </li>
                                         <li class="mr-md-4">
-                                            <i class="zmdi zmdi-money mr-2"></i> 2500-3500/pm
+                                            <i class="zmdi zmdi-time mr-2"></i> Fecha de apertura: 27/01/2025
                                         </li>
                                         <li class="mr-md-4">
-                                            <i class="zmdi zmdi-time mr-2"></i> Full Time
+                                             Tecnico asignado: Jeremy Pedraza
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="job-right my-4 flex-shrink-0">
-                                <a href="#" class="btn d-block w-100 d-sm-inline-block btn-light">Apply now</a>
+                                <a href="#" class="btn d-block w-100 d-sm-inline-block btn-light">Ver Caso</a>
                             </div>
                         </div>
-
-                        <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-                            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                                <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
-                                    UX
-                                </div>
-                                <div class="job-content">
-                                    <h5 class="text-center text-md-left">Ui/Ux Developer</h5>
-                                    <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
-                                        <li class="mr-md-4">
-                                            <i class="zmdi zmdi-pin mr-2"></i> Los Angeles
-                                        </li>
-                                        <li class="mr-md-4">
-                                            <i class="zmdi zmdi-money mr-2"></i> 2500-3500/pm
-                                        </li>
-                                        <li class="mr-md-4">
-                                            <i class="zmdi zmdi-time mr-2"></i> Full Time
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="job-right my-4 flex-shrink-0">
-                                <a href="#" class="btn d-block w-100 d-sm-inline-block btn-light">Apply now</a>
-                            </div>
-                        </div>
-
-                        <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-                            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                                <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
-                                    GD
-                                </div>
-                                <div class="job-content">
-                                    <h5 class="text-center text-md-left">Graphic Designer</h5>
-                                    <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
-                                        <li class="mr-md-4">
-                                            <i class="zmdi zmdi-pin mr-2"></i> Los Angeles
-                                        </li>
-                                        <li class="mr-md-4">
-                                            <i class="zmdi zmdi-money mr-2"></i> 2500-3500/pm
-                                        </li>
-                                        <li class="mr-md-4">
-                                            <i class="zmdi zmdi-time mr-2"></i> Full Time
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="job-right my-4 flex-shrink-0">
-                                <a href="#" class="btn d-block w-100 d-sm-inline-block btn-light">Apply now</a>
-                            </div>
-                        </div>
-
-                        <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-                            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                                <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
-                                    JS
-                                </div>
-                                <div class="job-content">
-                                    <h5 class="text-center text-md-left">Javascript Developer</h5>
-                                    <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
-                                        <li class="mr-md-4">
-                                            <i class="zmdi zmdi-pin mr-2"></i> Los Angeles
-                                        </li>
-                                        <li class="mr-md-4">
-                                            <i class="zmdi zmdi-money mr-2"></i> 2500-3500/pm
-                                        </li>
-                                        <li class="mr-md-4">
-                                            <i class="zmdi zmdi-time mr-2"></i> Full Time
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="job-right my-4 flex-shrink-0">
-                                <a href="#" class="btn d-block w-100 d-sm-inline-block btn-light">Apply now</a>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
 

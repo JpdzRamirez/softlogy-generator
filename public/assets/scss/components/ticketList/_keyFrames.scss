@@ -262,5 +262,11 @@
       opacity: 0;
     }
   }
-  
-  
+    /*Animation Online Status*/
+  .career-search{
+  @keyframes blink {
+    100% { transform: scale(2, 2); 
+            opacity: 0;
+          }
+  }
+  }

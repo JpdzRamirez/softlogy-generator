@@ -314,14 +314,38 @@ class HelpdeskServices implements HelpDeskServiceInterface
         // Consulta 
         try {
             $ticketsList = $this->glpiTicketRepository->getAllTicketsUser($idUser);
-
+            
             if (!$ticketsList) {
                 return null;
-            }
+            }            
 
             // Iteramos cada ticket
             foreach ($ticketsList as $ticket) {
-                $ticket->ticketContent;
+                
+                $recipients=$this->glpiTicketRepository->getAllRecipients($ticket->tickets_id);
+
+                // Verificar si hay destinatarios
+                if ($recipients) {
+                    // Inicializar las variables para técnicos y observadores
+                    $tecnicos = [];
+                    $observadores = [];
+
+                    // Recorrer los destinatarios y asignarlos a la propiedad correspondiente
+                    foreach ($recipients as $recipient) {
+                        // Comprobar el tipo de destinatario
+                        if ($recipient->type == 2) {
+                            // Agregar a los técnicos
+                            $tecnicos[] = $recipient->name;
+                        } elseif ($recipient->type == 3) {
+                            // Agregar a los observadores
+                            $observadores[] = $recipient->name;
+                        }
+                    }
+
+                    // Asignar los resultados a las propiedades dinámicas del ticket
+                    $ticket->tecnicos = $tecnicos;
+                    $ticket->observadores = $observadores;
+                }
                 // Procesar contenido del ticket principal
                 $decodedContent = htmlspecialchars_decode($ticket->ticketContent->content);
                 // Extraer texto limpio
@@ -339,6 +363,10 @@ class HelpdeskServices implements HelpDeskServiceInterface
                         $imageData = file_get_contents($completePath);
                         $imagesBase64[] = 'data:' . $document->mime . ';base64,' . base64_encode($imageData);
                     }
+                    
+                }
+                if(!empty($imagesBase64)){
+                    $ticket->ticketContent->resources=$imagesBase64;
                 }
             }
 

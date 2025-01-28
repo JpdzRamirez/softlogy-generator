@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-
+use Illuminate\Support\Facades\DB;
 use App\Models\GlpiTicketsUsers;
 
 
@@ -44,6 +44,27 @@ class GlpiTicketsRepository
         })
         ->select('tickets_id', 'users_id', 'type')
         ->get();
+    }
+
+     /**
+     * 
+     * @param int $ticketId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllRecipients(int $ticketId){
+        $recipients = DB::connection('mysql_second')
+        ->table('glpi_tickets_users')
+        ->join('glpi_users', 'glpi_tickets_users.users_id', '=', 'glpi_users.id')
+        ->where('glpi_tickets_users.tickets_id', $ticketId)
+        ->where('glpi_tickets_users.type', '!=', 1)
+        ->select(
+            'glpi_tickets_users.tickets_id',
+            'glpi_tickets_users.users_id',
+            'glpi_tickets_users.type',
+            'glpi_users.name' 
+        )
+        ->get();
+        return $recipients;
     }
 
     public function create(array $data)
