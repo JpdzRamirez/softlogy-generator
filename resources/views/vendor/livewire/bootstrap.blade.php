@@ -39,16 +39,16 @@ $scrollIntoViewJsSnippet = ($scrollTo !== false)
                 </ul>
             </div>
 
-            <div class="d-none flex-sm-fill d-sm-flex align-items-sm-center justify-content-sm-between">
+            <div class="d-none flex-sm-fill d-sm-flex align-items-sm-center justify-content-sm-between flex-column-reverse">
                 <div>
                     <p class="small text-muted">
-                        {!! __('Showing') !!}
+                        {!! __('pagination.showing') !!}
                         <span class="fw-semibold">{{ $paginator->firstItem() }}</span>
-                        {!! __('to') !!}
+                        {!! __('pagination.to') !!}
                         <span class="fw-semibold">{{ $paginator->lastItem() }}</span>
-                        {!! __('of') !!}
+                        {!! __('pagination.of') !!}
                         <span class="fw-semibold">{{ $paginator->total() }}</span>
-                        {!! __('results') !!}
+                        {!! __('pagination.results') !!}
                     </p>
                 </div>
 

@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <div class="counter-tickets">
-                        <div class="row" style="gap:1em; margin: 1em;">
+                        <div class="row" style="gap:1em;max-width: 36em;">
                             <div class="info-card col-md-3">
                                 <div class="counter-box new">
                                     <i class="fa-solid fa-plus"></i>

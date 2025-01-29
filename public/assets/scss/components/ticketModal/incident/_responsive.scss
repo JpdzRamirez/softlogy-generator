@@ -1,0 +1,10 @@
+
+.container-incident{
+
+    @media (max-width:999px) {
+        .grid-wrapper{
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
