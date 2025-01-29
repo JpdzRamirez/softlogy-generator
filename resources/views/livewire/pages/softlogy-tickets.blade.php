@@ -1,4 +1,4 @@
-<div>
+<div id="listTickets" wire:id="{{$listTicketsId}}">
     <div class="container">
         {{-- HEADER TICKET LIST SECTION --}}
 
@@ -492,5 +492,6 @@
             //         });
             //     }
         };
+
     </script>
 @endpush

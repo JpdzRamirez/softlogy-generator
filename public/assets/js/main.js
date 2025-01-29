@@ -400,7 +400,38 @@
     $(document).on("click", function () {
         $(".has-tooltip").removeClass("active");
     });
-    // Initializar tooltips
+    // Inicializar tooltips
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+    document.addEventListener('restartToolTip', function(event){ 
+        setTimeout(() => {            
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));            
+        }, 1000);      
+    });
+
+    const listTickets = document.getElementById("listTickets");
+    const wireListTicketsId = listTickets.getAttribute('wire:id');
+
+    let lastScrollPosition = 0;
+    
+    document.addEventListener("scroll", function () {
+            lastScrollPosition = window.scrollY;
+            console.log(lastScrollPosition);
+    });
+        
+    Livewire.hook('morph.updated', ({ component }) => {
+            
+              //Si el componente es el selector de países
+              if (component.id == wireListTicketsId) {
+                console.log("updated :RRRRR"+lastScrollPosition);
+                console.log("updated");
+                window.scrollTo({ top: lastScrollPosition, behavior: "instant" });
+              }
+            
+    })
+
+    
+
 })();
