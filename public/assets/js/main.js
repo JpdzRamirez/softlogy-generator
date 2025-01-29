@@ -302,26 +302,26 @@
     const closeTutorialButton = $("#closeTutorial");
     const headerTicket = $(".header-ticket-title");
 
-    const openTicketList = $("#openTicketList");
-    const listTickets = $("#listTickets");
+    // const openTicketList = $("#openTicketList");
+    // const listTickets = $("#listTickets");
 
-    openTicketList.on("click", function () {
-        if (listTickets.css("display") === "flex") {
-            listTickets.css(
-                "animation",
-                "slide-out-top 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both"
-            );
-            setTimeout(() => {
-                listTickets.css("display", "none");
-            }, 600);
-        } else {
-            listTickets.css(
-                "animation",
-                "slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both"
-            );
-            listTickets.css("display", "flex");
-        }
-    });
+    // openTicketList.on("click", function () {
+    //     if (listTickets.css("display") === "flex") {
+    //         listTickets.css(
+    //             "animation",
+    //             "slide-out-top 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both"
+    //         );
+    //         setTimeout(() => {
+    //             listTickets.css("display", "none");
+    //         }, 600);
+    //     } else {
+    //         listTickets.css(
+    //             "animation",
+    //             "slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both"
+    //         );
+    //         listTickets.css("display", "flex");
+    //     }
+    // });
 
     // Función para aplicar estilos según media query
     function applyResponsiveStyles() {

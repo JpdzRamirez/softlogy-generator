@@ -1,0 +1,9 @@
+@use "./variables" as *;
+
+.active>.page-link, .page-link.active{
+    background-color: $new;
+    border-color: $new;
+}
+.page-link {
+    color:$new;
+}

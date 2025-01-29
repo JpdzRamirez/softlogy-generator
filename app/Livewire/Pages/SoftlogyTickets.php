@@ -5,18 +5,19 @@ namespace App\Livewire\Pages;
 use App\Contracts\HelpDeskServiceInterface;
 use Illuminate\Support\Facades\Auth;
 
+use Livewire\WithPagination;
 use Carbon\Carbon;
 
 use Livewire\Component;
 
 class SoftlogyTickets extends Component
 {   
+    use WithPagination;
     public $ticketsCounter;
     public $day;
     public $month;
-
-    public $listTickets;
-
+    public $showList = false;
+    
     public function mount(HelpDeskServiceInterface $helpdeskServices){
         $date = Carbon::now();
         $this->day = $date->format('d'); // Día (ej: 22)
@@ -24,17 +25,18 @@ class SoftlogyTickets extends Component
         $this->ticketsCounter=$helpdeskServices->getTicketsCount(Auth::user()->glpi_id); 
                    
     }
+    // Events binding
+    public function toggleList()
+    {
+        $this->showList = !$this->showList; // Alternar estado
+    }
     public function render(HelpDeskServiceInterface $helpdeskServices)
     {           
-        // Recupera los tickets con la paginación
-        $ticketsList = $helpdeskServices->getTicketsUser(Auth::user()->glpi_id, 10);
-        
-    // Convierte la colección a un arreglo simple sin relaciones
-    $this->listTickets = $ticketsList->items(); // Solo los elementos de la página actual
-    // $this->total = $ticketsList->total(); // Total de tickets (necesario para paginación)
-    // $this->lastPage = $ticketsList->lastPage(); // Última página
-    // $this->currentPage = $ticketsList->currentPage(); // Página actual
+        // Paginación inteligente
+        $ticketsList = $helpdeskServices->getTicketsUser(Auth::user()->glpi_id, 1);                                            
 
-        return view('livewire.pages.softlogy-tickets');
+        return view('livewire.pages.softlogy-tickets',[
+            'listTickets'=>$ticketsList,
+        ]);
     }
 }

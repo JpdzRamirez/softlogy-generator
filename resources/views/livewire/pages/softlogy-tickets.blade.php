@@ -97,7 +97,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="fab" id="openTicketList"><i class="fa fa-arrow-down fa-3x"> </i></div>
+                <div class="fab" ><i wire:click.prevent="toggleList" class="fa fa-arrow-down fa-3x"> </i></div>
             </div>
         </div>
         {{-- END HEADER TICKET LIST SECTION --}}
@@ -111,7 +111,9 @@
         </div>
 
         {{-- TICKET LIST SECTION --}}
-        <div class="row" id="listTickets" style="display: none;">
+        <div class="row" id="listTickets" 
+        x-data="{ show: @entangle('showList') }" 
+        x-bind:class="show ? 'flex animate__animated animate__slideInDown' : 'hidden'">
             <div class="col-lg-10 mx-auto">
                 <div class="career-search mb-60">
 
@@ -266,25 +268,9 @@
                 </div>
 
                 <!-- START Pagination -->
-                <nav aria-label="Page navigation">
-                    <ul class="pagination pagination-reset justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                <i class="zmdi zmdi-long-arrow-left"></i>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item d-none d-md-inline-block"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item d-none d-md-inline-block"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#">8</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">
-                                <i class="zmdi zmdi-long-arrow-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+                <div class="pagination justify-content-center">
+                    {{ $listTickets->links() }}
+                </div>
                 <!-- END Pagination -->
             </div>
         </div>

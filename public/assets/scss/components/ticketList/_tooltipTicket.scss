@@ -4,7 +4,6 @@ $red: #E71D36;
 $green: #2EC4B6;
 $purple: #A593E0;
 .has-tooltip{
-    width: 1em;
     position: relative;
     z-index: 2;
     text-align: center;
@@ -53,7 +52,7 @@ $purple: #A593E0;
     widtH: 0;
     height: 0;
     border: 5px solid transparent;
-    border-top: 5px solid rgba(0,0,0,0.75);
+    border-top: 5px solid rgba(255, 255, 255, 0.75);
     position: absolute;
     bottom: 0;
     left: 50%;

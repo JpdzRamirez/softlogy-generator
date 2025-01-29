@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\DB;
 use App\Models\GlpiTicketsUsers;
 
 
+
 class GlpiTicketsRepository
 {
+
     protected $model;
 
     /**
