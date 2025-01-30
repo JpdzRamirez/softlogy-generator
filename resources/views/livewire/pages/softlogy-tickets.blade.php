@@ -97,7 +97,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="fab" ><i wire:click.prevent="toggleList" class="fa fa-arrow-down fa-3x"> </i></div>
+                <div class="fab" wire:click.prevent="toggleList">
+                    <i data-bs-toggle="tooltipTitle" data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-title="Desplegar lista de tickets" class="fa fa-arrow-down fa-3x"></i></div>
             </div>
         </div>
         {{-- END HEADER TICKET LIST SECTION --}}
@@ -297,7 +300,7 @@
                             <div class="grid-wrapper grid-col-auto">
 
                               <label for="radio-card-1" class="radio-card">
-                                <input type="radio" name="radio-card" value="option1" id="radio-card-1" checked />
+                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="1" id="radio-card-1" />
                                 <div class="card-content-wrapper">
                                   <span class="check-icon"></span>
                                   <div class="card-content">
@@ -313,7 +316,7 @@
                               <!-- /.radio-card -->
                     
                               <label for="radio-card-2" class="radio-card">
-                                <input type="radio" name="radio-card" value="option2" id="radio-card-2" />
+                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="2" id="radio-card-2" />
                                 <div class="card-content-wrapper">
                                   <span class="check-icon"></span>
                                   <div class="card-content">
@@ -328,7 +331,7 @@
                               </label>
 
                               <label for="radio-card-3" class="radio-card">
-                                <input type="radio" name="radio-card" value="option3" id="radio-card-3" />
+                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="3" id="radio-card-3" />
                                 <div class="card-content-wrapper">
                                   <span class="check-icon"></span>
                                   <div class="card-content">
@@ -343,7 +346,7 @@
                               </label>
 
                               <label for="radio-card-4" class="radio-card">
-                                <input type="radio" name="radio-card" value="option4" id="radio-card-4" />
+                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="4" id="radio-card-4" />
                                 <div class="card-content-wrapper">
                                   <span class="check-icon"></span>
                                   <div class="card-content">
@@ -358,6 +361,10 @@
                               </label>
                               <!-- /.radio-card -->
                             </div>
+                            @error('ticketCheck')
+                                <span class="@error('ticketCheck') is-invalid @enderror">Error de check</span>
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                             <!-- /.grid-wrapper -->
                           </div>
                           <!-- /.container -->
@@ -377,31 +384,55 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="supportDataForm">
+                <form wire:submit="saveTicket" id="supportDataForm">
                     <p><i class="fa-solid fa-camera"></i> Adjunte foto del incidente</p>                    
+                    <div class="card-img card-pic">
+                        @if ($photoTicketData instanceof \Livewire\TemporaryUploadedFile)
+                            <img class="ticket-photo"
+                                src="{{ $photoTicketData->temporaryUrl() }}" />
+                        @elseif ($photoTicketData)
+                            <img class="ticket-photo"
+                                src="{{ $photoTicketData }}" />
+                        @else
+                            <img class="ticket-photo"
+                                src="{{asset('assets/img/support/imageTicket.png')}}" />
+                        @endif
+                    </div>
                     <div class="mb-3">
-                        <label for="formFileMultiple" class="form-label">Fotos</label>
-                        <input class="form-control" type="file" id="formFileMultiple" multiple accept="image/*" capture="camera">
+                        <label for="photoTicketData" class="form-label">Fotos</label>
+                        <input id="photo"
+                        class="form-control @error('photoTicketData') is-invalid @enderror" id="photoTicketData"
+                        wire:model.live.debounce.500ms="photoTicketData" name="photoTicketData" type="file" capture="camera"/>
+                        @error('photoTicketData')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror                        
                         <small>Opcional</small>
                     </div>
                     <div class="mb-3">
                         <label for="aditionalDescription" class="form-label">Datos Adicionales</label>
-                        <textarea class="form-control" id="aditionalDescription" name="aditionalDescription" placeholder="Añada aquí una descripción breve" aria-label="With textarea"></textarea>
+                        <textarea class="form-control @error('descriptionTicketData') is-invalid @enderror" wire:model="descriptionTicketData" id="aditionalDescription" name="aditionalDescription" placeholder="Añada aquí una descripción breve" aria-label="With textarea"></textarea>
+                        @error('descriptionTicketData')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror 
                         <small>Opcional</small>
-                     </div>
-                </form>
+                     </div>                
             </div>
             <div class="modal-footer">
               <button class="btn btn-info" data-bs-target="#fastTicketModal" style="color:#fff" data-bs-toggle="modal">Regresar</button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="button" onclick="submitTicketForm()" style="color:#fff"  class="btn btn-info">Enviar</button>
+              <button type="submit" style="color:#fff"  class="btn btn-info">Enviar</button>
             </div>
+            </form>
           </div>
         </div>
       </div>   
 </div>
 @push('scripts')
-    @routes
+    {{-- @routes
     <script>        
         function submitTicketForm() {
             // Extraer datos del formulario 'fastTicketFormModal'
@@ -491,5 +522,5 @@
             //     }
         };
 
-    </script>
+    </script> --}}
 @endpush

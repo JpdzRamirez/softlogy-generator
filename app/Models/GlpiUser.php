@@ -68,6 +68,14 @@ class GlpiUser extends Model
     {
         return $this->belongsTo(GlpiUserEntiti::class, 'entities_id');
     }
+    /**
+     * Entitie name
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function profile()
+    {
+        return $this->belongsTo(GlpiUserProfile::class, 'profiles_id');
+    }
 
     /**
      * Title name
@@ -82,7 +90,7 @@ class GlpiUser extends Model
     {
         return $this->hasOne(GlpiUserEmail::class, 'users_id');
     }
-            /*  
+    /*  
     ***************************************************
                👚 Complementary Data info
     ***************************************************                    
@@ -93,6 +101,6 @@ class GlpiUser extends Model
      */
     public function tickets()
     {
-        return $this->belongsTo(GlpiTicket::class, 'users_id_recipient');
+        return $this->belongsTo(GlpiTickets::class, 'users_id_recipient');
     }
 }

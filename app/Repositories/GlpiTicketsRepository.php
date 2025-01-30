@@ -95,7 +95,12 @@ class GlpiTicketsRepository
         return $recipients;
     }
 
-    public function create(array $data)
+    /**
+     * Summary of createTicket
+     * @param array $data
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function createTicket(array $data)
     {
         return $this->model->create($data);
     }

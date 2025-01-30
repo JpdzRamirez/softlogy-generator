@@ -22,6 +22,20 @@ class GlpiTicketsUsers extends Model
     */
     protected $with = ['ticketContent'];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'tickets_id',
+        'users_id',
+        'type',
+        'use_notification',
+        'alternative_email'
+    ];
+
+
     /*  
     ***************************************************
                👚 Complementary Data info

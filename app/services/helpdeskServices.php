@@ -3,13 +3,13 @@
 namespace app\services;
 
 use Illuminate\Support\Facades\DB;
-use App\Contracts\HelpDeskServiceInterface;
+use App\Contracts\HelpDeskServicesInterface;
 
 use App\Repositories\GlpiTicketsRepository;
 
 use Exception;
 
-class HelpdeskServices implements HelpDeskServiceInterface
+class HelpdeskServices implements HelpDeskServicesInterface
 {
 
     protected $glpiTicketRepository;
@@ -306,7 +306,7 @@ class HelpdeskServices implements HelpDeskServiceInterface
             }
             return $tickets;
         } catch (Exception $e) {
-            return ['error' => "ERROR DE INTEGRACION: " . $e->getMessage()];
+            throw $e;
         }
     }
     
@@ -383,14 +383,24 @@ class HelpdeskServices implements HelpDeskServiceInterface
             // Devuelve la respuesta estructurada
             return $ticketsList;
         } catch (Exception $e) {
-            return ['error' => "ERROR DE INTEGRACION: " . $e->getMessage()];
+            throw $e;
         }
     }
 
     public function createTicket(array $ticketData)
     {
         // Aseguramos que no haya límites de tiempo y memoria
-        set_time_limit(0);  // Sin límite de tiempo de ejecución
-        ini_set("memory_limit", -1);  // Sin límite de memoria
+        DB::statement('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');        
+        set_time_limit(90);
+        ini_set('default_socket_timeout', 90);
+        DB::beginTransaction();
+        try{
+            $response=$this->glpiTicketRepository->createTicket($ticketData);
+
+            return $response;
+        }catch(Exception $e){
+            throw $e;
+        }
+
     }
 }

@@ -56,7 +56,7 @@ class AuthServices implements AuthServicesInterface
             $user = $this->glpiUserRepository
             ->only(
                 ['id', 'name', 'phone', 'mobile', 'password', 'realname', 'firstname', 'profiles_id', 'entities_id', 'usertitles_id', 'locations_id', 'is_active', 'picture'],
-                ['location', 'entiti', 'title', 'email']
+                ['location', 'entiti', 'title', 'email','profile']
             )
             ->where('name', $data['username'])
             ->first();

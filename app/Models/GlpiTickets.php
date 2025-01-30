@@ -24,6 +24,7 @@ class GlpiTickets extends Model
         'entities_id',
         'name',
         'date',
+        'user_id_lastupdater',
         'status',
         'user_id_recipient',
         'requesttypes_id',

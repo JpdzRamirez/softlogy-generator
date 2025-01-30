@@ -273,6 +273,9 @@
         // Limpiar los campos del formulario
         $("#adminFormModal")[0].reset();
     });
+    $(".closeMessage").on("click", function () {
+        $(".modal-errors").fadeOut(); // Oculta el modal con efecto de desvanecimiento
+    });
     // Evento de cierre del modal
     $("#auth").on("hidden.bs.modal", function () {
         // Limpiar los campos del formulario
@@ -303,11 +306,11 @@
     const headerTicket = $(".header-ticket-title");
 
     const listTickets = $("#listTickets");
-    
-    document.addEventListener('hideListTickets', function(event){ 
-        setTimeout(() => {            
+
+    document.addEventListener("hideListTickets", function (event) {
+        setTimeout(() => {
             listTickets.css("display", "none");
-        }, 600);      
+        }, 600);
     });
 
     // Función para aplicar estilos según media query
@@ -359,6 +362,9 @@
     // Aplicar estilos inicialmente al cargar la página
     applyResponsiveStyles();
 
+    /*
+        MODALS EVENTS
+    */
     $("#incident").on("click", function () {
         // Mostrar el modal con el id 'fastTicketModal'
         let adminModal = new bootstrap.Modal(
@@ -367,9 +373,36 @@
         adminModal.show();
     });
 
+    document.addEventListener("reloadsupportModal", function (event) {
+        $(".modal-backdrop.fade.show").remove();
+        // Abrir el modal
+        let supportModal = new bootstrap.Modal(
+            document.getElementById("sopportDataModal")
+        );
+        supportModal.show();
+
+        let backdrops = $(".modal-backdrop.fade.show");
+        let totalBackdrops = backdrops.length;
+        if (totalBackdrops > 1) {
+            backdrops.slice(1).remove();
+        }
+    });
+
+    // Seleccionar todos los botones de cerrar modales
+    $('button[data-bs-dismiss="modal"]').on("click", function () {
+        // Obtener el modal asociado a este botón
+        let modal = $(this).closest(".modal");
+
+        // Reiniciar el formulario dentro de ese modal específico
+        modal.find("form")[0].reset();
+
+        // Hacer un dispatch para Livewire (opcional, si es necesario)
+        Livewire.dispatch("resetPhotoTicketValue");
+
+    });
     /*
     
-            LIST TICKET EVENTS
+        LIST TICKET EVENTS
     
     */
     $(".has-tooltip").on("click", function (e) {
@@ -388,15 +421,27 @@
         $(".has-tooltip").removeClass("active");
     });
     // Inicializar tooltips
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    const tooltipTriggerList = document.querySelectorAll(
+        '[data-bs-toggle="tooltip"]'
+    );
+    const tooltipTitleTriggerList = document.querySelectorAll(
+        '[data-bs-toggle="tooltipTitle"]'
+    );
+    const tooltipList = [...tooltipTriggerList].map(
+        (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+    );
+    const tooltipTitleList = [...tooltipTitleTriggerList].map(
+        (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+    );
 
-    document.addEventListener('restartToolTip', function(event){ 
-        setTimeout(() => {            
-            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));            
-        }, 1000);      
+    document.addEventListener("restartToolTip", function (event) {
+        setTimeout(() => {
+            const tooltipTriggerList = document.querySelectorAll(
+                '[data-bs-toggle="tooltip"]'
+            );
+            const tooltipList = [...tooltipTriggerList].map(
+                (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+            );
+        }, 1000);
     });
-
-
 })();

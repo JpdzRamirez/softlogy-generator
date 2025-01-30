@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\AuthServicesInterface;
-use App\Contracts\HelpDeskServiceInterface;
+use App\Contracts\HelpDeskServicesInterface;
 use App\Http\Requests\ValidateLoginRequest;
 
 use App\Exceptions\UserNotFoundException;
@@ -17,11 +17,11 @@ use Exception;
 class PuntosVentaController extends Controller
 {   
     protected $helpDeskServiceInterface;
-    public function __construct(HelpDeskServiceInterface $helpDeskServiceInterface)
+    public function __construct(HelpDeskServicesInterface $helpDeskServiceInterface)
     {
         $this->helpDeskServiceInterface = $helpDeskServiceInterface;
     }
-    public function loginOAuth(ValidateLoginRequest $request, AuthServicesInterface $auth,HelpDeskServiceInterface $helpServices )
+    public function loginOAuth(ValidateLoginRequest $request, AuthServicesInterface $auth,HelpDeskServicesInterface $helpServices )
     {
                 
         // Se valida los datos con inyección de dependencias de un validador 

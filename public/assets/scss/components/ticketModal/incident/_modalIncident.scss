@@ -166,3 +166,17 @@
     
 }
 
+.modal-content{
+    #supportDataForm{
+        .card-pic{
+            border-radius: 50%;
+            padding: 7px;
+            width: 200px;
+            max-width: 100%;
+            margin: auto;
+            .ticket-photo{
+                width: inherit;
+            }
+        }
+    }
+}

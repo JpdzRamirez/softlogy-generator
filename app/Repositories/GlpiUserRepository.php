@@ -104,16 +104,18 @@ class GlpiUserRepository
             if ($localUser) {
                 // Preparar los datos a actualizar solo si hay cambios
                 $updatedData = array_filter([
-                    'email' => $user->email->email ?? "{$user->name}@example.com",
+                    'email' => $user->email->email ?? "{$user->name}@example.com", // Corregido el acceso a email
                     'realname' => $user->realname !== $localUser->realname ? $user->realname : null,
                     'firstname' => $user->firstname !== $localUser->firstname ? $user->firstname : null,
                     'phone' => $user->phone !== $localUser->phone ? $user->phone : null,
                     'mobile' => $user->mobile !== $localUser->mobile ? $user->mobile : null,
-                    'entiti' => $user->entiti?->name !== $localUser->entiti ? $user->entiti?->name : null,
-                    'title' => $user->title?->name !== $localUser->title ? $user->title?->name : null,
-                    'location' => $user->location?->name !== $localUser->location ? $user->location?->name : null,
+                    'entiti' => ($user->entiti?->name ?? null) !== ($localUser->entiti?->name ?? null) ? $user->entiti?->name : null,
+                    'entities_id' => ($user->entiti?->id ?? null) !== ($localUser->entiti?->id ?? null) ? $user->entiti?->id : null,
+                    'title' => ($user->title?->name ?? null) !== ($localUser->title?->name ?? null) ? $user->title?->name : null,
+                    'location' => ($user->location?->name ?? null) !== ($localUser->location?->name ?? null) ? $user->location?->name : null,
                     'glpi_id' => $user->id !== $localUser->glpi_id ? $user->id : null,
-                    'profile_id' => $user->profiles_id !== $localUser->profile_id ? $user->profiles_id : null,
+                    'profile' => ($user->profile?->name ?? null) !== ($localUser->profile?->name ?? null) ? $user->profile?->name : null,
+                    'profile_id' => ($user->profile?->id ?? null) !== ($localUser->profile?->id ?? null) ? $user->profile?->id : null,
                     'is_active' => $user->is_active !== $localUser->is_active ? $user->is_active : null,
                     'picture' => $user->picture !== $localUser->picture ? $user->picture : null,
                 ], fn($value) => $value !== null); // Filtrar solo valores no nulos
@@ -127,17 +129,19 @@ class GlpiUserRepository
 
                 $data = [
                     'name' => $user->name,
-                    'realname' => $user->realname ? $user->name : null ,
-                    'firstname' => $user->firstname ? $user->fistname : null,
-                    'email' => $user->email->email ?? "{$user->name}@softlogydummy.com",
-                    'password' => $user->password, // Asegúrate de que esté encriptada si es necesario
+                    'realname' => $user->realname ? $user->name : null,
+                    'firstname' => $user->firstname ? $user->fistname : null, 
+                    'email' => $user->email->email ?? "{$user->name}@softlogydummy.com", 
+                    'password' => $user->password,
                     'phone' => $user->phone ? $user->phone : null,
                     'mobile' => $user->mobile ? $user->mobile : null,
-                    'entiti' => $user->entiti->name,
-                    'title' => $user->title->name ?? 'Sin título',
-                    'location' => $user->location->name ?? 'Sin ubicación',
+                    'entiti' => $user->entiti->name, 
+                    'entities_id' => $user->entiti->id, 
+                    'title' => $user->title->name ?? 'Usuario Estandar', 
+                    'location' => $user->location->name ?? '-', 
                     'glpi_id' => $user->id,
-                    'profile_id' => $user->id,
+                    'profile' => $user->profile->name, 
+                    'profile_id' => $user->profile->id, 
                     'is_active' => $user->is_active,
                     'picture' => $user->picture ?? null,
                 ];
