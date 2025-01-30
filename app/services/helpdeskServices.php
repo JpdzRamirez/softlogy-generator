@@ -310,11 +310,17 @@ class HelpdeskServices implements HelpDeskServiceInterface
         }
     }
     
-    public function getTicketsUser(int $idUser,int $perPage)
+    public function getTicketsUser(int $idUser, $ticketName, $ticketStatus, $ticketType, int $perPage)
     {
         // Consulta 
         try {
-            $ticketsList = $this->glpiTicketRepository->getAllTicketsUser($idUser,$perPage);
+            $ticketsList= $this->glpiTicketRepository->getAllTicketsUser(
+                $idUser,
+                $ticketName,
+                $ticketStatus,
+                $ticketType,
+                $perPage
+            );
             
             if (!$ticketsList) {
                 return null;

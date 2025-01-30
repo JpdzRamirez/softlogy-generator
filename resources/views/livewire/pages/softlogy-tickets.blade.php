@@ -1,4 +1,4 @@
-<div id="listTickets" wire:id="{{$listTicketsId}}">
+<div>
     <div class="container">
         {{-- HEADER TICKET LIST SECTION --}}
 
@@ -111,24 +111,22 @@
         </div>
 
         {{-- TICKET LIST SECTION --}}
-        <div class="row" id="listTickets" 
-        x-data="{ show: @entangle('showList') }" 
-        x-bind:class="show ? 'flex animate__animated animate__slideInDown' : 'hidden'">
+        <div class="row {{$listToggleClass}}" id="listTickets" >
             <div class="col-lg-10 mx-auto">
                 <div class="career-search mb-60">
 
-                    <form action="#" class="career-form mb-60">
+                    <form wire:submit.prevent="searchTickets" class="career-form mb-60">
                         <div class="row">
                             <div class="col-md-6 col-lg-3 my-3">
                                 <div class="input-group position-relative">
                                     <input type="text" class="form-control" placeholder="Buscar por nombre"
-                                        id="ticketName">
+                                        id="ticketName" wire:model="ticketName">
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-3 my-3">
-                                <div class="select-container">
+                                <div class="select-container" wire:model="ticketStatus">
                                     <select class="custom-select">
-                                        <option selected="">Filtrar por estado</option>
+                                        <option selected value="">Filtrar por estado</option>
                                         <option value="1">Nuevos</option>
                                         <option value="2">En curso</option>
                                         <option value="3">Planificados</option>
@@ -140,15 +138,15 @@
                             </div>
                             <div class="col-md-6 col-lg-3 my-3">
                                 <div class="select-container">
-                                    <select class="custom-select">
-                                        <option selected="">Filtrar por Tipo</option>
+                                    <select class="custom-select" wire:model="ticketType">
+                                        <option selected value="">Filtrar por Tipo</option>
                                         <option value="1">Soporte Rápido</option>
                                         <option value="2">Solicitud</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-3 my-3 d-inline-flex justify-content-center">
-                                <button type="button" id="search"
+                                <button type="submit" id="search"
                                     class="button btn btn-lg btn-block btn-light btn-custom">
                                     <span> Buscar</span>
                                 </button>
@@ -269,7 +267,7 @@
 
                 <!-- START Pagination -->
                 <div class="pagination justify-content-center">
-                    {{ $listTickets->links() }}
+                    {{ $listTickets->links(data: ['scrollTo' => false]) }}
                 </div>
                 <!-- END Pagination -->
             </div>

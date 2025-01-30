@@ -302,26 +302,13 @@
     const closeTutorialButton = $("#closeTutorial");
     const headerTicket = $(".header-ticket-title");
 
-    // const openTicketList = $("#openTicketList");
-    // const listTickets = $("#listTickets");
-
-    // openTicketList.on("click", function () {
-    //     if (listTickets.css("display") === "flex") {
-    //         listTickets.css(
-    //             "animation",
-    //             "slide-out-top 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both"
-    //         );
-    //         setTimeout(() => {
-    //             listTickets.css("display", "none");
-    //         }, 600);
-    //     } else {
-    //         listTickets.css(
-    //             "animation",
-    //             "slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both"
-    //         );
-    //         listTickets.css("display", "flex");
-    //     }
-    // });
+    const listTickets = $("#listTickets");
+    
+    document.addEventListener('hideListTickets', function(event){ 
+        setTimeout(() => {            
+            listTickets.css("display", "none");
+        }, 600);      
+    });
 
     // Función para aplicar estilos según media query
     function applyResponsiveStyles() {
@@ -411,27 +398,5 @@
         }, 1000);      
     });
 
-    const listTickets = document.getElementById("listTickets");
-    const wireListTicketsId = listTickets.getAttribute('wire:id');
-
-    let lastScrollPosition = 0;
-    
-    document.addEventListener("scroll", function () {
-            lastScrollPosition = window.scrollY;
-            console.log(lastScrollPosition);
-    });
-        
-    Livewire.hook('morph.updated', ({ component }) => {
-            
-              //Si el componente es el selector de países
-              if (component.id == wireListTicketsId) {
-                console.log("updated :RRRRR"+lastScrollPosition);
-                console.log("updated");
-                window.scrollTo({ top: lastScrollPosition, behavior: "instant" });
-              }
-            
-    })
-
-    
 
 })();

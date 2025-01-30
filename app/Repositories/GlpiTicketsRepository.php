@@ -36,39 +36,62 @@ class GlpiTicketsRepository
     /**
      * 
      * @param int $userId
+     * @param mixed $ticketName
+     * @param mixed $ticketStatus
+     * @param mixed $ticketType
      * @param mixed $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getAllTicketsUser(int $userId,$perPage){
-        return $this->model
-        ->where('users_id', $userId)
-        ->where('type', 1)
-        ->whereHas('ticketContent', function ($query) {
-            $query->where('is_deleted', '!=', 1); // Filtra los tickets no eliminados
-        })
-        ->select('tickets_id', 'users_id', 'type')
-        ->paginate($perPage); 
+    public function getAllTicketsUser(int $userId, $ticketName, $ticketStatus, $ticketType, $perPage)
+    {
+        $query = $this->model
+            ->where('users_id', $userId)
+            ->where('type', 1) // Asumiendo que 'type' es un campo en el modelo principal
+            ->whereHas('ticketContent', function ($query) use ($ticketName, $ticketStatus, $ticketType) {
+                // Filtro por estado dentro de la relación
+                $query->where('is_deleted', '!=', 1); // Filtra los tickets no eliminados
+
+                // Filtrar por nombre del ticket en ticketContent
+                if ($ticketName) {
+                    $query->where('name', 'like', '%' . $ticketName . '%'); // Cambia 'name' por el campo adecuado
+                }
+
+                // Filtrar por estado en ticketContent
+                if ($ticketStatus) {
+                    $query->where('status', $ticketStatus); // Filtra por el campo 'status' de la relación
+                }
+
+                // Filtrar por tipo en ticketContent
+                if ($ticketType) {
+                    $query->where('type', $ticketType); // Filtra por el campo 'type' de la relación
+                }
+            });
+
+        // Seleccionar los campos necesarios
+        return $query->select('tickets_id', 'users_id', 'type')
+            ->paginate($perPage);
     }
 
-     /**
+    /**
      * 
      * @param int $ticketId
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAllRecipients(int $ticketId){
+    public function getAllRecipients(int $ticketId)
+    {
         $recipients = DB::connection('mysql_second')
-        ->table('glpi_tickets_users')
-        ->join('glpi_users', 'glpi_tickets_users.users_id', '=', 'glpi_users.id')
-        ->where('glpi_tickets_users.tickets_id', $ticketId)
-        ->where('glpi_tickets_users.type', '!=', 1)
-        ->select(
-            'glpi_tickets_users.tickets_id',
-            'glpi_tickets_users.users_id',
-            'glpi_tickets_users.type',            
-            'glpi_users.firstname',
-            'glpi_users.realname',
-        )
-        ->get();
+            ->table('glpi_tickets_users')
+            ->join('glpi_users', 'glpi_tickets_users.users_id', '=', 'glpi_users.id')
+            ->where('glpi_tickets_users.tickets_id', $ticketId)
+            ->where('glpi_tickets_users.type', '!=', 1)
+            ->select(
+                'glpi_tickets_users.tickets_id',
+                'glpi_tickets_users.users_id',
+                'glpi_tickets_users.type',
+                'glpi_users.firstname',
+                'glpi_users.realname',
+            )
+            ->get();
         return $recipients;
     }
 
