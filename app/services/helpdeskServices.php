@@ -403,7 +403,7 @@ class HelpdeskServices implements HelpDeskServicesInterface
         DB::beginTransaction();
         try {
             $ticketID = $this->glpiTicketRepository->createTicket_first_step($ticketData);
-            $content = $this->castServicesInterface->glpiContenTicketBuilder($ticketData['descriptionTicketData'], $ticketData['photoTicketData']);
+            $content = $this->castServicesInterface->glpiContenTicketBuilder($ticketData,$ticketID);
             
             DB::commit();
             return true;
