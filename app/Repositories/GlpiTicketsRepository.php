@@ -24,13 +24,6 @@ class GlpiTicketsRepository
     {
         $this->model = new GlpiTicketsUsers();
     }
-    /**
-     * All production steps work with the same product instance.
-     */
-    public function find($id)
-    {
-        return $this->model->findOrFail($id);
-    }
 
 
     /**
@@ -73,28 +66,27 @@ class GlpiTicketsRepository
     }
 
     /**
-     * 
+     * Obtiene todos los destinatarios de un ticket específico.
+     *
      * @param int $ticketId
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllRecipients(int $ticketId)
     {
-        $recipients = DB::connection('mysql_second')
-            ->table('glpi_tickets_users')
-            ->join('glpi_users', 'glpi_tickets_users.users_id', '=', 'glpi_users.id')
-            ->where('glpi_tickets_users.tickets_id', $ticketId)
-            ->where('glpi_tickets_users.type', '!=', 1)
-            ->select(
-                'glpi_tickets_users.tickets_id',
-                'glpi_tickets_users.users_id',
-                'glpi_tickets_users.type',
-                'glpi_users.firstname',
-                'glpi_users.realname',
-            )
-            ->get();
-        return $recipients;
+        return $this->model->with('user')
+        ->where('tickets_id', $ticketId)
+        ->where('type', '!=', 1)
+        ->get()
+        ->map(function ($ticketUser) {
+            $recipient = new \stdClass(); // Crea un nuevo objeto stdClass
+            $recipient->tickets_id = $ticketUser->tickets_id;
+            $recipient->users_id = $ticketUser->users_id;
+            $recipient->type = $ticketUser->type;
+            $recipient->firstname = optional($ticketUser->user)->firstname;
+            $recipient->realname = optional($ticketUser->user)->realname;
+            return $recipient; // Retorna el objeto stdClass
+        });
     }
-
     /**
      * Summary of createTicket
      * @param array $data

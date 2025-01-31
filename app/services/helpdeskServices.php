@@ -342,10 +342,14 @@ class HelpdeskServices implements HelpDeskServicesInterface
                         // Comprobar el tipo de destinatario
                         if ($recipient->type == 2) {
                             // Agregar a los técnicos
-                            $tecnicos[] = $recipient->firstname ." ". $recipient->realname;
-                        } elseif ($recipient->type == 3) {
+                            $nombres = explode(" ", $recipient->firstname); 
+                            $apellidos = explode(" ", $recipient->realname);
+                            $tecnicos[] = $nombres[0] . " " . $apellidos[0];
+                        } elseif ($recipient->type == "3") {
                             // Agregar a los observadores
-                            $observadores[] = $recipient->firstname ." ". $recipient->realname;
+                            $nombres = explode(" ", $recipient->firstname); 
+                            $apellidos = explode(" ", $recipient->realname); 
+                            $observadores[] = $nombres[0] . " " . $apellidos[0];
                         }
                     }
                     // Crear el tooltip para observadores

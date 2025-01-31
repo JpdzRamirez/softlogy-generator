@@ -240,7 +240,7 @@
                                     <p style="margin-left: 2em;"><i class="fa-solid fa-user-gear"></i> Tecnicos asignados: 
                                         @if($ticket->tecnicos && count($ticket->tecnicos) > 0)
                                                 @foreach ($ticket->tecnicos as $tecnico)
-                                                    <span>{{$tecnico}}</span>
+                                                    <span>{{$tecnico}},</span>
                                                 @endforeach
                                             @else
                                             <span>Sin Tecnicos Asignados</span>
@@ -400,7 +400,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="photoTicketData" class="form-label">Fotos</label>
-                        <input id="photo"
+                        <input id="photoTicketData"
                         class="form-control @error('photoTicketData') is-invalid @enderror" id="photoTicketData"
                         wire:model.live.debounce.500ms="photoTicketData" name="photoTicketData" type="file" capture="camera"/>
                         @error('photoTicketData')
@@ -431,96 +431,3 @@
         </div>
       </div>   
 </div>
-@push('scripts')
-    {{-- @routes
-    <script>        
-        function submitTicketForm() {
-            // Extraer datos del formulario 'fastTicketFormModal'
-            let fastTicketForm = $('#fastTicketFormModal');
-            let fastTicketData = {}; // Objeto para almacenar los datos
-            fastTicketForm.find(':input[name]').each(function () {
-                if (this.type === 'radio' && !this.checked) return; // Solo radios seleccionados
-                fastTicketData[this.name] = $(this).val();
-            });
-
-            // Extraer datos del formulario 'supportDataForm'
-            let supportDataForm = $('#supportDataForm');
-            let formData = new FormData(); // Usaremos FormData para manejar archivos también
-            supportDataForm.find(':input[name], :input[type="file"]').each(function () {
-                if (this.type === 'file') {
-                    // Agregar archivos al FormData
-                    Array.from(this.files).forEach((file, index) => {
-                        formData.append(this.name + '[' + index + ']', file);
-                    });
-                } else {
-                    formData.append(this.name, $(this).val());
-                }
-            });
-
-            // Combinar objetos (fastTicketData en formData)
-            for (let key in fastTicketData) {
-                formData.append(key, fastTicketData[key]);
-            }
-
-            // Obtener el token CSRF
-            let token = $('meta[name="csrf-token"]').attr('content');
-
-            for (let pair of formData.entries()) {
-                console.log(pair[0], pair[1]);
-            }
-            showSpinner(true);
-            // // Enviar peticiones a la ruta
-            // $.ajax({
-            //     type: "POST",
-            //     url: route('create.fastTickets'), // Generar la ruta correctamente con Ziggy
-            //     data: formData,
-            //     dataType: "json", // Esperamos una respuesta JSON
-            //     processData: false, // Evitar que jQuery procese los datos
-            //     contentType: false, // Evitar que jQuery establezca el tipo de contenido
-            //     headers: {
-            //         'X-CSRF-TOKEN': token // Incluir el token CSRF en el encabezado
-            //     },
-            //     success: function(response) {
-            //         if (response.status) {
-            //             console.log(response);
-            //             Swal.fire({
-            //                 title: response.title,
-            //                 text: "Se han añadido un total de: " + response.records +
-            //                     " Puntos de venta. Filas no Procesadas " + response.notProcess,
-            //                 icon: "success"
-            //             });
-            //         } else {
-            //             Swal.fire({
-            //                 title: "Error de Integración",
-            //                 text: "Ha sucedido un error inseperado",
-            //                 icon: "warning"
-            //             });
-            //         }
-            //     },
-            //     error: function(xhr, status, error) {
-            //         let errorMessage = "Ocurrió un error inesperado."; // Mensaje genérico por defecto
-            //         let title = "Error de Integración";
-            //         if (xhr.responseJSON && xhr.responseJSON.message) {
-            //             // Obtener el mensaje específico desde el backend
-            //             errorMessage = xhr.responseJSON.message;
-            //         }
-
-            //         // Manejar errores específicos según el código HTTP
-            //         if (xhr.status === 401) {
-            //             title = xhr.responseJSON.title;
-            //         } else if (xhr.status === 500) {
-            //             title = xhr.responseJSON.title;
-            //         }
-
-            //         // Mostrar el mensaje con SweetAlert2
-            //         Swal.fire({
-            //             icon: "error",
-            //             title: title,
-            //             text: errorMessage,
-            //             confirmButtonText: "Entendido"
-            //         });
-            //     }
-        };
-
-    </script> --}}
-@endpush

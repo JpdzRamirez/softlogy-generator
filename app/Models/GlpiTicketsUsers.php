@@ -51,4 +51,13 @@ class GlpiTicketsUsers extends Model
         return $this->belongsTo(GlpiTickets::class, 'tickets_id', 'id')
             ->where('is_deleted', '!=', 1); // Filtra tickets no eliminados
     }
+
+    /**
+     * Relation with GlpiUsers (BelongsTo)
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(GlpiUser::class, 'users_id', 'id');         
+    }
 }

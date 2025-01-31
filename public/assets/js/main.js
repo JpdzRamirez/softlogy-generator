@@ -387,7 +387,7 @@
             backdrops.slice(1).remove();
         }
     });
-
+    
     // Seleccionar todos los botones de cerrar modales
     $('button[data-bs-dismiss="modal"]').on("click", function () {
         // Obtener el modal asociado a este botón
@@ -396,12 +396,11 @@
         // Reiniciar el formulario dentro de ese modal específico
         modal.find("form")[0].reset();
 
-        // Hacer un dispatch para Livewire (opcional, si es necesario)
-        Livewire.dispatch("resetPhotoTicketValue");
-
+        // Resetear el src de la imagen dentro del modal
+        modal.find(".ticket-photo").attr("src", "/assets/img/support/imageTicket.png");
     });
     /*
-    
+
         LIST TICKET EVENTS
     
     */
