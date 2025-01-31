@@ -103,4 +103,5 @@ class GlpiUser extends Model
     {
         return $this->belongsTo(GlpiTickets::class, 'users_id_recipient');
     }
+
 }

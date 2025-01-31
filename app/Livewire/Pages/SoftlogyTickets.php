@@ -32,7 +32,7 @@ class SoftlogyTickets extends Component
     public $ticketName = '';
     public $ticketStatus = '';
     public $ticketType = '';
-    public $perPage = 1;
+    public $perPage = 3;
 
     /**
      * Toggle visibility of list tickets
@@ -135,10 +135,14 @@ class SoftlogyTickets extends Component
 
         try{
             $validatedData = $this->validate();
+
             $ticketData=[
-                "ticketCategory"=>$validatedData['ticketCheck'],
+                "glpi_id"=> Auth::user()->glpi_id,
+                "entities_id"=>Auth::user()->entities_id,
+                "location_id"=> Auth::user()->location_id,
+                "ticketCheck"=>$validatedData['ticketCheck'],
                 "photoTicketData" =>$validatedData['photoTicketData'],
-                "ticketDescription"=>$validatedData['descriptionTicketData']
+                "descriptionTicketData"=>$validatedData['descriptionTicketData']
             ];
             $helpdeskServices->createTicket($ticketData);
             session()->flash('status', 'Post successfully updated.');            

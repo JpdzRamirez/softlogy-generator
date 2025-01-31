@@ -4,6 +4,7 @@ namespace app\services;
 
 use Illuminate\Support\Facades\DB;
 use App\Contracts\HelpDeskServicesInterface;
+use App\Contracts\CastServicesInterface;
 
 use App\Repositories\GlpiTicketsRepository;
 
@@ -13,12 +14,14 @@ class HelpdeskServices implements HelpDeskServicesInterface
 {
 
     protected $glpiTicketRepository;
+    protected $castServicesInterface;
     /**
      * Create a new class instance.
      */
-    public function __construct(GlpiTicketsRepository $glpiTicketRepository)
+    public function __construct(GlpiTicketsRepository $glpiTicketRepository, CastServicesInterface $castServicesInterface)
     {
         $this->glpiTicketRepository = $glpiTicketRepository;
+        $this->castServicesInterface = $castServicesInterface;
     }
     private function curlRequest($url)
     {
@@ -309,67 +312,67 @@ class HelpdeskServices implements HelpDeskServicesInterface
             throw $e;
         }
     }
-    
+
     public function getTicketsUser(int $idUser, $ticketName, $ticketStatus, $ticketType, int $perPage)
     {
         // Consulta 
         try {
-            $ticketsList= $this->glpiTicketRepository->getAllTicketsUser(
+            $ticketsList = $this->glpiTicketRepository->getAllTicketsUser(
                 $idUser,
                 $ticketName,
                 $ticketStatus,
                 $ticketType,
                 $perPage
             );
-            
+
             if (!$ticketsList) {
                 return null;
-            }            
+            }
 
             // Iteramos cada ticket
             foreach ($ticketsList as $ticket) {
-                
-                $recipients=$this->glpiTicketRepository->getAllRecipients($ticket->tickets_id);
+
+                $recipients = $this->glpiTicketRepository->getAllRecipients($ticket->id);
 
                 // Verificar quienes son los actores del caso
                 if ($recipients) {
                     // Inicializar las variables para técnicos y observadores
                     $tecnicos = [];
                     $observadores = [];
-                    $observadoresTooltip=null;
+                    $observadoresTooltip = null;
                     // Recorrer los destinatarios y asignarlos a la propiedad correspondiente
                     foreach ($recipients as $recipient) {
                         // Comprobar el tipo de destinatario
                         if ($recipient->type == 2) {
                             // Agregar a los técnicos
-                            $nombres = explode(" ", $recipient->firstname); 
+                            $nombres = explode(" ", $recipient->firstname);
                             $apellidos = explode(" ", $recipient->realname);
                             $tecnicos[] = $nombres[0] . " " . $apellidos[0];
                         } elseif ($recipient->type == "3") {
                             // Agregar a los observadores
-                            $nombres = explode(" ", $recipient->firstname); 
-                            $apellidos = explode(" ", $recipient->realname); 
+                            $nombres = explode(" ", $recipient->firstname);
+                            $apellidos = explode(" ", $recipient->realname);
                             $observadores[] = $nombres[0] . " " . $apellidos[0];
                         }
                     }
                     // Crear el tooltip para observadores
                     if (!empty($observadores)) {
                         $observadoresTooltip = implode(', ', $observadores);
-                    }              
+                    }
                     // Asignar los resultados a las propiedades dinámicas del ticket
                     $ticket->tecnicos = $tecnicos;
                     $ticket->observadores = $observadoresTooltip;
                 }
                 // Procesar contenido del ticket principal
-                $decodedContent = htmlspecialchars_decode($ticket->ticketContent->content);
+                $decodedContent = htmlspecialchars_decode($ticket->content);
                 // Extraer texto limpio
                 $textCleaned = strip_tags($decodedContent);
 
-                $ticket->ticketContent->content=$textCleaned;
+                $ticket->content = $textCleaned;
 
                 $imagesBase64 = [];
 
-                foreach ($ticket->ticketContent->documents as $document) {
+                foreach ($ticket->documents as $document) {
                     $resoursesFile = env('SOFTLOGY_HELDEKS_RESOURCES');
                     $completePath = $resoursesFile . DIRECTORY_SEPARATOR . $document->filepath;
 
@@ -377,10 +380,9 @@ class HelpdeskServices implements HelpDeskServicesInterface
                         $imageData = file_get_contents($completePath);
                         $imagesBase64[] = 'data:' . $document->mime . ';base64,' . base64_encode($imageData);
                     }
-                    
                 }
-                if(!empty($imagesBase64)){
-                    $ticket->ticketContent->resources=$imagesBase64;
+                if (!empty($imagesBase64)) {
+                    $ticket->resources = $imagesBase64;
                 }
             }
 
@@ -393,18 +395,21 @@ class HelpdeskServices implements HelpDeskServicesInterface
 
     public function createTicket(array $ticketData)
     {
+
         // Aseguramos que no haya límites de tiempo y memoria
-        DB::statement('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');        
+        DB::statement('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
         set_time_limit(90);
         ini_set('default_socket_timeout', 90);
         DB::beginTransaction();
-        try{
-            $response=$this->glpiTicketRepository->createTicket($ticketData);
-
-            return $response;
-        }catch(Exception $e){
+        try {
+            $ticketID = $this->glpiTicketRepository->createTicket_first_step($ticketData);
+            $content = $this->castServicesInterface->glpiContenTicketBuilder($ticketData['descriptionTicketData'], $ticketData['photoTicketData']);
+            
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
             throw $e;
         }
-
     }
 }

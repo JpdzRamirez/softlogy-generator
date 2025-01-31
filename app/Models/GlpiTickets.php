@@ -77,4 +77,22 @@ class GlpiTickets extends Model
         ->select('glpi_documents.id', 'glpi_documents.name',
         'glpi_documents.filename','glpi_documents.filepath','glpi_documents.mime','glpi_documents.sha1sum'); 
     }
+
+    /**
+     * Relation with GlpiTicketsUser
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ticketsUser()
+    {
+        return $this->hasMany(GlpiTicketsUsers::class, 'tickets_id', 'id');
+    }
+
+    /**
+     * Relation with GlpiUsers (BelongsTo)
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(GlpiUser::class, 'users_id', 'id');         
+    }
 }

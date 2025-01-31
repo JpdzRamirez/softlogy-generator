@@ -163,21 +163,21 @@
                         <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
                             <div class="job-left my-4 d-md-flex align-items-center flex-wrap ticket-info">
                                 <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
-                                   <span class="has-tooltip">{{$ticket->ticketContent->id}}</span>
+                                   <span class="has-tooltip">{{$ticket->id}}</span>
                                    <div class='field'>                                        
                                             <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                                             <div class="toast-header">
                                                 <img src="{{asset('assets/img/clients/softlogy-logo.png')}}" style="max-width: 1.2em;" class="rounded me-2" alt="Ticket Preview">
-                                                <strong class="me-auto">Ticket: {{$ticket->ticketContent->id}}</strong>
-                                                <small>{{$ticket->ticketContent->date}}</small>
+                                                <strong class="me-auto">Ticket: {{$ticket->id}}</strong>
+                                                <small>{{$ticket->date}}</small>
                                                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                                               </div>
                                               <div class="toast-body">
-                                                {{$ticket->ticketContent->content}}
+                                                {{$ticket->content}}
                                                 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident ratione neque amet, non excepturi, in deleniti soluta veniam quod corporis odio nesciunt, 
                                                 voluptas vitae impedit! Quo temporibus aliquid dolores veritatis.
-                                                @if($ticket->ticketContent->resources && count($ticket->ticketContent->resources) > 0)
-                                                    @foreach ($ticket->ticketContent->resources as $resource)
+                                                @if($ticket->resources && count($ticket->resources) > 0)
+                                                    @foreach ($ticket->resources as $resource)
                                                         <img src="{{ $resource }}" />
                                                     @endforeach
                                                 @endif                                          
@@ -186,10 +186,10 @@
                                     </div>
                                 </div>
                                 <div class="job-content">
-                                    <h5 style="margin-left: 1.5em;">{{$ticket->ticketContent->name}}</h5>
+                                    <h5 style="margin-left: 1.5em;">{{$ticket->name}}</h5>
                                     <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans" style="gap:1em;">
                                         <li class="mr-md-4">
-                                            @switch($ticket->ticketContent->status)
+                                            @switch($ticket->status)
                                                 @case(1)
                                                 <div class="online-indicator new">
                                                     <span class="blink"></span>
@@ -230,17 +230,17 @@
                                             @endswitch                                            
                                         </li>
                                         <li class="mr-md-4">
-                                            @if (!$ticket->ticketContent->solvedate)
-                                            <i class="zmdi zmdi-time mr-2"></i> Fecha de apertura: {{$ticket->ticketContent->date}}
+                                            @if (!$ticket->solvedate)
+                                            <i class="zmdi zmdi-time mr-2"></i> Fecha de apertura: {{$ticket->date}}
                                                 @else
-                                                <i class="zmdi zmdi-time mr-2"></i> Fecha de solución: {{$ticket->ticketContent->solvedate}}
+                                                <i class="zmdi zmdi-time mr-2"></i> Fecha de solución: {{$ticket->solvedate}}
                                             @endif                                            
                                         </li>
                                     </ul>
                                     <p style="margin-left: 2em;"><i class="fa-solid fa-user-gear"></i> Tecnicos asignados: 
                                         @if($ticket->tecnicos && count($ticket->tecnicos) > 0)
                                                 @foreach ($ticket->tecnicos as $tecnico)
-                                                    <span>{{$tecnico}},</span>
+                                                    <span>{{$tecnico}}|</span>
                                                 @endforeach
                                             @else
                                             <span>Sin Tecnicos Asignados</span>
@@ -300,7 +300,7 @@
                             <div class="grid-wrapper grid-col-auto">
 
                               <label for="radio-card-1" class="radio-card">
-                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="1" id="radio-card-1" />
+                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="406" id="radio-card-1" />
                                 <div class="card-content-wrapper">
                                   <span class="check-icon"></span>
                                   <div class="card-content">
@@ -316,7 +316,7 @@
                               <!-- /.radio-card -->
                     
                               <label for="radio-card-2" class="radio-card">
-                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="2" id="radio-card-2" />
+                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="207" id="radio-card-2" />
                                 <div class="card-content-wrapper">
                                   <span class="check-icon"></span>
                                   <div class="card-content">
@@ -331,7 +331,7 @@
                               </label>
 
                               <label for="radio-card-3" class="radio-card">
-                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="3" id="radio-card-3" />
+                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="201" id="radio-card-3" />
                                 <div class="card-content-wrapper">
                                   <span class="check-icon"></span>
                                   <div class="card-content">
@@ -346,7 +346,7 @@
                               </label>
 
                               <label for="radio-card-4" class="radio-card">
-                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="4" id="radio-card-4" />
+                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="389" id="radio-card-4" />
                                 <div class="card-content-wrapper">
                                   <span class="check-icon"></span>
                                   <div class="card-content">

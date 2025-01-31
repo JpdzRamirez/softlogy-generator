@@ -113,10 +113,11 @@ class GlpiUserRepository
                     'entities_id' => ($user->entiti?->id ?? null) !== ($localUser->entiti?->id ?? null) ? $user->entiti?->id : null,
                     'title' => ($user->title?->name ?? null) !== ($localUser->title?->name ?? null) ? $user->title?->name : null,
                     'location' => ($user->location?->name ?? null) !== ($localUser->location?->name ?? null) ? $user->location?->name : null,
+                    'location_id' => ($user->locations_id ?? null) !== ($localUser->location_id ?? null) ? $user->locations_id : null,
                     'glpi_id' => $user->id !== $localUser->glpi_id ? $user->id : null,
                     'profile' => ($user->profile?->name ?? null) !== ($localUser->profile?->name ?? null) ? $user->profile?->name : null,
                     'profile_id' => ($user->profile?->id ?? null) !== ($localUser->profile?->id ?? null) ? $user->profile?->id : null,
-                    'is_active' => $user->is_active !== $localUser->is_active ? $user->is_active : null,
+                    'is_active' => $user->is_active !== $localUser->is_active ? $user->is_active : null,                    
                     'picture' => $user->picture !== $localUser->picture ? $user->picture : null,
                 ], fn($value) => $value !== null); // Filtrar solo valores no nulos
 
@@ -139,6 +140,7 @@ class GlpiUserRepository
                     'entities_id' => $user->entiti->id, 
                     'title' => $user->title->name ?? 'Usuario Estandar', 
                     'location' => $user->location->name ?? '-', 
+                    'location_id' => $user->locations_id ?? '-', 
                     'glpi_id' => $user->id,
                     'profile' => $user->profile->name, 
                     'profile_id' => $user->profile->id, 

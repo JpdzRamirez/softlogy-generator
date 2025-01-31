@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->integer('entities_id')->nullable()->after('entiti');
             $table->string('profile')->nullable()->after('glpi_id');
+            $table->string('location_id')->nullable()->after('location');
         });
     }
 
@@ -25,6 +26,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn(['entities_id']);
             $table->dropColumn(['profile']);
+            $table->dropColumn(['location_id']);
         });
     }
 };
