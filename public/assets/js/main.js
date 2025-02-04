@@ -257,6 +257,17 @@
     window.showSpinner = function (show) {
         spinner.css("display", show ? "block" : "none");
     };
+    document.addEventListener("hideSpinner", function (event) {
+        showSpinner(false);
+        let responseData = event.detail.data; 
+
+        Swal.fire({
+            title: "¡Envio exitoso!",
+            text: "Se ha creado correctamente el ticket: " + responseData,
+            icon: "success",
+            confirmButtonColor: "#3085d6"
+        });
+    });
 
     /*
         TOOLS PAGE

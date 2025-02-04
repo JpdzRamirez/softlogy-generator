@@ -422,9 +422,9 @@
                      </div>                
             </div>
             <div class="modal-footer">
-              <button class="btn btn-info" data-bs-target="#fastTicketModal" style="color:#fff" data-bs-toggle="modal">Regresar</button>
+              <button type="button" class="btn btn-info" data-bs-target="#fastTicketModal" style="color:#fff" data-bs-toggle="modal">Regresar</button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" style="color:#fff"  class="btn btn-info">Enviar</button>
+              <button type="submit" style="color:#fff" onclick="showSpinner(true)"  class="btn btn-info">Enviar</button>
             </div>
             </form>
           </div>

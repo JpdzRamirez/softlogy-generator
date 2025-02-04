@@ -137,15 +137,26 @@ class SoftlogyTickets extends Component
             $validatedData = $this->validate();
 
             $ticketData=[
-                "glpi_id"=> Auth::user()->glpi_id,
+                "glpi_id"=>(int)Auth::user()->glpi_id,
+                "tienda"=>explode('_', Auth::user()->name)[0],
                 "entities_id"=>Auth::user()->entities_id,
-                "location_id"=> Auth::user()->location_id,
-                "ticketCheck"=>$validatedData['ticketCheck'],
+                "location_id"=> Auth::user()->location_id ? Auth::user()->location_id : 795,
+                "ticketCheck"=>(int)$validatedData['ticketCheck'],
                 "photoTicketData" =>$validatedData['photoTicketData'],
                 "descriptionTicketData"=>$validatedData['descriptionTicketData']
             ];
-            $helpdeskServices->createTicket($ticketData);
-            session()->flash('status', 'Post successfully updated.');            
+            $response=$helpdeskServices->createTicket($ticketData);
+
+            if ($response['status']) {
+                $this->dispatch('hideSpinner', ['data' => $response]);
+            } else {
+                throw new Exception($response['message']);
+            }
+            
+        }catch(Exception $e){
+            // Manejar error si `createTicket` falla por un error inesperado
+            session()->flash('error', 'Hubo un problema al crear el ticket.');
+            return redirect()->route('softlogy.tickets');
         }catch(ValidationException  $e){
             session()->flash('validation_errors', $e->errors());
             return redirect()->route('softlogy.tickets');

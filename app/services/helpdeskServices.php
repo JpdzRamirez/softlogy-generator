@@ -4,7 +4,7 @@ namespace app\services;
 
 use Illuminate\Support\Facades\DB;
 use App\Contracts\HelpDeskServicesInterface;
-use App\Contracts\CastServicesInterface;
+
 
 use App\Repositories\GlpiTicketsRepository;
 
@@ -14,14 +14,13 @@ class HelpdeskServices implements HelpDeskServicesInterface
 {
 
     protected $glpiTicketRepository;
-    protected $castServicesInterface;
+    
     /**
      * Create a new class instance.
      */
-    public function __construct(GlpiTicketsRepository $glpiTicketRepository, CastServicesInterface $castServicesInterface)
+    public function __construct(GlpiTicketsRepository $glpiTicketRepository)
     {
-        $this->glpiTicketRepository = $glpiTicketRepository;
-        $this->castServicesInterface = $castServicesInterface;
+        $this->glpiTicketRepository = $glpiTicketRepository;        
     }
     private function curlRequest($url)
     {
@@ -398,18 +397,25 @@ class HelpdeskServices implements HelpDeskServicesInterface
 
         // Aseguramos que no haya límites de tiempo y memoria
         DB::statement('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
-        set_time_limit(90);
-        ini_set('default_socket_timeout', 90);
-        DB::beginTransaction();
+        // set_time_limit(90);
+        // ini_set('default_socket_timeout', 90);
+        DB::connection('mysql_second')->beginTransaction();
         try {
-            $ticketID = $this->glpiTicketRepository->createTicket_first_step($ticketData);
-            $content = $this->castServicesInterface->glpiContenTicketBuilder($ticketData,$ticketID);
-            
-            DB::commit();
-            return true;
+            $ticket = $this->glpiTicketRepository->createTicket($ticketData);
+            $this->glpiTicketRepository->createRelationTicketUser($ticket,$ticketData);
+            $content = $this->glpiTicketRepository->glpiContenTicketBuilder($ticketData,$ticket);
+            $this->glpiTicketRepository->updateTicket($ticket->id,$content);
+            DB::connection('mysql_second')->commit();
+            return [
+                'ticket'=>$ticket->id,
+                'status'=>true
+            ];
         } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
+            DB::connection('mysql_second')->rollBack();
+            return [
+                'message' => "Error en la transacción: " . $e->getMessage(),
+                'status' => false
+            ];
         }
     }
 }

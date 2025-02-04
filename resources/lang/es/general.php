@@ -20,6 +20,10 @@ return [
     'spinner-message'=>'Cargando...',
     'button-accept'=>'Aceptar',
 
+
+    // Ticket defaults content
+
+    'ticket-default-message'=>'Este es el mensaje por defecto generado por SOFTLOGY-MICRO:',
     'contact-title'=>'Contactame',
     'contact-info'=>'Mayor información',
     'contact-services'=>'Servicios en',
