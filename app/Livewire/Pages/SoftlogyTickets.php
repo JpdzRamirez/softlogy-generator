@@ -29,10 +29,14 @@ class SoftlogyTickets extends Component
      * Summary of filter variables
      * 
      */
+    public $requestTitle='';
+    public $requestType='';
+    public $formType='';
+    public $ticketID = '';
     public $ticketName = '';
     public $ticketStatus = '';
     public $ticketType = '';
-    public $perPage = 3;
+    public $perPage = 5;
 
     /**
      * Toggle visibility of list tickets
@@ -130,7 +134,7 @@ class SoftlogyTickets extends Component
     /*
         MODAL SUBMIT FORM TICKET
     */
-    public function saveTicket(HelpDeskServicesInterface $helpdeskServices)
+    public function saveTicket(HelpDeskServicesInterface $helpdeskServices,$formType)
     {   
 
         try{
@@ -175,10 +179,11 @@ class SoftlogyTickets extends Component
         try{
             $ticketsList = $helpdeskServices->getTicketsUser(
                 Auth::user()->glpi_id,
+                (int)$this->ticketID,
                 $this->ticketName,
-                $this->ticketStatus,
-                $this->ticketType,
-                $this->perPage
+                (int)$this->ticketStatus,
+                (int)$this->ticketType,
+                (int)$this->perPage
             );
     
             $this->dispatch('restartToolTip');

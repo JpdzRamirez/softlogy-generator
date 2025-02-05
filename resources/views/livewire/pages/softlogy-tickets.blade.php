@@ -118,8 +118,14 @@
             <div class="col-lg-10 mx-auto">
                 <div class="career-search mb-60">
 
-                    <form wire:submit.prevent="searchTickets" class="career-form mb-60">
+                    <form wire:submit.prevent="searchTickets" class="career-form mb-60 d-flex align-items-center">
                         <div class="row">
+                            <div class="col-md-6 col-lg-3 my-3">
+                                <div class="input-group position-relative">
+                                    <input type="text" class="form-control" placeholder="Buscar por N°Ticket"
+                                        id="ticketID" wire:model="ticketID">
+                                </div>
+                            </div>
                             <div class="col-md-6 col-lg-3 my-3">
                                 <div class="input-group position-relative">
                                     <input type="text" class="form-control" placeholder="Buscar por nombre"
@@ -148,12 +154,12 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-lg-3 my-3 d-inline-flex justify-content-center">
-                                <button type="submit" id="search"
-                                    class="button btn btn-lg btn-block btn-light btn-custom">
-                                    <span> Buscar</span>
-                                </button>
-                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 my-3 d-inline-flex justify-content-center">
+                            <button type="submit" id="search"
+                                class="button btn btn-lg btn-block btn-light btn-custom">
+                                <span> Buscar</span>
+                            </button>
                         </div>
                     </form>
 
@@ -174,8 +180,7 @@
                                               </div>
                                               <div class="toast-body">
                                                 {{$ticket->content}}
-                                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident ratione neque amet, non excepturi, in deleniti soluta veniam quod corporis odio nesciunt, 
-                                                voluptas vitae impedit! Quo temporibus aliquid dolores veritatis.
+                                                <hr>
                                                 @if($ticket->resources && count($ticket->resources) > 0)
                                                     @foreach ($ticket->resources as $resource)
                                                         <img src="{{ $resource }}" />
@@ -384,7 +389,8 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form wire:submit="saveTicket" id="supportDataForm">
+                <form wire:submit.prevent="saveTicket(1)" id="supportDataForm">
+                    <input type="hidden" wire:model.defer="formType" value="1">
                     <p><i class="fa-solid fa-camera"></i> Adjunte foto del incidente</p>                    
                     <div class="card-img card-pic">
                         @if ($photoTicketData instanceof \Livewire\TemporaryUploadedFile)
@@ -430,4 +436,78 @@
           </div>
         </div>
       </div>   
+
+      {{--Solicitude Modal Form --}}
+
+      <div class="modal fade" id="requestModal" aria-hidden="true" aria-labelledby="requestModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="requestModalLabel"><i class="fa-solid fa-photo-film"></i> Adjuntos</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form wire:submit.prevent="saveTicket(2)" id="requestModalForm">
+                    <input type="hidden" wire:model.defer="formType" value="2">
+                    <div class="mb-3">
+                        <label for="requestTitle" class="form-label">Nombre de solicitud</label>
+                        <input type="text" class="form-control" wire:model="requestTitle" id="requestTitle" placeholder="Titulo">
+                    </div>
+                    <div class="col-md">
+                        <div class="form-floating">
+                          <select class="form-select" wire:model="requestType" id="floatingSelectGrid">
+                            <option selected>Seleccione una categoría</option>
+                            <option value="1">Desarrollo-Nueva Implementación</option>
+                            <option value="2">Instalación</option>
+                            <option value="3">Reinstalación</option>
+                            <option value="4">Nueva Resolución</option>
+                          </select>
+                          <label for="floatingSelectGrid">Tipo de solicitud</label>
+                        </div>
+                      </div>
+                    <hr>
+                    <p><i class="fa-solid fa-camera"></i> Adjunte una foto de referencia</p>                    
+                    <div class="card-img card-pic">
+                        @if ($photoTicketData instanceof \Livewire\TemporaryUploadedFile)
+                            <img class="ticket-photo"
+                                src="{{ $photoTicketData->temporaryUrl() }}" />
+                        @elseif ($photoTicketData)
+                            <img class="ticket-photo"
+                                src="{{ $photoTicketData }}" />
+                        @else
+                            <img class="ticket-photo"
+                                src="{{asset('assets/img/support/imageTicket.png')}}" />
+                        @endif
+                    </div>
+                    <div class="mb-3">
+                        <label for="photoTicketData" class="form-label">Fotos</label>
+                        <input id="photoTicketData"
+                        class="form-control @error('photoTicketData') is-invalid @enderror" id="photoTicketData"
+                        wire:model.live.debounce.500ms="photoTicketData" name="photoTicketData" type="file" capture="camera"/>
+                        @error('photoTicketData')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror                        
+                        <small>Opcional</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="aditionalDescription" class="form-label">Datos Adicionales</label>
+                        <textarea class="form-control @error('descriptionTicketData') is-invalid @enderror" wire:model="descriptionTicketData" id="aditionalDescription" name="aditionalDescription" placeholder="Añada aquí una descripción breve" aria-label="With textarea"></textarea>
+                        @error('descriptionTicketData')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror 
+                        <small>Opcional</small>
+                     </div>                
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" style="color:#fff" onclick="showSpinner(true)"  class="btn btn-info">Enviar</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div> 
 </div>

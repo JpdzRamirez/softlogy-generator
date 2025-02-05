@@ -38,3 +38,11 @@
         }
     }
 }
+
+.career-form {
+    @media (max-width:992px) {
+        .btn-custom{
+            height: 8.5em;
+        }
+    }
+}

@@ -383,6 +383,13 @@
         );
         adminModal.show();
     });
+    $("#requeriment").on("click", function () {
+        // Mostrar el modal con el id 'fastTicketModal'
+        let adminModal = new bootstrap.Modal(
+            document.getElementById("requestModal")
+        );
+        adminModal.show();
+    });
 
     document.addEventListener("reloadsupportModal", function (event) {
         $(".modal-backdrop.fade.show").remove();
