@@ -4,7 +4,10 @@ namespace App\Services;
 
 use App\Contracts\CastServicesInterface;
 
-
+use Exception;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\PngEncoder;
 
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -20,18 +23,37 @@ class CastServices implements CastServicesInterface
     }
 
     /**
-     * Castea y transforma un arreglo de habilidades.
+     * Castea y transforma una imagen a base 64 y la comprime para reducir su tamaño.
      *
      * @param object $photo
-     * @return string
+     * @return mixed
      */
     public function processPhoto(object $photo)
-    {
-        $photoPath = $photo->getRealPath();
-        $base64Photo = base64_encode(file_get_contents($photoPath));
-        $photo = 'data:image/' . $photo->getClientOriginalExtension() . ';base64,' . $base64Photo;
+    {   
+        // Crear una instancia de ImageManager con el driver GD
+        if ($photo->getClientOriginalExtension() === 'heic') {
+            throw new Exception('Error de formato no compatible | HEIC | Iphone.');
+        }elseif(!in_array(strtolower($photo->getClientOriginalExtension()),['jpeg','jpg','png'])){
+            $manager = new ImageManager(new Driver());
+    
+            // Leer la imagen desde el archivo y convertirla a PNG
+            $image = $manager->read($photo->getRealPath());
+    
+            $encoder = new PngEncoder(9);
+            
+            $image = $image->encode($encoder);
+    
+            // Convertir la imagen PNG a Base64
+            $base64Photo = base64_encode($image->toString());
+        
+            // Retornar la imagen en formato Base64 con el encabezado correcto
+            return 'data:image/png;base64,' . $base64Photo;
+        }else{
+            $photoPath = $photo->getRealPath();
+            $base64Photo = base64_encode(file_get_contents($photoPath));
+            return 'data:image/' . $photo->getClientOriginalExtension() . ';base64,' . $base64Photo;
+        }
 
-        return $photo;
     }
     /**
      * Castea y transforma un arreglo de habilidades.

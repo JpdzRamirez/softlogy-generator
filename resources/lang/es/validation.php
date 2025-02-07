@@ -138,55 +138,22 @@ return [
             'max' => 'El :attribute no debe exceder :max caracteres.',
             'unique' => 'Este :attribute ya está en uso.',
         ],
+        'ticketCheck' => [
+            'required' => 'El campo :attribute es obligatorio.',
+            'string' => 'El :attribute debe ser una cadena de texto.',            
+            'max' => 'El :attribute no debe exceder :max caracteres.',            
+        ],
+        'descriptionTicketData' => [
+            'required' => 'El campo :attribute es obligatorio.',           
+        ],
         'xmlFactura.required' => 'El archivo XML es obligatorio.',
         'xmlFactura.mimes' => 'El archivo debe ser de tipo XML.',
         'xmlFactura.max' => 'El archivo no debe superar los 10MB.',
         'identificator.required' => 'La identificación es obligatoria.',
         'identificator.regex' => 'La identificación solo puede contener números.',
+
     ],
-    /*
-    |--------------------------------------------------------------------------
-    | Custom Validation Attributes
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used to swap attribute place-holders
-    | with something more reader friendly such as E-Mail Address instead
-    | of "email". This simply helps us make messages a little cleaner.
-    |
-    */
-    'attributes'           => [
-        'name'                  => 'nombre',
-        'username'              => 'usuario',
-        'email'                 => 'correo electrónico',
-        'first_name'            => 'nombre',
-        'last_name'             => 'apellido',
-        'password'              => 'contraseña',
-        'password_confirmation' => 'confirmación de la contraseña',
-        'state'                 => 'departamento',
-        'city'                  => 'ciudad',
-        'country'               => 'país',
-        'country_born'          => 'país de nacimiento',
-        'address'               => 'dirección',
-        'phone'                 => 'teléfono',
-        'mobile'                => 'celular',
-        'age'                   => 'edad',
-        'sex'                   => 'sexo',
-        'gender'                => 'género',
-        'year'                  => 'año',
-        'month'                 => 'mes',
-        'day'                   => 'día',
-        'hour'                  => 'hora',
-        'minute'                => 'minuto',
-        'second'                => 'segundo',
-        'title'                 => 'título',
-        'body'                  => 'contenido',
-        'description'           => 'descripción',
-        'excerpt'               => 'extracto',
-        'date'                  => 'fecha',
-        'time'                  => 'hora',
-        'subject'               => 'asunto',
-        'message'               => 'mensaje',
-        'required'              => 'Requerido',
-    ],
+
+    'attributes' => include __DIR__ . '/attributes.php',
 ];
 

@@ -1,12 +1,11 @@
 <?php
 
-namespace app\services;
+namespace App\Services;
 
 
 use App\Contracts\XmlServicesInterface;
 use App\Models\Paises;
 
-use SimpleXMLElement;
 use Exception;
 
 class XmlServices implements XmlServicesInterface

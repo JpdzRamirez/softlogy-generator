@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <div class="counter-tickets">
-                        <div class="row" style="gap:1em;max-width: 36em;">
+                        <div class="row justify-content-center" style="gap:1em;max-width: 36em;">
                             <div class="info-card col-md-3">
                                 <div class="counter-box new">
                                     <i class="fa-solid fa-plus"></i>
@@ -118,24 +118,24 @@
             <div class="col-lg-10 mx-auto">
                 <div class="career-search mb-60">
 
-                    <form wire:submit.prevent="searchTickets" class="career-form mb-60 d-flex align-items-center">
+                    <form wire:submit.prevent="searchTickets" style="gap:1em;" class="career-form mb-60 d-flex align-items-center">
                         <div class="row">
                             <div class="col-md-6 col-lg-3 my-3">
                                 <div class="input-group position-relative">
-                                    <input type="text" class="form-control" placeholder="Buscar por N°Ticket"
+                                    <input type="text" class="form-control" placeholder="N°Ticket"
                                         id="ticketID" wire:model="ticketID">
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-3 my-3">
                                 <div class="input-group position-relative">
-                                    <input type="text" class="form-control" placeholder="Buscar por nombre"
+                                    <input type="text" class="form-control" placeholder="Nombre"
                                         id="ticketName" wire:model="ticketName">
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-3 my-3">
                                 <div class="select-container" wire:model="ticketStatus">
                                     <select class="custom-select">
-                                        <option selected value="">Filtrar por estado</option>
+                                        <option selected value="">Estado</option>
                                         <option value="1">Nuevos</option>
                                         <option value="2">En curso</option>
                                         <option value="3">Planificados</option>
@@ -148,7 +148,7 @@
                             <div class="col-md-6 col-lg-3 my-3">
                                 <div class="select-container">
                                     <select class="custom-select" wire:model="ticketType">
-                                        <option selected value="">Filtrar por Tipo</option>
+                                        <option selected value="">Tipo</option>
                                         <option value="1">Soporte Rápido</option>
                                         <option value="2">Solicitud</option>
                                     </select>
@@ -336,7 +336,7 @@
                               </label>
 
                               <label for="radio-card-3" class="radio-card">
-                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="201" id="radio-card-3" />
+                                <input type="radio" wire:model="ticketCheck" name="radio-card" value="427" id="radio-card-3" />
                                 <div class="card-content-wrapper">
                                   <span class="check-icon"></span>
                                   <div class="card-content">
@@ -390,7 +390,6 @@
             </div>
             <div class="modal-body">
                 <form wire:submit.prevent="saveTicket(1)" id="supportDataForm">
-                    <input type="hidden" wire:model.defer="formType" value="1">
                     <p><i class="fa-solid fa-camera"></i> Adjunte foto del incidente</p>                    
                     <div class="card-img card-pic">
                         @if ($photoTicketData instanceof \Livewire\TemporaryUploadedFile)
@@ -406,8 +405,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="photoTicketData" class="form-label">Fotos</label>
-                        <input id="photoTicketData"
-                        class="form-control @error('photoTicketData') is-invalid @enderror" id="photoTicketData"
+                        <input id="photoTicketData" required
+                        class="form-control @error('photoTicketData') is-invalid @enderror" 
                         wire:model.live.debounce.500ms="photoTicketData" name="photoTicketData" type="file" capture="camera"/>
                         @error('photoTicketData')
                             <div class="invalid-feedback">
@@ -418,7 +417,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="aditionalDescription" class="form-label">Datos Adicionales</label>
-                        <textarea class="form-control @error('descriptionTicketData') is-invalid @enderror" wire:model="descriptionTicketData" id="aditionalDescription" name="aditionalDescription" placeholder="Añada aquí una descripción breve" aria-label="With textarea"></textarea>
+                        <textarea required class="form-control @error('descriptionTicketData') is-invalid @enderror" wire:model="descriptionTicketData" id="aditionalDescription" name="aditionalDescription" placeholder="Añada aquí una descripción breve" aria-label="With textarea"></textarea>
                         @error('descriptionTicketData')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -447,44 +446,44 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form wire:submit.prevent="saveTicket(2)" id="requestModalForm">
-                    <input type="hidden" wire:model.defer="formType" value="2">
+                <form wire:submit.prevent="saveTicket(2)" id="requestModalForm">  
                     <div class="mb-3">
                         <label for="requestTitle" class="form-label">Nombre de solicitud</label>
-                        <input type="text" class="form-control" wire:model="requestTitle" id="requestTitle" placeholder="Titulo">
+                        <input type="text" class="form-control" required wire:model="requestTitle" id="requestTitle" placeholder="Titulo">
                     </div>
                     <div class="col-md">
                         <div class="form-floating">
-                          <select class="form-select" wire:model="requestType" id="floatingSelectGrid">
+                          <select class="form-select" required wire:model="requestType" id="requestSelectGrid">
                             <option selected>Seleccione una categoría</option>
-                            <option value="1">Desarrollo-Nueva Implementación</option>
-                            <option value="2">Instalación</option>
-                            <option value="3">Reinstalación</option>
-                            <option value="4">Nueva Resolución</option>
+                            <option value="401">Desarrollo-Nueva Implementación</option>
+                            <option value="428">Instalación</option>
+                            <option value="429">Reinstalación</option>
+                            <option value="286">Nueva Resolución</option>
                           </select>
                           <label for="floatingSelectGrid">Tipo de solicitud</label>
                         </div>
+                        <div class="alert alert-info mt-3 text-center" hidden id="alert-request-info" role="alert"></div>
                       </div>
                     <hr>
                     <p><i class="fa-solid fa-camera"></i> Adjunte una foto de referencia</p>                    
                     <div class="card-img card-pic">
-                        @if ($photoTicketData instanceof \Livewire\TemporaryUploadedFile)
+                        @if ($photoRequestData instanceof \Livewire\TemporaryUploadedFile)
                             <img class="ticket-photo"
-                                src="{{ $photoTicketData->temporaryUrl() }}" />
-                        @elseif ($photoTicketData)
+                                src="{{ $photoRequestData->temporaryUrl() }}" />
+                        @elseif ($photoRequestData)
                             <img class="ticket-photo"
-                                src="{{ $photoTicketData }}" />
+                                src="{{ $photoRequestData }}" />
                         @else
                             <img class="ticket-photo"
                                 src="{{asset('assets/img/support/imageTicket.png')}}" />
                         @endif
                     </div>
                     <div class="mb-3">
-                        <label for="photoTicketData" class="form-label">Fotos</label>
-                        <input id="photoTicketData"
-                        class="form-control @error('photoTicketData') is-invalid @enderror" id="photoTicketData"
-                        wire:model.live.debounce.500ms="photoTicketData" name="photoTicketData" type="file" capture="camera"/>
-                        @error('photoTicketData')
+                        <label for="photoRequestData" class="form-label">Fotos</label>
+                        <input id="photoRequestData"
+                        class="form-control @error('photoRequestData') is-invalid @enderror" 
+                        wire:model.live.debounce.500ms="photoRequestData" name="photoRequestData" type="file" capture="camera"/>
+                        @error('photoRequestData')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -493,7 +492,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="aditionalDescription" class="form-label">Datos Adicionales</label>
-                        <textarea class="form-control @error('descriptionTicketData') is-invalid @enderror" wire:model="descriptionTicketData" id="aditionalDescription" name="aditionalDescription" placeholder="Añada aquí una descripción breve" aria-label="With textarea"></textarea>
+                        <textarea required class="form-control @error('descriptionTicketData') is-invalid @enderror" wire:model="descriptionTicketData" id="aditionalDescription" name="aditionalDescription" placeholder="Añada aquí una descripción breve" aria-label="With textarea"></textarea>
                         @error('descriptionTicketData')
                             <div class="invalid-feedback">
                                 {{ $message }}

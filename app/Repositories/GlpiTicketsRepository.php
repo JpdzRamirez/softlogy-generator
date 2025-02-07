@@ -47,7 +47,7 @@ class GlpiTicketsRepository
      * @param int $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getAllTicketsUser(int $userId,int $ticketID,string $ticketName,int $ticketStatus,int $ticketType,int $perPage)
+    public function getAllTicketsUser(int $userId, int $ticketID, string $ticketName, int $ticketStatus, int $ticketType, int $perPage)
     {
         $query = $this->model->whereHas('ticketsUser', function ($query) use ($userId) {
             $query->where('users_id', $userId)
@@ -127,60 +127,103 @@ class GlpiTicketsRepository
     public function createTicket(array $ticketData)
     {
         try {
-            $titleTicket = "";
+            $title = 'Caso Entrante';
+            $type = 1;
+            $itilCategory = 136;
             $urgency = 1;
             $impact = 1;
             $priority = 1;
-            $slas_id_ttr = 53;
+            $slas_id_ttr = '';
             $slas_id_tto = 0;
             $slalevels_id_ttr = 0;
-            switch ($ticketData['ticketCheck']) {
-                case 406:
-                    $titleTicket = "Error de Impresión" . " " . $ticketData['tienda'];
-                    $urgency = 4;
-                    $impact = 3;
-                    $priority = 4;
-                    break;
-                case 201:
-                    $titleTicket = "Identificador WEB" . " " . $ticketData['tienda'];
-                    $urgency = 3;
-                    $impact = 2;
-                    $priority = 2;
-                    break;
-                case 207:
-                    $titleTicket = "Personalizar Factura" . " " . $ticketData['tienda'];
-                    $urgency = 3;
-                    $impact = 3;
-                    $priority = 2;
-                    break;
-                case 389:
-                    $titleTicket = "Error de Facturación" . " " . $ticketData['tienda'];
-                    $urgency = 4;
-                    $impact = 3;
-                    $priority = 4;
-                    break;
-                default:
-                    $titleTicket = "Caso Entrante " . " " . $ticketData['tienda'];
-                    $urgency = 3;
-                    $impact = 3;
-                    $priority = 3;
-            };
+            if ($ticketData['formType'] == 1) {
+                $type = 1;
+                $itilCategory = $ticketData['ticketCheck'];
+                switch ($ticketData['ticketCheck']) {
+                    case 406:
+                        $title = "Error de Impresión";
+                        $urgency = 4;
+                        $impact = 3;
+                        $priority = 4;
+                        $slas_id_ttr = 27;
+                        break;
+                    case 201:
+                        $title = "Identificador WEB";
+                        $urgency = 3;
+                        $impact = 2;
+                        $priority = 2;
+                        $slas_id_ttr = 53;
+                        break;
+                    case 207:
+                        $title = "Personalizar Factura";
+                        $urgency = 3;
+                        $impact = 3;
+                        $priority = 2;
+                        break;
+                    case 389:
+                        $title = "Error de Facturación";
+                        $urgency = 4;
+                        $impact = 3;
+                        $priority = 4;
+                        break;
+                    default:
+                        $title = "Caso Entrante " . " " . $ticketData['tienda'];
+                        $urgency = 3;
+                        $impact = 3;
+                        $priority = 3;
+                };
+            } else {
+                $type = 2;
+                $itilCategory = $ticketData['requestType'];
+                switch ($ticketData['requestType']) {
+                    case 1:
+                        $title = "Nuevo Desarrollo" . " " . $ticketData['requestTitle'];
+                        $urgency = 2;
+                        $impact = 4;
+                        $priority = 3;
+                        break;
+                    case 2:
+                        $title = "Instalación de Punto" . " " . $ticketData['requestTitle'];
+                        $urgency = 3;
+                        $impact = 4;
+                        $priority = 4;
+                        break;
+                    case 3:
+                        $title = "Reinstalación de punto" . " " . $ticketData['requestTitle'];
+                        $urgency = 4;
+                        $impact = 4;
+                        $priority = 4;
+                        break;
+                    case 4:
+                        $title = "Nueva Resolución" . " " . $ticketData['requestTitle'];
+                        $urgency = 4;
+                        $impact = 3;
+                        $priority = 4;
+                        break;
+                    default:
+                        $title = "Solicitud Entrante " . " " . $ticketData['requestTitle'];
+                        $urgency = 3;
+                        $impact = 3;
+                        $priority = 3;
+                };
+            }
+
             $glpiTicketData = [
                 'entities_id' => $ticketData['entities_id'],
-                'name' => $titleTicket,
+                'name' => $title,
                 'date' => now()->format('Y-m-d H:i:s'),
                 'takeintoaccountdate' => now()->format('Y-m-d H:i:s'),
                 'date_mod' => now()->format('Y-m-d H:i:s'),
                 'users_id_lastupdater' => $ticketData['glpi_id'],
                 'status' => 1,
                 'users_id_recipient' => $ticketData['glpi_id'],
-                'requesttypes_id' => 1,
+                'requesttypes_id' => 7,
                 'content' => "",
                 'urgency' => $urgency,
                 'impact' => $impact,
                 'priority' => $priority,
-                'itilcategories_id' => $ticketData['ticketCheck'],
-                'type' => 1,
+                'itilcategories_id' => $itilCategory,
+                'type' => $type,
                 'global_validation' => 1,
                 'slas_id_ttr' => $slas_id_ttr,
                 'slas_id_tto' => $slas_id_tto,
@@ -260,21 +303,26 @@ class GlpiTicketsRepository
         try {
             // Creamos el contenido por defecto
             $content = "";
-
-            if ($ticketData['photoTicketData'] && $ticketData['descriptionTicketData']) {
-
+            $imageData = NULL;
+            if ($ticketData['formType'] == 1 && !empty($ticketData['photoTicketData'])) {
                 $imageData = $ticketData['photoTicketData'];
+            } elseif ($ticketData['formType'] == 2 && !empty($ticketData['photoRequestData'])) {
+                $imageData = $ticketData['photoRequestData'];
+            }
 
-                // Eliminar la cabecera 'data:image/png;base64,' si está presente
-                if (strpos($imageData, 'data:image/png;base64,') === 0) {
-                    $imageData = substr($imageData, strlen('data:image/png;base64,'));
+            if (!empty($imageData)) {
+
+                // Eliminar la cabecera 'data:image/...;base64,' si está presente
+                if (preg_match('/^data:image\/(\w+);base64,/', $imageData,$matches)) {
+                    $imageType = $matches[1]; // Obtener el tipo de imagen (png, jpg, jpeg)
+                    $imageData = substr($imageData, strpos($imageData, ',') + 1); // Eliminar la cabecera
                 }
 
                 // Decodificar la cadena base64
                 $imageData = base64_decode($imageData);
 
                 // Obtener la ruta desde el archivo .env
-                $basePath = env('SOFTLOGY_HELDEKS_RESOURCES') . DIRECTORY_SEPARATOR . "PNG"; // Ruta base desde el .env
+                $basePath = env('SOFTLOGY_HELDEKS_RESOURCES') . DIRECTORY_SEPARATOR . strtoupper($imageType); // Ruta base desde el .env
 
                 // Generar un nombre de carpeta aleatorio de 4 caracteres
                 $randomFolder = substr(md5(uniqid(rand(), true)), 0, 4);
@@ -285,8 +333,9 @@ class GlpiTicketsRepository
                 if (!file_exists($folderPath)) {
                     mkdir($folderPath, 0777, true); // Crear la carpeta si no existe
                 }
+
                 // Generar un nombre único para el archivo de imagen
-                $imageName = md5(uniqid(rand(), true)) . '.png';
+                $imageName = md5(uniqid(rand(), true)) . '.' . $imageType;
 
                 // Ruta completa del archivo de imagen
                 $imagePath = $folderPath . DIRECTORY_SEPARATOR . $imageName;
@@ -303,11 +352,11 @@ class GlpiTicketsRepository
                 $glpidocumentData = [
                     'entities_id' => $ticketData['entities_id'],
                     'is_recursive' => 0,
-                    'name' => "Documento de caso " . $ticket->id,
-                    'filename' => "image_paste" . $ticket->id,
-                    'filepath' => "PNG/" . $randomFolder . DIRECTORY_SEPARATOR . $imageName,
+                    'name' => 'Imagen_caso' . $ticket->id.'.'.$imageType,
+                    'filename' => 'image_paste' . $ticket->id . '.' . $imageType,
+                    'filepath' => strtoupper($imageType) . '/' . $randomFolder . '/' . $imageName,
                     'documentcategories_id' => 1,
-                    'mime' => "image/png",
+                    'mime' => 'image/' . $imageType,
                     'date_mod' => now()->format('Y-m-d H:i:s'),
                     'is_deleted' => 0,
                     'users_id' => $ticketData['glpi_id'],
@@ -334,14 +383,23 @@ class GlpiTicketsRepository
                 ];
 
                 $glpiDocumentsItems = $this->glpiDocumentsItems->create($glpiDocumentsItemsData);
-
-                $content = [
-                    'content' => "&#60;p&#62;{$ticketData['descriptionTicketData']}&#60;br&#62;&#60;a 
-                    href='/front/document.send.php?docid={$glpiDocumentBuilded->id}&#38;itemtype=Ticket&#38;items_id={$glpiDocumentsItems->id}'
-                    target='_blank' &#62;&#60;img alt='{$tag}'
-                    width='759' src='/front/document.send.php?docid={$glpiDocumentBuilded->id}&#38;itemtype=Ticket&#38;items_id={$glpiDocumentsItems->id}' /&#62;&#60;/a&#62;&#60;/p&#62;",
-                ];
-            } elseif ($ticketData['descriptionTicketData']) {
+                if (empty($ticketData['descriptionTicketData'])) {
+                    $message = __('general.ticket-default-message') . $ticket->name;
+                    $content = [
+                        'content' => "&#60;p&#62;{$message}&#60;br&#62;&#60;a 
+                        href='/front/document.send.php?docid={$glpiDocumentBuilded->id}&#38;itemtype=Ticket&#38;items_id={$glpiDocumentsItems->id}'
+                        target='_blank' &#62;&#60;img alt='{$tag}'
+                        width='550' height='500' src='/front/document.send.php?docid={$glpiDocumentBuilded->id}&#38;itemtype=Ticket&#38;items_id={$glpiDocumentsItems->id}' /&#62;&#60;/a&#62;&#60;/p&#62;",
+                    ];
+                } else {
+                    $content = [
+                        'content' => "&#60;p&#62;{$ticketData['descriptionTicketData']}&#60;br&#62;&#60;a 
+                        href='/front/document.send.php?docid={$glpiDocumentBuilded->id}&#38;itemtype=Ticket&#38;items_id={$glpiDocumentsItems->id}'
+                        target='_blank' &#62;&#60;img alt='{$tag}'
+                        width='550' height='500' src='/front/document.send.php?docid={$glpiDocumentBuilded->id}&#38;itemtype=Ticket&#38;items_id={$glpiDocumentsItems->id}' /&#62;&#60;/a&#62;&#60;/p&#62;",
+                    ];
+                }
+            } elseif (!empty($ticketData['descriptionTicketData'])) {
                 $content = [
                     'content' => "&#60;p&#62;{$ticketData['descriptionTicketData']}&#60;/p&#62;",
                 ];
@@ -356,7 +414,7 @@ class GlpiTicketsRepository
             throw $e;
         }
     }
-    public function createRelationTicketUser($ticket, $ticketData)
+    public function createRelationTicketUser($ticket, array $ticketData)
     {
         $dataTicketUser = [
             'tickets_id' => $ticket->id,

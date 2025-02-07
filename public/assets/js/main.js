@@ -257,15 +257,22 @@
     window.showSpinner = function (show) {
         spinner.css("display", show ? "block" : "none");
     };
+
     document.addEventListener("hideSpinner", function (event) {
         showSpinner(false);
-        let responseData = event.detail.data; 
-
+        let responseData = event.detail.data; // Recibe el array
+        let ticketId = responseData.ticket; // Extrae el ID del ticket
+    
         Swal.fire({
-            title: "¡Envio exitoso!",
-            text: "Se ha creado correctamente el ticket: " + responseData,
+            title: "¡Envío exitoso!",
+            html: `Se ha creado correctamente el ticket: <strong><code>${ticketId}</code></strong>`, // Subrayado y en negrita
             icon: "success",
-            confirmButtonColor: "#3085d6"
+            confirmButtonColor: "#3085d6",
+        }).then((result) => {
+            // Verifica si el usuario hizo clic en "OK"
+            if (result.isConfirmed) {
+                $(".modal-backdrop.fade.show").remove();
+            }
         });
     });
 
@@ -391,6 +398,45 @@
         adminModal.show();
     });
 
+    // Detectamos el cambio en el select
+    $("#requestSelectGrid").change(function () {
+        // Obtenemos el valor seleccionado
+        let selectedValue = $(this).val();
+
+        // Obtenemos el elemento del alert
+        let alertElement = $("#alert-request-info");
+
+        // Verificamos el valor seleccionado y actualizamos el contenido del alert
+        if (selectedValue === "401") {
+            alertElement
+                .html(
+                    '<i class="fa-solid fa-circle-info"></i> Los desarrollos son nuevas funcionalidades que se necesiten adicionar.'
+                )
+                .removeAttr("hidden");
+        } else if (selectedValue === "428") {
+            alertElement
+                .html(
+                    '<i class="fa-solid fa-headset"></i> Si necesitas instalar un nuevo punto de facturación.'
+                )
+                .removeAttr("hidden");
+        } else if (selectedValue === "429") {
+            alertElement
+                .html(
+                    '<i class="fa-solid fa-headset"></i> Si necesitas realizar la reinstalación de un punto de facturación.<br> <code>¡Se debe realizar un BackupPrevio!</code>'
+                )
+                .removeAttr("hidden");
+        } else if (selectedValue === "286") {
+            alertElement
+                .html(
+                    '<i class="fa-regular fa-folder-closed"></i> Si se han agotado los folios o necesitas nueva resolución.'
+                )
+                .removeAttr("hidden");
+        } else {
+            // Si se selecciona la opción por defecto, ocultamos el alert
+            alertElement.attr("hidden", true);
+        }
+    });
+
     document.addEventListener("reloadsupportModal", function (event) {
         $(".modal-backdrop.fade.show").remove();
         // Abrir el modal
@@ -400,12 +446,30 @@
         supportModal.show();
 
         let backdrops = $(".modal-backdrop.fade.show");
+
         let totalBackdrops = backdrops.length;
+
         if (totalBackdrops > 1) {
             backdrops.slice(1).remove();
         }
     });
-    
+    document.addEventListener("reloadrequestModal", function (event) {
+        $(".modal-backdrop.fade.show").remove();
+        // Abrir el modal
+        let requestModal = new bootstrap.Modal(
+            document.getElementById("requestModal")
+        );
+        requestModal.show();
+
+        let backdrops = $(".modal-backdrop.fade.show");
+
+        let totalBackdrops = backdrops.length;
+
+        if (totalBackdrops > 1) {
+            backdrops.slice(1).remove();
+        }
+    });
+
     // Seleccionar todos los botones de cerrar modales
     $('button[data-bs-dismiss="modal"]').on("click", function () {
         // Obtener el modal asociado a este botón
@@ -414,8 +478,9 @@
         // Reiniciar el formulario dentro de ese modal específico
         modal.find("form")[0].reset();
 
-        // Resetear el src de la imagen dentro del modal
-        modal.find(".ticket-photo").attr("src", "/assets/img/support/imageTicket.png");
+        // Resetear variables
+        
+        Livewire.dispatch('resetAll');
     });
     /*
 
