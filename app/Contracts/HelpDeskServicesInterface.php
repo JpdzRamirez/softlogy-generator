@@ -12,5 +12,7 @@ interface HelpDeskServicesInterface
     public function getTicketsUser(int $idUser,int $ticketID, string $ticketName, int $ticketStatus, int $ticketType, int $perPage);
     
     public function createTicket(array $ticketData);
+
+    public function getTicketInfo(int $ticketID, int $userID);
     
 }

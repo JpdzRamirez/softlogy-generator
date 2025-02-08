@@ -152,25 +152,28 @@ class GlpiTicketsRepository
                         $urgency = 3;
                         $impact = 2;
                         $priority = 2;
-                        $slas_id_ttr = 53;
+                        $slas_id_ttr = 60;
                         break;
                     case 207:
                         $title = "Personalizar Factura";
                         $urgency = 3;
                         $impact = 3;
                         $priority = 2;
+                        $slas_id_ttr = 53;
                         break;
                     case 389:
                         $title = "Error de Facturación";
                         $urgency = 4;
                         $impact = 3;
                         $priority = 4;
+                        $slas_id_ttr = 27;
                         break;
                     default:
                         $title = "Caso Entrante " . " " . $ticketData['tienda'];
                         $urgency = 3;
                         $impact = 3;
                         $priority = 3;
+                        $slas_id_ttr = 47;
                 };
             } else {
                 $type = 2;
@@ -181,30 +184,35 @@ class GlpiTicketsRepository
                         $urgency = 2;
                         $impact = 4;
                         $priority = 3;
+                        $slas_id_ttr = 57;
                         break;
                     case 2:
                         $title = "Instalación de Punto" . " " . $ticketData['requestTitle'];
                         $urgency = 3;
                         $impact = 4;
                         $priority = 4;
+                        $slas_id_ttr = 58;
                         break;
                     case 3:
                         $title = "Reinstalación de punto" . " " . $ticketData['requestTitle'];
                         $urgency = 4;
                         $impact = 4;
                         $priority = 4;
+                        $slas_id_ttr = 59;
                         break;
                     case 4:
                         $title = "Nueva Resolución" . " " . $ticketData['requestTitle'];
                         $urgency = 4;
                         $impact = 3;
                         $priority = 4;
+                        $slas_id_ttr = 54;
                         break;
                     default:
                         $title = "Solicitud Entrante " . " " . $ticketData['requestTitle'];
                         $urgency = 3;
                         $impact = 3;
                         $priority = 3;
+                        $slas_id_ttr = 47;
                 };
             }
 

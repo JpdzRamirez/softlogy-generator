@@ -20,6 +20,9 @@ class SoftlogyMicro extends Controller
     public function tickets(){          
         return view('pages.softlogy-tickets');
     }
+    public function ticket($id){          
+        return view('pages.softlogy-ticket-info',['id' => $id]);
+    }
     public function tools(){
         $paises = Paises::all();
         return view('pages.softlogy-tools', compact('paises'));

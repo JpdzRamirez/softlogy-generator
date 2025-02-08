@@ -218,8 +218,8 @@ class SoftlogyTickets extends Component
             $response = $helpdeskServices->createTicket($ticketData);
 
             if ($response['status']) {
-                $this->resteAll();
-                $this->dispatch('hideSpinner', ['data' => $response]);
+                $this->resetAll();
+                $this->dispatch('hideSpinner', $response);
             } else {
                 throw new Exception($response['message']);
             }

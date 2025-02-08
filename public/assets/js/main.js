@@ -259,19 +259,24 @@
     };
 
     document.addEventListener("hideSpinner", function (event) {
-        showSpinner(false);
-        let responseData = event.detail.data; // Recibe el array
-        let ticketId = responseData.ticket; // Extrae el ID del ticket
-    
+        showSpinner(false);     
+        console.log(event);
+        let responseData = event.detail[0]; // Recibe el array        
+        let ticketId = responseData.ticket; // Extrae el ID del ticket        
         Swal.fire({
             title: "¡Envío exitoso!",
-            html: `Se ha creado correctamente el ticket: <strong><code>${ticketId}</code></strong>`, // Subrayado y en negrita
+            imageUrl: "/assets/img/support/softlogyLogo-White.png",
+            imageWidth: 150,
+            imageHeight: 50,
+            imageAlt: "SoftlogyTickets",
+            html: `Se ha creado correctamente el ticket: <br>N°: <strong style="background-color: yellow;font-size: 2em;"><code>${ticketId}</code></strong>`, 
             icon: "success",
             confirmButtonColor: "#3085d6",
         }).then((result) => {
             // Verifica si el usuario hizo clic en "OK"
             if (result.isConfirmed) {
                 $(".modal-backdrop.fade.show").remove();
+                location.reload();
             }
         });
     });

@@ -419,4 +419,10 @@ class HelpdeskServices implements HelpDeskServicesInterface
             ];
         }
     }
+
+    public function getTicketInfo(int $ticketID, int $userID)
+    {
+
+    }
+
 }
