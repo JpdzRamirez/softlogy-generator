@@ -259,17 +259,17 @@
     };
 
     document.addEventListener("hideSpinner", function (event) {
-        showSpinner(false);     
+        showSpinner(false);
         console.log(event);
-        let responseData = event.detail[0]; // Recibe el array        
-        let ticketId = responseData.ticket; // Extrae el ID del ticket        
+        let responseData = event.detail[0]; // Recibe el array
+        let ticketId = responseData.ticket; // Extrae el ID del ticket
         Swal.fire({
             title: "¡Envío exitoso!",
             imageUrl: "/assets/img/support/softlogyLogo-White.png",
             imageWidth: 150,
             imageHeight: 50,
             imageAlt: "SoftlogyTickets",
-            html: `Se ha creado correctamente el ticket: <br>N°: <strong style="background-color: yellow;font-size: 2em;"><code>${ticketId}</code></strong>`, 
+            html: `Se ha creado correctamente el ticket: <br>N°: <strong style="background-color: yellow;font-size: 2em;"><code>${ticketId}</code></strong>`,
             icon: "success",
             confirmButtonColor: "#3085d6",
         }).then((result) => {
@@ -484,8 +484,8 @@
         modal.find("form")[0].reset();
 
         // Resetear variables
-        
-        Livewire.dispatch('resetAll');
+
+        Livewire.dispatch("resetAll");
     });
     /*
 
@@ -531,4 +531,77 @@
             );
         }, 1000);
     });
+
+    /*
+        CHAT INPUT MESSAGES
+    */
+    /*
+        Emoji Picker
+    */
+    Livewire.on("toggleEmojiPicker", () => {
+        console.log("emoji testing");
+        new EmojiPicker({
+            trigger: [
+                {
+                    selector: ".emojiButton",
+                    insertInto: [".messageFollowUp"],
+                },
+            ],
+            closeButton: true,
+            //specialButtons: green
+        });
+    });
+
+    // File Input
+    // Activar el input de archivo al hacer clic en el icono de paperclip
+    Livewire.on("triggerFileInput", () => {
+        document.getElementById("file-input").click();
+    });
+    // Event acordion effect
+    function Accordion(el, multiple) {
+        this.el = el;
+        this.multiple = multiple;
+
+        // Evento
+        this.el.find(".link").on("click", function () {
+            let $this = $(this);
+            let $next = $this.next();
+
+            $next.slideToggle();
+            $this.parent().toggleClass("open");
+
+            if (!multiple) {
+                $this
+                    .closest("#accordion")
+                    .find(".submenu")
+                    .not($next)
+                    .slideUp()
+                    .parent()
+                    .removeClass("open");
+            }
+        });
+    }
+
+    // Inicializar el acordeón
+    new Accordion($("#accordion"), false);
+
+    // Tabs Chat Followup
+    $(".tabs li").on("click", function (e) {
+        e.preventDefault();
+
+        let $this = $(this);
+        let index = $this.index();
+
+        // Remover la clase 'active' de todas las pestañas y agregarla solo a la seleccionada
+        $(".tabs li").removeClass("active");
+        $this.addClass("active");
+
+        // Ocultar todos los contenidos y mostrar solo el correspondiente
+        $(".tabs-container > li").hide();
+        $(".tabs-container > li").eq(index).show();
+    });
+
+    // Asegurar que la primera pestaña y su contenido estén visibles al cargar la página
+    $(".tabs li:first-child").addClass("active");
+    $(".tabs-container > li").hide().first().show();
 })();

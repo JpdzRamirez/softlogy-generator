@@ -1,0 +1,74 @@
+@use "../../utils" as *;
+
+@media (max-width: 920px) {
+    .dropdown-ticket-info{
+        visibility: visible;
+        opacity: 1;
+        display: block;
+    }
+    .window-wrapper-chat {
+        .window-area {
+            display: flex;
+            flex-direction: column;
+            padding-left: 0 !important;
+            .conversation-list {
+                display: none;
+                visibility: hidden;
+                opacity: 0;
+                width: inherit;
+                max-height: 40%;
+                overflow: scroll;
+                position: relative;
+                ul {
+                    padding-left: 0;
+                }
+                .my-account {
+                    position: relative;
+                    .image {
+                        i {
+                            top: 15px;
+                        }
+                    }
+                    .name {
+                        .availability {
+                            display: inline-block;
+                        }
+                    }
+                }
+            }
+            .chat-area {
+                overflow: scroll;
+                overflow-x: unset;
+                right: 0;
+                left: 0;
+                position: relative;
+
+                .chat-list {
+                    position: relative;
+                    ul {
+                        padding-left: 0;
+                    }
+                }
+                .input-area {
+                    position: sticky;
+                }
+            }
+            .right-tabs {
+                position: relative;
+                width: inherit;
+                overflow: scroll;
+                min-height: 20%;
+                .tabs-container{
+                    li{
+                        .member-list{
+                            display: flex;
+                            flex-direction: row;
+                            flex-wrap: wrap;
+                            justify-content: space-between;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

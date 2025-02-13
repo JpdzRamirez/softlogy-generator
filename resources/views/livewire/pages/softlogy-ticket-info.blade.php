@@ -14,150 +14,141 @@
 			</div>
 		</div>
 		<div class="window-area">
-			<div class="conversation-list">
-				<ul class="">
-          <li class="item"><a href="#"><i class="fa fa-list-alt"></i><span>Dashboard</span></a></li>
-					<li class="item active"><a href="#"><i class="fa fa-user"></i><span>Team chat</span><i class="fa fa-times"></i></a></li>
-					<li><a href="#"><i class="fa-regular fa-circle"></i></i></i><span>Cucu Ionel</span><i class="fa fa-times"></i></a></li>
-					<li><a href="#"><i class="fa-regular fa-circle"></i></i></i><span>Jan Dvořák</span><i class="fa fa-times"></i></a></li>
-					<li><a href="#"><i class="fa-regular fa-circle"></i></i></i><span>Clark Kent</span><i class="fa fa-times"></i></a></li>
-          <li><a href="#"><i class="fa-regular fa-circle"></i></i><span>Ioana Marcu</span><i class="fa fa-times"></i></a></li>
-				</ul>
-				<div class="my-account">
-					<div class="image">
-						<img src="https://secure.gravatar.com/avatar/de76e03aa6b5b0bf675c1e8a990da52f?s=64">
-						<i class="fa fa-circle online"></i>
-					</div>
-					<div class="name">
-						<span>Cucu Ionel</span>
-						<i class="fa fa-angle-down"></i>
-						<span class="availability">Available</span>
-					</div>
-
-				</div>
+			<div class="dropdown-ticket-info">
+				<ul id="accordion" class="accordion">
+					<li>
+					  <div class="link"><i class="fa fa-database"></i>Web Design<i class="fa fa-chevron-down"></i></div>
+					  <ul class="submenu">
+						<li class="item"><a><i class="fa fa-list-alt"></i><span>Dashboard</span></a></li>
+						<li class="item active"><a href="#"><i class="fa-solid fa-list-check"></i><span>Ver Todo</span></a></li>
+						<li><a href="#"><i class="fa-solid fa-person-chalkboard"></i><span>Actualizaciones Softlogy</span></a></li>
+						<li><a href="#"><i class="fa-solid fa-child-reaching"></i><span>Tus respuestas</span></a></li>
+						<li><a href="#"><i class="fa-solid fa-clock"></i></i></i><span>Ultima Actualización</span></a></li>		
+					  </ul>
+					</li>
+				  </ul>	
 			</div>
+	  
+			<div class="conversation-list">
+						<ul class="">
+							<li class="item"><a><i class="fa fa-list-alt"></i><span>Dashboard</span></a></li>
+							<li class="item active"><a href="#"><i class="fa-solid fa-list-check"></i><span>Ver Todo</span></a></li>
+							<li><a href="#"><i class="fa-solid fa-person-chalkboard"></i><span>Actualizaciones Softlogy</span></a></li>
+							<li><a href="#"><i class="fa-solid fa-child-reaching"></i><span>Tus respuestas</span></a></li>
+							<li><a href="#"><i class="fa-solid fa-clock"></i></i></i><span>Ultima Actualización</span></a></li>				
+						</ul>
+						<div class="my-account">
+							<div class="image">
+								<img src="https://secure.gravatar.com/avatar/de76e03aa6b5b0bf675c1e8a990da52f?s=64">
+								<div class="status">
+									<i class="fa fa-circle online"></i>
+									<span class="blink online"></span>
+								</div>
+							</div>
+							<div class="name">
+								<span>Cucu Ionel</span>
+								<i class="fa fa-angle-down"></i>
+								<span class="availability">Available</span>
+							</div>		
+						</div>
+				</div>
+
 			<div class="chat-area">
 				<div class="title"><b>Conversation title</b><i class="fa fa-search"></i></div>
 				<div class="chat-list">
 					<ul>
 						<li class="me">
 							<div class="name">
-								<span class="">Cucu Ionel</span>
+								<span class="">								
+								<i class="fa-solid fa-user-tie idle"></i>
+								<br>
+								Cucu Ionel
+								</span>
 							</div>
 							<div class="message">
-								<p>Hey, do you like the new interface? It's done with Font Awesome.</p>
-								<span class="msg-time">5:00 pm</span>
+								<p>Hey, do you like the new interface? It's done with Font Awesome.</p>								
 							</div>
+							<span class="msg-time">5:00 pm</span>
 						</li>
 						<li class="">
 							<div class="name">
+								<i class="fa-solid fa-user-astronaut online"></i>
+								<br>
 								<span class="">Christian Smith</span>
 							</div>
 							<div class="message">
-								<p><span class="blue-label">Cucu Ionel</span> I see what you did there.</p>
-								<span class="msg-time">5:01 pm</span>
+								<p><span class="blue-label">Cucu Ionel</span> I see what you did there.</p>								
 							</div>
+							<span class="msg-time">5:01 pm</span>
 						</li>
 						<li class="me">
 							<div class="name">
-								<span class="">Cucu Ionel</span>
+								<span class="">								
+								<i class="fa-solid fa-user-tie idle"></i>
+								<br>
+								Cucu Ionel
+								</span>
 							</div>
 							<div class="message">
-								<p>Feel free to look at the code if you want.</p>
-								<span class="msg-time">5:02 pm</span>
+								<p>Hey, do you like the new interface? It's done with Font Awesome.</p>								
 							</div>
+							<span class="msg-time">5:00 pm</span>
 						</li>
 						<li class="">
 							<div class="name">
+								<i class="fa-solid fa-user-astronaut online"></i>
+								<br>
 								<span class="">Christian Smith</span>
 							</div>
 							<div class="message">
-								<p>Yeah, will do.</p>
-								<span class="msg-time">5:04 pm</span>
+								<p><span class="blue-label">Cucu Ionel</span> I see what you did there.</p>								
 							</div>
+							<span class="msg-time">5:01 pm</span>
 						</li>
 						<li class="me">
 							<div class="name">
-								<span class="">Cucu Ionel</span>
+								<span class="">								
+								<i class="fa-solid fa-user-tie idle"></i>
+								<br>
+								Cucu Ionel
+								</span>
 							</div>
 							<div class="message">
-								<p>This is an example text reply.</p>
-								<span class="msg-time">5:04 pm</span>
+								<p>Hey, do you like the new interface? It's done with Font Awesome.</p>								
 							</div>
+							<span class="msg-time">5:00 pm</span>
 						</li>
 						<li class="">
 							<div class="name">
+								<i class="fa-solid fa-user-astronaut online"></i>
+								<br>
 								<span class="">Christian Smith</span>
 							</div>
 							<div class="message">
-								<p>I know, put some more.</p>
-								<span class="msg-time">5:06 pm</span>
+								<p><span class="blue-label">Cucu Ionel</span> I see what you did there.</p>								
 							</div>
-						</li>
-						<li class="me">
-							<div class="name">
-								<span class="">Cucu Ionel</span>
-							</div>
-							<div class="message">
-								<p>Here is another line.</p>
-								<span class="msg-time">5:06 pm</span>
-							</div>
-						</li>
-						<li class="">
-							<div class="name">
-								<span class="">Christian Smith</span>
-							</div>
-							<div class="message">
-								<p>Yeah, will do.</p>
-								<span class="msg-time">5:04 pm</span>
-							</div>
-						</li>
-						<li class="me">
-							<div class="name">
-								<span class="">Cucu Ionel</span>
-							</div>
-							<div class="message">
-								<p>Feel free to look at the code if you want.</p>
-								<span class="msg-time">5:02 pm</span>
-							</div>
-						</li>
-						<li class="">
-							<div class="name">
-								<span class="">Christian Smith</span>
-							</div>
-							<div class="message">
-								<p>Yeah, will do.</p>
-								<span class="msg-time">5:04 pm</span>
-							</div>
-						</li>
-						<li class="me">
-							<div class="name">
-								<span class="">Cucu Ionel</span>
-							</div>
-							<div class="message">
-								<p>Feel free to look at the code if you want.</p>
-								<span class="msg-time">5:02 pm</span>
-							</div>
-						</li>
-						<li class="">
-							<div class="name">
-								<span class="">Christian Smith</span>
-							</div>
-							<div class="message">
-								<p>Yeah, will do.</p>
-								<span class="msg-time">5:04 pm</span>
-							</div>
+							<span class="msg-time">5:01 pm</span>
 						</li>
 					</ul>
 				</div>
+				
 				<div class="input-area">
-					<div class="input-wrapper">
-						<input type="text" value="">
-						<i class="fa-regular fa-face-smile"></i>
-						<i class="fa fa-paperclip"></i>
-					</div>
-					<input type="button" value="Submit" class="send-btn">
+					
+					<div class="input-wrapper">		
+						<form wire:submit.prevent="uploadFollowUp">			
+						<input type="text" class="messageFollowUp" wire:model="message" placeholder="Escribe un mensaje...">
+						<i class="fa-regular fa-face-smile emojiButton" wire:click="$dispatch('toggleEmojiPicker')"></i>
+						<i class="fa fa-paperclip" wire:click="$dispatch('triggerFileInput')"></i>
+				
+						<!-- Mostrar el input de archivo -->
+						<input type="file" wire:model="file" id="file-input" style="display: none;" accept="image/*, .pdf, .doc, .docx">
+				
+						@error('file') <span class="error">{{ $message }}</span> @enderror
+					</div>					
+					<button type="submit" value="Enviar" class="btn send-btn" >Enviar</button>
+					</form>
 				</div>
+			
 			</div>
 			<div class="right-tabs">
 				<ul class="tabs">
@@ -170,16 +161,53 @@
 				<ul class="tabs-container">
 					<li class="active">
 						<ul class="member-list">
-							<li><span class="status online"><i class="fa fa-circle"></i></span><span>Cucu Ionel</span></li>
-							<li><span class="status online"><i class="fa fa-circle"></i></span><span>Christian Smith</span></li>
-							<li><span class="status idle"><i class="fa fa-circle"></i></span><span>John Bradley</span><span class="time">10:45 pm</span></li>
-							<li><span class="status offline"><i class="fa fa-circle"></i></span><span>Daniel Freitz</span></li>
+							<li><span class="status offline"><i class="fa-solid fa-user-tie"></i></span><span>Solicitante:<br>
+								<ul style="list-style:disc;">
+									<li style="display: list-item;">Papa Johns</li>
+								</ul>	
+							</span></li>
+							<li><span class="status online"><i class="fa-solid fa-user-astronaut"></i></span><span>Tecnicos:<br>
+								<ul style="list-style:disc;">
+									<li style="display: list-item;">Jeremy Pedraza</li>
+								</ul>
+							</span></li>
+							<li><span class="status idle"><i class="fa-solid fa-users"></i></span>
+							<span>Observadores:<br>
+								<ul style="list-style:disc;">
+									<li style="display: list-item;">Rodrigo Fernandez</li>
+									<li>Andres Chinchilla</li>
+								</ul>
+							</span><span class="time">10:45 pm</span></li>							
 						</ul>
+						<nav class="tmln tmln--box tmln--hr">
+							<h2 class="tmln__header">Estado de Caso</h2>
+								<ul class="tmln__list">
+									<li class="tmln__item tmln__item--active">
+										<span data-title>32 mins ago</span>
+										<h3 class="tmln__item-headline">Nuevo</h3>										
+									</li>
+									<li class="tmln__item tmln__item--bg-lght">
+										<span data-title>36 mins ago</span>
+										<h3 class="tmln__item-headline">En Curso</h3>											
+									</li>
+									<li class="tmln__item tmln__item--bg-dark">
+										<span data-title>58 mins ago</span>
+										<h3 class="tmln__item-headline">Solucionado</h3>
+									</li>
+									<li class="tmln__item tmln__item--bg-lght">
+										<span data-title>1 day ago</span>
+										<h3 class="tmln__item-headline">Cerrado</h3>																				
+									</li>
+								</ul>
+						</nav>
 					</li>
-					<li></li>
-					<li></li>
-				</ul>
-				<i class="fa fa-cog"></i>
+					<li>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce porttitor leo nec ligula viverra, quis facilisis nunc vehicula. Maecenas purus orci, efficitur in dapibus vel, rutrum in massa. Sed auctor urna sit amet eros mattis interdum. Integer imperdiet ante in quam lacinia, a laoreet risus imperdiet. Ut a blandit elit, vitae volutpat nunc. Nam posuere urna sagittis lectus eleifend viverra. Quisque mauris nunc, viverra vitae sodales non, auctor in diam. Sed dignissim pulvinar sapien sed fermentum. Praesent interdum turpis ut neque tristique ornare. Nam dictum est sed sem elementum rutrum. Nam a mollis turpis.</p>
+					</li>
+					<li>
+						<p>Pellentesque rutrum sit amet nunc sit amet faucibus. Ut id arcu tempus, varius erat et, ornare libero. In quis felis nunc. Aliquam euismod lacus a eros ornare, ut aliquam sem mattis. Cras non varius dui, quis commodo ante. Maecenas gravida est non nulla malesuada egestas. Proin tincidunt eros et lacus sodales lobortis.</p>
+					</li>
+				</ul>				
 			</div>
 		</div>
 	</div>

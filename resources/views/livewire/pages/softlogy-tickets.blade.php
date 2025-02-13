@@ -260,12 +260,11 @@
                             </div>
                             <div class="job-right my-4 flex-shrink-0 ticket-buttom">
                                 <div class="col">
-                                    <a class="btn d-block w-100 d-sm-inline-block" href="#">
+                                    <a class="btn d-block w-100 d-sm-inline-block" href="{{route('ticket',['id'=>$ticket->id])}}">
                                       <span class="text">Ver Caso</span>
                                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.66669 11.3334L11.3334 4.66669" stroke="white" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.66669 4.66669H11.3334V11.3334" stroke="white" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                     </a>
-                                  </div>
-                                {{-- <a href="#" class="btn d-block w-100 d-sm-inline-block btn-light">Ver Caso</a> --}}
+                                  </div>                                
                             </div>
                         </div>
                         @endforeach

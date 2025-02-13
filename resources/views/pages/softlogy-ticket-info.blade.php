@@ -10,3 +10,4 @@
         @livewire('pages.softlogy-ticket-info', ['id' => $id])
     </main>
 </x-app-layout>
+
