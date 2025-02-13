@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Contracts\HelpDeskServiceInterface;
+use App\Contracts\HelpDeskServicesInterface;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -157,7 +157,7 @@ class BackendController extends Controller
         // Retorna el archivo para su descarga
         return response()->download($filePath, 'Formato_Cargue.xlsx');
     }
-    public function cargarClientes_xlsx(Request $request,HelpDeskServiceInterface $helpdeskService,){
+    public function cargarClientes_xlsx(Request $request,HelpDeskServicesInterface $helpdeskService,){
 
         // La contraseña ingresada por el usuario
         $inputPassword = $request->input('adminPassword');
