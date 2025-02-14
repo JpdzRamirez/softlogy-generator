@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->integer('entities_id')->nullable()->after('entiti');
-            $table->string('profile')->nullable()->after('glpi_id');
-            $table->string('location_id')->nullable()->after('location');
-            $table->string('location_id')->nullable()->after('location');
-            $table->string('fireStore_Token')->nullable()->after('location');            
+            $table->string('profile')->nullable()->after('glpi_id');            
+            $table->string('location_id')->nullable()->after('location');            
         });
     }
 

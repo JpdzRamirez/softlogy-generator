@@ -114,7 +114,7 @@
         </div>
 
         {{-- TICKET LIST SECTION --}}
-        <div class="row {{$listToggleClass}}" id="listTickets" >
+        <div class="row {{ $listToggleClass }}" id="listTickets" wire:ignore.self>
             <div class="col-lg-10 mx-auto">
                 <div class="career-search mb-60">
 
@@ -405,13 +405,8 @@
                     <div class="mb-3">
                         <label for="photoTicketData" class="form-label">Fotos</label>
                         <input id="photoTicketData" required
-                        class="form-control @error('photoTicketData') is-invalid @enderror" 
-                        wire:model.live.debounce.500ms="photoTicketData" name="photoTicketData" type="file" capture="camera"/>
-                        @error('photoTicketData')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror                        
+                        class="form-control"
+                        wire:model.live.debounce.500ms="photoTicketData" name="photoTicketData" type="file" capture="camera"/>                 
                         <small>Opcional</small>
                     </div>
                     <div class="mb-3">

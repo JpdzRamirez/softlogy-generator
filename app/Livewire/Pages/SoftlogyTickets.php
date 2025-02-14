@@ -95,13 +95,13 @@ class SoftlogyTickets extends Component
 
         return $rules;  // Devuelves las reglas dinámicas
     }
-    public function mount(HelpDeskServicesInterface $helpdeskServices, $defaultClass = "d-none")
+    public function mount(HelpDeskServicesInterface $helpdeskServices)
     {
         $date = Carbon::now();
         $this->day = $date->format('d'); // Día (ej: 22)
         $this->month = $date->translatedFormat('F'); // Mes en texto (ej: Enero)
         $this->ticketsCounter = $helpdeskServices->getTicketsCount(Auth::user()->glpi_id);
-        $this->listToggleClass = $defaultClass;
+        $this->listToggleClass = "listTicketHidden";
     }
 
 
@@ -111,12 +111,12 @@ class SoftlogyTickets extends Component
     public function toggleList()
     {
         $this->showList = !$this->showList; // Alternar estado
-        if ($this->showList) {
-            $this->listToggleClass = "listTicketToggled";
-        } else {
-            $this->listToggleClass = "listTicketNotToggled";
-            $this->dispatch('hideListTickets');
-        }
+
+        // Actualizar la clase según el estado
+        $this->listToggleClass = $this->showList ? "listTicketToggled" : "listTicketNotToggled";
+    
+        // Enviar evento a JavaScript con el estado actual
+        $this->dispatch('toggleListTickets', ['showList' => $this->showList]);
     }
 
     public function updatedPhotoTicketData(CastServicesInterface $castService)
@@ -126,11 +126,13 @@ class SoftlogyTickets extends Component
             //Inicializar Instancia
             $tempPhoto = $this->photoTicketData;
             $this->photoTicketData = $castService->processPhoto($tempPhoto);
-            $this->dispatch('reloadsupportModal');
+            
         } catch (Exception $e) {
             // Manejar error si `createTicket` falla por un error inesperado
             session()->flash('error', 'Hubo un problema de compatibilidad | ' . $e->getMessage());
             return redirect()->route('softlogy.tickets');
+        }finally {
+            $this->dispatch('reloadsupportModal');
         }
     }
     public function updatedPhotoRequestData(CastServicesInterface $castService)
@@ -139,11 +141,13 @@ class SoftlogyTickets extends Component
             //Inicializar Instancia
             $tempPhoto = $this->photoRequestData;
             $this->photoRequestData = $castService->processPhoto($tempPhoto);
-            $this->dispatch('reloadrequestModal');
+            
         } catch (Exception $e) {
             // Manejar error si `createTicket` falla por un error inesperado
             session()->flash('error', 'Hubo un problema de compatibilidad | ' . $e->getMessage());
             return redirect()->route('softlogy.tickets');
+        }finally {
+            $this->dispatch('hideSpinnerRequest'); // Oculta el spinner
         }
     }
 
@@ -219,7 +223,7 @@ class SoftlogyTickets extends Component
 
             if ($response['status']) {
                 $this->resetAll();
-                $this->dispatch('hideSpinner', $response);
+                $this->dispatch('hideSpinnerTicketSubmmited', $response);
             } else {
                 throw new Exception($response['message']);
             }
@@ -251,9 +255,7 @@ class SoftlogyTickets extends Component
                 (int)$this->ticketStatus,
                 (int)$this->ticketType,
                 (int)$this->perPage
-            );
-
-            $this->dispatch('restartToolTip');
+            );                     
 
             return view('livewire.pages.softlogy-tickets', [
                 'listTickets' => $ticketsList,
@@ -261,6 +263,8 @@ class SoftlogyTickets extends Component
         } catch (Exception $e) {
             session()->flash('error', $e->getMessage());
             return redirect()->route('softlogy.tickets');
+        }finally{
+            $this->dispatch('restartToolTip');
         }
     }
 }

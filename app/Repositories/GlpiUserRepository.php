@@ -130,23 +130,24 @@ class GlpiUserRepository
 
                 $data = [
                     'name' => $user->name,
-                    'realname' => $user->realname ? $user->name : null,
-                    'firstname' => $user->firstname ? $user->fistname : null, 
-                    'email' => $user->email->email ?? "{$user->name}@softlogydummy.com", 
+                    'realname' => !empty($user->realname) ? $user->name : null,
+                    'firstname' => !empty($user->firstname) ? $user->firstname : null, 
+                    'email' => optional($user->email)->email ?? "{$user->name}@softlogydummy.com", 
                     'password' => $user->password,
-                    'phone' => $user->phone ? $user->phone : null,
-                    'mobile' => $user->mobile ? $user->mobile : null,
-                    'entiti' => $user->entiti->name, 
-                    'entities_id' => $user->entiti->id, 
-                    'title' => $user->title->name ?? 'Usuario Estandar', 
-                    'location' => $user->location->name ?? '-', 
-                    'location_id' => $user->locations_id ?? '-', 
+                    'phone' => !empty($user->phone) ? $user->phone : null,
+                    'mobile' => !empty($user->mobile) ? $user->mobile : null,
+                    'entity' => optional($user->entiti)->name, 
+                    'entities_id' => optional($user->entiti)->id, 
+                    'title' =>  optional($user->title)->name ?? 'Usuario Estandar', 
+                    'location' => optional($user->location)->name ?? '-', 
+                    'location_id' => $user->locations_id ?? null, 
                     'glpi_id' => $user->id,
-                    'profile' => $user->profile->name, 
-                    'profile_id' => $user->profile->id, 
+                    'profile' => optional($user->profile)->name, 
+                    'profile_id' => optional($user->profile)->id, 
                     'is_active' => $user->is_active,
                     'picture' => $user->picture ?? null,
                 ];
+                
                 // Crear usuario local si no existe
                 $localUser = $userRepository->create($data);
             }

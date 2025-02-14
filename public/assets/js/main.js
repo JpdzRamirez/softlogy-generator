@@ -258,7 +258,7 @@
         spinner.css("display", show ? "block" : "none");
     };
 
-    document.addEventListener("hideSpinner", function (event) {
+    document.addEventListener("hideSpinnerTicketSubmmited", function (event) {
         showSpinner(false);
         console.log(event);
         let responseData = event.detail[0]; // Recibe el array
@@ -330,10 +330,12 @@
 
     const listTickets = $("#listTickets");
 
-    document.addEventListener("hideListTickets", function (event) {
-        setTimeout(() => {
-            listTickets.css("display", "none");
-        }, 600);
+    document.addEventListener("toggleListTickets", function (event) {                                
+            if (event.detail[0].showList) {                
+                listTickets.addClass("listTicketToggled").removeClass("listTicketNotToggled");
+            } else {                
+                listTickets.addClass("listTicketNotToggled").removeClass("listTicketToggled");
+            }
     });
 
     // Función para aplicar estilos según media query
@@ -356,7 +358,11 @@
             }
         }
     }
-
+    // Cargar foto de ticket
+    $('#photoTicketData,#photoRequestData').on('change', function () {
+        showSpinner(true); 
+        $(this).prop('disabled', true);
+    });
     // Mostrar el tutorial y ocultar el botón "Tutorial"
     openTutorialButton.click(function () {
         if (window.matchMedia("(max-width: 991px)").matches) {
@@ -457,6 +463,8 @@
         if (totalBackdrops > 1) {
             backdrops.slice(1).remove();
         }
+        showSpinner(false);
+        $('#photoTicketData').prop('disabled', false); // Reactiva el input
     });
     document.addEventListener("reloadrequestModal", function (event) {
         $(".modal-backdrop.fade.show").remove();
@@ -473,6 +481,8 @@
         if (totalBackdrops > 1) {
             backdrops.slice(1).remove();
         }
+        showSpinner(false);
+        $('#photoRequestData').prop('disabled', false); // Reactiva el input
     });
 
     // Seleccionar todos los botones de cerrar modales
