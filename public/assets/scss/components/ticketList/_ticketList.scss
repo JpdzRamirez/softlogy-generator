@@ -4,14 +4,19 @@
 .listTicketToggled{
   opacity: 1 !important;
   height: auto !important;
+  display: flex !important;
   animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both !important;
 }
 .listTicketNotToggled{  
+  display: flex !important;
+  position: relative;
+  z-index: -1;
   animation: slide-out-top 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both !important;    
 }
 .listTicketHidden {
   opacity: 0;
-  height: 0;     
+  height: 0;
+  display: none; 
 }
 /* ===== Career ===== */
 .career-form {

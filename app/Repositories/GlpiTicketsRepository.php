@@ -36,6 +36,59 @@ class GlpiTicketsRepository
         $this->model = new GlpiTickets();
     }
 
+    public function getTicketsCounterUser(int $userId)
+    {
+
+        try {
+            $tickets = [
+                "nuevos" => 0,
+                "encurso" => 0,
+                "planificados" => 0,
+                "enespera" => 0,
+                "solucionados" => 0,
+                "cerrados" => 0
+            ];
+
+            // Obtener el conteo de tickets agrupados por status
+            $statusCounts = $this->model->whereHas('ticketsUser', function ($query) use ($userId) {
+                $query->where('users_id', $userId)
+                    ->where('type', 1); // Filtra solo los tickets de este usuario con type=1 (Solicitante)
+            })
+            ->where('is_deleted', '!=', 1) // Excluir tickets eliminados
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->get();
+
+            // Iterar sobre los resultados de la consulta para asignar los valores al arreglo
+            foreach ($statusCounts as $statusCount) {
+                switch ($statusCount->status) {
+                    case '1':
+                        $tickets["nuevos"] = $statusCount->total;
+                        break;
+                    case '2':
+                        $tickets["encurso"] = $statusCount->total;
+                        break;
+                    case '3':
+                        $tickets["planificados"] = $statusCount->total;
+                        break;
+                    case '4':
+                        $tickets["enespera"] = $statusCount->total;
+                        break;
+                    case '5':
+                        $tickets["solucionados"] = $statusCount->total;
+                        break;
+                    case '6':
+                        $tickets["cerrados"] = $statusCount->total;
+                        break;
+                }
+            };
+
+            return $tickets;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
 
     /**
      * Summary of getAllTicketsUser
@@ -53,7 +106,7 @@ class GlpiTicketsRepository
             $query->where('users_id', $userId)
                 ->where('type', 1); // Filtra solo los tickets de este usuario con type=1
         })
-            ->where('is_deleted', '!=', 1); // Excluir tickets eliminados
+        ->where('is_deleted', '!=', 1); // Excluir tickets eliminados
 
         // Filtrar por nombre del ticket
         if ($ticketID) {
@@ -88,7 +141,7 @@ class GlpiTicketsRepository
             'impact',
             'type'
         ) // Campos necesarios
-            ->paginate($perPage);
+        ->paginate($perPage);
     }
 
     /**
@@ -119,10 +172,11 @@ class GlpiTicketsRepository
                 });
             });
     }
-    /**
-     * Summary of CreateTicket
-     * @param array $data
-     * @return \Illuminate\Database\Eloquent\Collection
+
+    /*
+     * Summary of createTicket
+     * @param array $ticketData
+     * @return GlpiTickets
      */
     public function createTicket(array $ticketData)
     {
@@ -321,7 +375,7 @@ class GlpiTicketsRepository
             if (!empty($imageData)) {
 
                 // Eliminar la cabecera 'data:image/...;base64,' si está presente
-                if (preg_match('/^data:image\/(\w+);base64,/', $imageData,$matches)) {
+                if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $matches)) {
                     $imageType = $matches[1]; // Obtener el tipo de imagen (png, jpg, jpeg)
                     $imageData = substr($imageData, strpos($imageData, ',') + 1); // Eliminar la cabecera
                 }
@@ -360,7 +414,7 @@ class GlpiTicketsRepository
                 $glpidocumentData = [
                     'entities_id' => $ticketData['entities_id'],
                     'is_recursive' => 0,
-                    'name' => 'Imagen_caso' . $ticket->id.'.'.$imageType,
+                    'name' => 'Imagen_caso' . $ticket->id . '.' . $imageType,
                     'filename' => 'image_paste' . $ticket->id . '.' . $imageType,
                     'filepath' => strtoupper($imageType) . '/' . $randomFolder . '/' . $imageName,
                     'documentcategories_id' => 1,
@@ -431,5 +485,47 @@ class GlpiTicketsRepository
             'use_notification' => 1,
         ];
         $this->glpiticketsUsers->create($dataTicketUser);
+    }
+
+    /**
+     * Summary of getAllTicketInfo
+     * @param int $ticketId
+     * @return GlpiTickets
+     */
+    public function getAllTicketInfo(int $ticketId){
+        try{
+            return $this->model
+            ->select(
+                'id',
+                'entities_id',
+                'name',
+                'date',
+                'closedate',
+                'solvedate',
+                'status',
+                'users_id_recipient',
+                'content',
+                'urgency',
+                'impact',
+                'type'
+            )
+            ->where('is_deleted', '!=', 1)
+            ->findOrFail($ticketId);
+        
+            
+        }catch(Exception $e){
+            throw $e;
+        }        
+    }
+
+    public function getAllTicketFollowUps(int $ticketId, int $userId){
+        return $this->model
+        ->where('id', $ticketId)
+        ->with(['itilfollowups' => function ($query) use ($userId) {
+            $query->with('documents','user')
+            ->orderBy('date','asc'); // Cargamos los documentos de cada follow-up
+        }])
+        ->firstOrFail()
+        ->itilfollowups;         
     }
 }

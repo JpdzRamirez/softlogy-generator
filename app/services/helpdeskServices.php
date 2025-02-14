@@ -5,6 +5,8 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\HelpDeskServicesInterface;
 
+use App\Models\GlpiTickets;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 use App\Repositories\GlpiTicketsRepository;
 
@@ -14,13 +16,13 @@ class HelpdeskServices implements HelpDeskServicesInterface
 {
 
     protected $glpiTicketRepository;
-    
+
     /**
      * Create a new class instance.
      */
     public function __construct(GlpiTicketsRepository $glpiTicketRepository)
     {
-        $this->glpiTicketRepository = $glpiTicketRepository;        
+        $this->glpiTicketRepository = $glpiTicketRepository;
     }
     private function curlRequest($url)
     {
@@ -65,7 +67,41 @@ class HelpdeskServices implements HelpDeskServicesInterface
         // Retornar null si no se pudo obtener una respuesta válida después de los intentos
         return null;
     }
+    /**
+     * 
+     * @param array $ticketData
+     * @return array{message: string, status: bool|array{status: bool, ticket: mixed}}
+     */
+    public function createTicket(array $ticketData)
+    {
 
+        // Aseguramos que no haya límites de tiempo y memoria
+        DB::statement('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
+        // set_time_limit(90);
+        // ini_set('default_socket_timeout', 90);
+        DB::connection('mysql_second')->beginTransaction();
+        try {
+            $ticket = $this->glpiTicketRepository->createTicket($ticketData);
+            $this->glpiTicketRepository->createRelationTicketUser($ticket, $ticketData);
+            $content = $this->glpiTicketRepository->glpiContenTicketBuilder($ticketData, $ticket);
+            $this->glpiTicketRepository->updateTicket($ticket->id, $content);
+            DB::connection('mysql_second')->commit();
+            return [
+                'ticket' => $ticket->id,
+                'status' => true
+            ];
+        } catch (Exception $e) {
+            DB::connection('mysql_second')->rollBack();
+            return [
+                'message' => "Error en la transacción: " . $e->getMessage(),
+                'status' => false
+            ];
+        }
+    }
+    /**
+     * Summary of createLocation
+     * @param array $location
+     */
     public function createLocation(array $location)
     {
         // Aseguramos que no haya límites de tiempo y memoria
@@ -154,6 +190,11 @@ class HelpdeskServices implements HelpDeskServicesInterface
             throw $e;
         }
     }
+    /**
+     * Summary of createEntiti
+     * @param array $data
+     * @return bool
+     */
     public function createEntiti(array $data)
     {
         // Aseguramos que no haya límites de tiempo y memoria
@@ -262,57 +303,123 @@ class HelpdeskServices implements HelpDeskServicesInterface
             throw $e;
         }
     }
-    public function getTicketsCount(int $idUser)
+    /**
+     * Summary of getTicketsCount
+     * @param int $userId
+     * @return array|array{cerrados: int, encurso: int, enespera: int, nuevos: int, planificados: int, solucionados: int}
+     */
+    public function getTicketsCount(int $userId)
     {
         try {
-            $tickets = [
-                "nuevos" => 0,
-                "encurso" => 0,
-                "planificados" => 0,
-                "enespera" => 0,
-                "solucionados" => 0,
-                "cerrados" => 0
-            ];
-            // Obtenemos el numero de tickets del usuario
-            $statusCounts = DB::connection('mysql_second')
-                ->table('glpi_tickets')
-                ->join('glpi_tickets_users', 'glpi_tickets.id', '=', 'glpi_tickets_users.tickets_id')
-                ->select('glpi_tickets.status', DB::raw('COUNT(*) as total'))
-                ->where('glpi_tickets_users.users_id', $idUser)
-                ->groupBy('glpi_tickets.status')
-                ->orderBy('glpi_tickets.status')
-                ->get();
-
-            // Iterar sobre los resultados de la consulta para asignar los valores al arreglo
-            foreach ($statusCounts as $statusCount) {
-                switch ($statusCount->status) {
-                    case '1':
-                        $tickets["nuevos"] = $statusCount->total;
-                        break;
-                    case '2':
-                        $tickets["encurso"] = $statusCount->total;
-                        break;
-                    case '3':
-                        $tickets["planificados"] = $statusCount->total;
-                        break;
-                    case '4':
-                        $tickets["enespera"] = $statusCount->total;
-                        break;
-                    case '5':
-                        $tickets["solucionados"] = $statusCount->total;
-                        break;
-                    case '6':
-                        $tickets["cerrados"] = $statusCount->total;
-                        break;
-                }
-            }
-            return $tickets;
+            return $this->glpiTicketRepository->getTicketsCounterUser($userId);
         } catch (Exception $e) {
             throw $e;
         }
     }
+    /*
+        *************************************************
+        ---------------❗ LOCAL FUNCTIONS-----------------
+        *************************************************
+    * 
+    /**
+     * Summary of processTicketInfo
+     * @param mixed $tickets
+     */
+    public function processTicketInfo($tickets)
+    {
 
-    public function getTicketsUser(int $idUser,int $ticketID,string $ticketName,int $ticketStatus, int $ticketType, int $perPage)
+        if (!$tickets) {
+            return null;
+        }
+    
+        // Si es un solo ticket (objeto en lugar de colección)
+        if ($tickets instanceof GlpiTickets) {
+            return $this->processSingleTicket($tickets);
+        }
+    
+    // Si `$tickets` es una paginación (LengthAwarePaginator)
+    if ($tickets instanceof LengthAwarePaginator) {
+        $tickets = new LengthAwarePaginator(
+            collect($tickets->items())->map(fn($ticket) => $this->processSingleTicket($ticket)), 
+            $tickets->total(),
+            $tickets->perPage(),
+            $tickets->currentPage(),
+            ['path' => $tickets->path()]
+        );
+    }
+
+    return $tickets;
+    }
+
+    private function processSingleTicket($ticket)
+    {
+        if (!$ticket) {
+            return null;
+        }
+
+        // Obtener los destinatarios del ticket
+        $recipients = $this->glpiTicketRepository->getAllRecipients($ticket->id);
+
+        // Clasificar los destinatarios
+        $tecnicos = [];
+        $observadores = [];
+
+        if ($recipients) {
+            foreach ($recipients as $recipient) {
+                $nombreCompleto = explode(" ", $recipient->firstname)[0] . " " . explode(" ", $recipient->realname)[0];
+                $recipient->nombrecompleto=$nombreCompleto;
+                if ($recipient->type == 2) {
+                    $tecnicos[] = $recipient; // Técnicos
+                } elseif ($recipient->type == 3) {
+                    $observadores[] = $recipient; // Observadores
+                }
+            }
+        }
+
+        // Asignar la información al ticket
+        $ticket->tecnicos = $tecnicos;
+        $ticket->observadores = !empty($observadores) 
+        ? implode(', ', array_map(fn($obs) => $obs->nombrecompleto, $observadores)) 
+        : null;
+
+        // Limpiar contenido del ticket
+        $decodedContent = htmlspecialchars_decode($ticket->content);
+        $ticket->content = strip_tags($decodedContent);
+
+        // Procesar documentos adjuntos en Base64
+        $ticket->resources = $this->processDocuments($ticket->documents);
+
+        return $ticket;
+    }
+
+    private function processDocuments($documents)
+    {
+        $imagesBase64 = [];
+
+        foreach ($documents as $document) {
+            $resoursesFile = env('SOFTLOGY_HELDEKS_RESOURCES');
+            $completePath = $resoursesFile . DIRECTORY_SEPARATOR . $document->filepath;
+
+            if (file_exists($completePath)) {
+                $imageData = file_get_contents($completePath);
+                $imagesBase64[] = 'data:' . $document->mime . ';base64,' . base64_encode($imageData);
+            }
+        }
+
+        return !empty($imagesBase64) ? $imagesBase64 : null;
+    }
+
+
+    /**
+     * Summary of getTicketsUser
+     * @param int $idUser
+     * @param int $ticketID
+     * @param string $ticketName
+     * @param int $ticketStatus
+     * @param int $ticketType
+     * @param int $perPage
+     */
+    public function getTicketsUser(int $idUser, int $ticketID, string $ticketName, int $ticketStatus, int $ticketType, int $perPage)
     {
         // Consulta 
         try {
@@ -324,105 +431,47 @@ class HelpdeskServices implements HelpDeskServicesInterface
                 $ticketType,
                 $perPage
             );
-
-            if (!$ticketsList) {
-                return null;
-            }
-
-            // Iteramos cada ticket
-            foreach ($ticketsList as $ticket) {
-
-                $recipients = $this->glpiTicketRepository->getAllRecipients($ticket->id);
-
-                // Verificar quienes son los actores del caso
-                if ($recipients) {
-                    // Inicializar las variables para técnicos y observadores
-                    $tecnicos = [];
-                    $observadores = [];
-                    $observadoresTooltip = null;
-                    // Recorrer los destinatarios y asignarlos a la propiedad correspondiente
-                    foreach ($recipients as $recipient) {
-                        // Comprobar el tipo de destinatario
-                        if ($recipient->type == 2) {
-                            // Agregar a los técnicos
-                            $nombres = explode(" ", $recipient->firstname);
-                            $apellidos = explode(" ", $recipient->realname);
-                            $tecnicos[] = $nombres[0] . " " . $apellidos[0];
-                        } elseif ($recipient->type == "3") {
-                            // Agregar a los observadores
-                            $nombres = explode(" ", $recipient->firstname);
-                            $apellidos = explode(" ", $recipient->realname);
-                            $observadores[] = $nombres[0] . " " . $apellidos[0];
-                        }
-                    }
-                    // Crear el tooltip para observadores
-                    if (!empty($observadores)) {
-                        $observadoresTooltip = implode(', ', $observadores);
-                    }
-                    // Asignar los resultados a las propiedades dinámicas del ticket
-                    $ticket->tecnicos = $tecnicos;
-                    $ticket->observadores = $observadoresTooltip;
-                }
-                // Procesar contenido del ticket principal
-                $decodedContent = htmlspecialchars_decode($ticket->content);
-                // Extraer texto limpio
-                $textCleaned = strip_tags($decodedContent);
-
-                $ticket->content = $textCleaned;
-
-                $imagesBase64 = [];
-
-                foreach ($ticket->documents as $document) {
-                    $resoursesFile = env('SOFTLOGY_HELDEKS_RESOURCES');
-                    $completePath = $resoursesFile . DIRECTORY_SEPARATOR . $document->filepath;
-
-                    if (file_exists($completePath)) {
-                        $imageData = file_get_contents($completePath);
-                        $imagesBase64[] = 'data:' . $document->mime . ';base64,' . base64_encode($imageData);
-                    }
-                }
-                if (!empty($imagesBase64)) {
-                    $ticket->resources = $imagesBase64;
-                }
-            }
-
-            // Devuelve la respuesta estructurada
-            return $ticketsList;
+            
+            // Procesamos la lista de tickets
+            $processedTickets = $this->processTicketInfo($ticketsList);
+            
+            // Devolvemos la lista procesada
+            return $processedTickets;
         } catch (Exception $e) {
             throw $e;
         }
     }
+    
+    public function addTicketFollowups(int $ticketId, int $userId){
+        try{
+            $followups= $this->glpiTicketRepository->getAllTicketFollowUps($ticketId,$userId);
+            if ($followups) {
+                foreach ($followups as $followup) {
+                    // Limpiar contenido del followup
+                    $decodedContent = htmlspecialchars_decode($followup->content);
+                    $followup->content = strip_tags($decodedContent);
 
-    public function createTicket(array $ticketData)
+                   $followup->documents->resources=$this->processDocuments($followup->documents);
+                }
+            }            
+            return $followups;
+        }catch(Exception $e){
+            throw $e;
+        }   
+    }
+
+    public function getTicketInfo(int $ticketId, int $userId)
     {
-
-        // Aseguramos que no haya límites de tiempo y memoria
-        DB::statement('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
-        // set_time_limit(90);
-        // ini_set('default_socket_timeout', 90);
-        DB::connection('mysql_second')->beginTransaction();
         try {
-            $ticket = $this->glpiTicketRepository->createTicket($ticketData);
-            $this->glpiTicketRepository->createRelationTicketUser($ticket,$ticketData);
-            $content = $this->glpiTicketRepository->glpiContenTicketBuilder($ticketData,$ticket);
-            $this->glpiTicketRepository->updateTicket($ticket->id,$content);
-            DB::connection('mysql_second')->commit();
-            return [
-                'ticket'=>$ticket->id,
-                'status'=>true
-            ];
+            // Obtener el ticket solicitado
+            $ticketInfo = $this->glpiTicketRepository->getAllTicketInfo($ticketId);
+            // Construir el contenido de el ticket
+            $processedTicket = $this->processTicketInfo($ticketInfo);
+            // Añadir los followups al ticket armado
+            $processedTicket->followups=$this->addTicketFollowups($ticketId,$userId);
+            return $processedTicket;
         } catch (Exception $e) {
-            DB::connection('mysql_second')->rollBack();
-            return [
-                'message' => "Error en la transacción: " . $e->getMessage(),
-                'status' => false
-            ];
+            throw $e;
         }
     }
-
-    public function getTicketInfo(int $ticketID, int $userID)
-    {
-        
-    }
-
 }

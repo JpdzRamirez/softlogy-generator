@@ -7,6 +7,8 @@ use App\Contracts\HelpDeskServicesInterface;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithFileUploads;
 
+use Exception;
+
 use Livewire\Component;
 
 class SoftlogyTicketInfo extends Component
@@ -48,8 +50,15 @@ class SoftlogyTicketInfo extends Component
 
     public function render(HelpDeskServicesInterface $helpdeskServices)
     {
-        $response = $helpdeskServices->getTicketInfo($this->id, (int) Auth::user()->glpi_id);
+        try {
+            $response = $helpdeskServices->getTicketInfo($this->id, (int) Auth::user()->glpi_id);
 
-        return view('livewire.pages.softlogy-ticket-info');
+            return view('livewire.pages.softlogy-ticket-info', [
+                'ticketInfo' => $response,
+            ]);
+        } catch (Exception $e) {
+            session()->flash('error', $e->getMessage());
+            return redirect()->route('softlogy.tickets');
+        }
     }
 }

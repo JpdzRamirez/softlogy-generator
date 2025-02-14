@@ -7,7 +7,7 @@
 				<i class="fa fa-circle"></i>
 			</div>
 			<div class="title">
-				<span>Hip Chat</span>
+				<span><i class="fa-solid fa-file-waveform"></i> SoftlogyDesk Historial de Caso</span>
 			</div>
 			<div class="expand">
 				<i class="fa fa-expand"></i>
@@ -54,80 +54,47 @@
 				</div>
 
 			<div class="chat-area">
-				<div class="title"><b>Conversation title</b><i class="fa fa-search"></i></div>
+				<div class="title"><b>Caso #{{$ticketInfo->id}}-{{$ticketInfo->name}} </b><i class="fa fa-search"></i></div>
 				<div class="chat-list">
 					<ul>
+						{{--Ticket Aperture --}}
 						<li class="me">
 							<div class="name">
-								<span class="">								
+								<span class="user-msg">								
 								<i class="fa-solid fa-user-tie idle"></i>
 								<br>
-								Cucu Ionel
+								{{$ticketInfo->user->name}}							
 								</span>
 							</div>
 							<div class="message">
-								<p>Hey, do you like the new interface? It's done with Font Awesome.</p>								
+								<p><span class="blue-label">Apertura de Caso</span></p>								
+								<p>{{$ticketInfo->content}}</p>
+								@if($ticketInfo->resources && count($ticketInfo->resources) > 0)
+									@foreach ($ticketInfo->resources as $key => $resource)
+										<hr>
+										<img src="{{ $resource }}" alt="{{$ticketInfo->documents[$key]->tag}}" />                                                        
+									@endforeach
+								@endif    								
 							</div>
-							<span class="msg-time">5:00 pm</span>
+							<span class="msg-time">{{$ticketInfo->date}}</span>
 						</li>
-						<li class="">
-							<div class="name">
-								<i class="fa-solid fa-user-astronaut online"></i>
-								<br>
-								<span class="">Christian Smith</span>
-							</div>
-							<div class="message">
-								<p><span class="blue-label">Cucu Ionel</span> I see what you did there.</p>								
-							</div>
-							<span class="msg-time">5:01 pm</span>
-						</li>
+						{{--Iterator folloups--}}
+						@if($ticketInfo->followups && count($ticketInfo->followups) > 0)
+							@foreach ($ticketInfo->followups as $followup )
+								
+							@endforeach
+						@endif
 						<li class="me">
 							<div class="name">
-								<span class="">								
-								<i class="fa-solid fa-user-tie idle"></i>
-								<br>
-								Cucu Ionel
-								</span>
-							</div>
-							<div class="message">
-								<p>Hey, do you like the new interface? It's done with Font Awesome.</p>								
-							</div>
-							<span class="msg-time">5:00 pm</span>
-						</li>
-						<li class="">
-							<div class="name">
 								<i class="fa-solid fa-user-astronaut online"></i>
 								<br>
-								<span class="">Christian Smith</span>
+								<span class="user-msg">Christian Smith</span>
 							</div>
 							<div class="message">
-								<p><span class="blue-label">Cucu Ionel</span> I see what you did there.</p>								
+								<p><span class="green-label">Tecnico Softlogy</span></p>
+								<p>La situacion es esta y aquella</p>								
 							</div>
-							<span class="msg-time">5:01 pm</span>
-						</li>
-						<li class="me">
-							<div class="name">
-								<span class="">								
-								<i class="fa-solid fa-user-tie idle"></i>
-								<br>
-								Cucu Ionel
-								</span>
-							</div>
-							<div class="message">
-								<p>Hey, do you like the new interface? It's done with Font Awesome.</p>								
-							</div>
-							<span class="msg-time">5:00 pm</span>
-						</li>
-						<li class="">
-							<div class="name">
-								<i class="fa-solid fa-user-astronaut online"></i>
-								<br>
-								<span class="">Christian Smith</span>
-							</div>
-							<div class="message">
-								<p><span class="blue-label">Cucu Ionel</span> I see what you did there.</p>								
-							</div>
-							<span class="msg-time">5:01 pm</span>
+							<span class="msg-time">2025-02-01 : 5:01 PM</span>
 						</li>
 					</ul>
 				</div>

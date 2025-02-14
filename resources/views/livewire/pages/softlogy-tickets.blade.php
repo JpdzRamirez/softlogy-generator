@@ -134,7 +134,7 @@
                             </div>
                             <div class="col-md-6 col-lg-3 my-3">
                                 <div class="select-container" wire:model="ticketStatus">
-                                    <select class="custom-select">
+                                    <select name="ticketStatus" class="custom-select">
                                         <option selected value="">Estado</option>
                                         <option value="1">Nuevos</option>
                                         <option value="2">En curso</option>
@@ -147,7 +147,7 @@
                             </div>
                             <div class="col-md-6 col-lg-3 my-3">
                                 <div class="select-container">
-                                    <select class="custom-select" wire:model="ticketType">
+                                    <select name="ticketType" class="custom-select" wire:model="ticketType">
                                         <option selected value="">Tipo</option>
                                         <option value="1">Soporte Rápido</option>
                                         <option value="2">Solicitud</option>
@@ -179,11 +179,11 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                                               </div>
                                               <div class="toast-body">
-                                                {{$ticket->content}}
-                                                <hr>
+                                                {{$ticket->content}}                                                
                                                 @if($ticket->resources && count($ticket->resources) > 0)
                                                     @foreach ($ticket->resources as $resource)
-                                                        <img src="{{ $resource }}" />
+                                                        <hr>
+                                                        <img src="{{ $resource }}" />                                                        
                                                     @endforeach
                                                 @endif                                          
                                               </div>
@@ -245,7 +245,7 @@
                                     <p style="margin-left: 2em;"><i class="fa-solid fa-user-gear"></i> Tecnicos asignados: 
                                         @if($ticket->tecnicos && count($ticket->tecnicos) > 0)
                                                 @foreach ($ticket->tecnicos as $tecnico)
-                                                    <span>{{$tecnico}}|</span>
+                                                    <span>{{$tecnico->nombrecompleto}}|</span>
                                                 @endforeach
                                             @else
                                             <span>Sin Tecnicos Asignados</span>
@@ -454,7 +454,7 @@
                             <option value="429">Reinstalación</option>
                             <option value="286">Nueva Resolución</option>
                           </select>
-                          <label for="floatingSelectGrid">Tipo de solicitud</label>
+                          <label for="requestSelectGrid">Tipo de solicitud</label>
                         </div>
                         <div class="alert alert-info mt-3 text-center" hidden id="alert-request-info" role="alert"></div>
                       </div>

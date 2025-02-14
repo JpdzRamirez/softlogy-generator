@@ -227,6 +227,8 @@
         & > div > .jspPane {
             margin-left: 0 !important;
         }
+
+
     }
     .chat-area ul {
         margin-right: -4px;
@@ -250,8 +252,10 @@
         float: left;
         color: #5d7185;
         font-weight: bold;
-        line-height: 20px;
-        border-right: 1px solid #cfdae1;
+        line-height: 20px;     
+        .user-msg{
+            word-wrap: break-word;
+        }   
     }
     .chat-area ul .message {
         padding: 14px;        
@@ -260,6 +264,11 @@
         width: 80%;
         position: relative;
         height: auto;
+        img{
+            max-height: 20em;
+        }
+        border-right: 1px solid #cfdae1;
+        border-left: 1px solid #cfdae1;
     }
     .chat-area ul .message > p {
         line-height: 20px;
@@ -270,7 +279,13 @@
         padding: 2px 5px;
         border-radius: 3px;
     }
-    .chat-area ul .message .msg-time {
+    .chat-area ul .message > p > .green-label {
+        background: $oncurse;
+        color: #fff;
+        padding: 2px 5px;
+        border-radius: 3px;
+    }
+    .chat-area ul .msg-time {
         position: absolute;
         top: 16px;
         right: 15px;

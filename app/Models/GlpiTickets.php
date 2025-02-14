@@ -61,7 +61,7 @@ class GlpiTickets extends Model
      *
      * @var array
     */
-    protected $with = ['documents'];
+    protected $with = ['documents','user'];
 
     /*  
     ***************************************************
@@ -75,8 +75,7 @@ class GlpiTickets extends Model
      */
     public function itilfollowups()
     {
-        return $this->hasMany(GlpiItilFollowups::class, 'items_id', 'id')
-        ->select('id','itemtype','items_id','users_id','users_id_editor','content');
+        return $this->hasMany(GlpiItilFollowups::class, 'items_id', 'id');
     }
 
     /**
@@ -94,7 +93,9 @@ class GlpiTickets extends Model
             'documents_id'                   // Clave local en GlpiDocumentsItems
         )->where('glpi_documents_items.itemtype', 'Ticket') // Filtra por itemtype = Ticket
         ->select('glpi_documents.id', 'glpi_documents.name',
-        'glpi_documents.filename','glpi_documents.filepath','glpi_documents.mime','glpi_documents.sha1sum'); 
+        'glpi_documents.filename','glpi_documents.filepath','glpi_documents.mime',
+        'glpi_documents.sha1sum','glpi_documents.tag','glpi_documents.users_id',
+        'glpi_documents.tickets_id'); 
     }
 
     /**
@@ -112,6 +113,6 @@ class GlpiTickets extends Model
      */
     public function user()
     {
-        return $this->belongsTo(GlpiUser::class, 'users_id', 'id');         
+        return $this->belongsTo(GlpiUser::class, 'users_id_recipient', 'id');         
     }
 }

@@ -13,7 +13,9 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 use Carbon\Carbon;
+
 use Exception;
+
 use Livewire\Component;
 
 class SoftlogyTickets extends Component
@@ -77,7 +79,7 @@ class SoftlogyTickets extends Component
     public function rules()
     {
         // Definir las reglas base
-        $rules = [                     
+        $rules = [
             'descriptionTicketData' => 'required|string|max:65535',
         ];
 
@@ -89,7 +91,7 @@ class SoftlogyTickets extends Component
             // También puedes añadir más reglas específicas para este caso
         } elseif ($this->formType == 2) {
             $rules['requestType'] = 'required';
-            $rules['requestTitle'] = 'required';            
+            $rules['requestTitle'] = 'required';
             $rules['photoRequestData'] = 'required';
         }
 
@@ -97,11 +99,17 @@ class SoftlogyTickets extends Component
     }
     public function mount(HelpDeskServicesInterface $helpdeskServices)
     {
-        $date = Carbon::now();
-        $this->day = $date->format('d'); // Día (ej: 22)
-        $this->month = $date->translatedFormat('F'); // Mes en texto (ej: Enero)
-        $this->ticketsCounter = $helpdeskServices->getTicketsCount(Auth::user()->glpi_id);
-        $this->listToggleClass = "listTicketHidden";
+        try {
+            $date = Carbon::now();
+            $this->day = $date->format('d'); 
+            $this->month = $date->translatedFormat('F'); // Mes en texto (ej: Enero)
+            $this->ticketsCounter = $helpdeskServices->getTicketsCount(Auth::user()->glpi_id);
+            $this->listToggleClass = "listTicketHidden"; // clase inicial oculta
+        } catch (Exception $e) {
+            // Manejar error si `createTicket` falla por un error inesperado
+            session()->flash('error', 'Hubo un problema en el conteo de tickets | ' . $e->getMessage());
+            return redirect()->route('softlogy.tickets');
+        }
     }
 
 
@@ -114,7 +122,7 @@ class SoftlogyTickets extends Component
 
         // Actualizar la clase según el estado
         $this->listToggleClass = $this->showList ? "listTicketToggled" : "listTicketNotToggled";
-    
+
         // Enviar evento a JavaScript con el estado actual
         $this->dispatch('toggleListTickets', ['showList' => $this->showList]);
     }
@@ -126,12 +134,11 @@ class SoftlogyTickets extends Component
             //Inicializar Instancia
             $tempPhoto = $this->photoTicketData;
             $this->photoTicketData = $castService->processPhoto($tempPhoto);
-            
         } catch (Exception $e) {
             // Manejar error si `createTicket` falla por un error inesperado
             session()->flash('error', 'Hubo un problema de compatibilidad | ' . $e->getMessage());
             return redirect()->route('softlogy.tickets');
-        }finally {
+        } finally {
             $this->dispatch('reloadsupportModal');
         }
     }
@@ -141,12 +148,11 @@ class SoftlogyTickets extends Component
             //Inicializar Instancia
             $tempPhoto = $this->photoRequestData;
             $this->photoRequestData = $castService->processPhoto($tempPhoto);
-            
         } catch (Exception $e) {
             // Manejar error si `createTicket` falla por un error inesperado
             session()->flash('error', 'Hubo un problema de compatibilidad | ' . $e->getMessage());
             return redirect()->route('softlogy.tickets');
-        }finally {
+        } finally {
             $this->dispatch('hideSpinnerRequest'); // Oculta el spinner
         }
     }
@@ -190,7 +196,7 @@ class SoftlogyTickets extends Component
     public function saveTicket(HelpDeskServicesInterface $helpdeskServices, $formType)
     {
 
-        try {            
+        try {
             // Inicializamos la variaable
             $this->formType = $formType;
             // Validamos
@@ -201,10 +207,10 @@ class SoftlogyTickets extends Component
                 "glpi_id" => (int) Auth::user()->glpi_id,
                 "tienda" => explode('_', Auth::user()->name)[0],
                 "entities_id" => Auth::user()->entities_id,
-                "location_id" => Auth::user()->location_id ?? 795, 
+                "location_id" => Auth::user()->location_id ?? 795,
                 "descriptionTicketData" => $validatedData['descriptionTicketData'],
             ];
-            
+
             // Agrega datos específicos según el tipo de formulario
             if ($formType == 1) {
                 $ticketData += [
@@ -229,7 +235,7 @@ class SoftlogyTickets extends Component
             }
         } catch (ValidationException $e) {
             // Manejar errores de validación
-            session()->flash('validation_errors', $e->errors() );
+            session()->flash('validation_errors', $e->errors());
             return redirect()->route('softlogy.tickets');
         } catch (Exception $e) {
             // Manejar otros errores generales
@@ -255,7 +261,7 @@ class SoftlogyTickets extends Component
                 (int)$this->ticketStatus,
                 (int)$this->ticketType,
                 (int)$this->perPage
-            );                     
+            );
 
             return view('livewire.pages.softlogy-tickets', [
                 'listTickets' => $ticketsList,
@@ -263,7 +269,7 @@ class SoftlogyTickets extends Component
         } catch (Exception $e) {
             session()->flash('error', $e->getMessage());
             return redirect()->route('softlogy.tickets');
-        }finally{
+        } finally {
             $this->dispatch('restartToolTip');
         }
     }
