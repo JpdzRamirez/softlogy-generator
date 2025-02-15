@@ -61,7 +61,7 @@ class GlpiTickets extends Model
      *
      * @var array
     */
-    protected $with = ['documents','user'];
+    protected $with = ['documents','user','itilcategory'];
 
     /*  
     ***************************************************
@@ -113,6 +113,18 @@ class GlpiTickets extends Model
      */
     public function user()
     {
-        return $this->belongsTo(GlpiUser::class, 'users_id_recipient', 'id');         
+        return $this->belongsTo(GlpiUser::class, 'users_id_recipient', 'id')
+        ->select('id', 'name', 'phone', 'phone2', 'mobile', 'realname', 'firstname', 'locations_id')
+        ->with(['location:id,name'])
+        ->withDefault();         
+    }
+
+    /**
+     * Relation with GlpiUsers (BelongsTo)
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function itilcategory()
+    {
+        return $this->belongsTo(GlpiItilCategories::class, 'itilcategories_id', 'id');         
     }
 }

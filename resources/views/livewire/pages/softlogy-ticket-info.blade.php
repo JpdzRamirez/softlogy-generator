@@ -17,7 +17,7 @@
 			<div class="dropdown-ticket-info">
 				<ul id="accordion" class="accordion">
 					<li>
-					  <div class="link"><i class="fa fa-database"></i>Web Design<i class="fa fa-chevron-down"></i></div>
+					  <div class="link"><i class="fa fa-database"></i>Acceso Rápido<i class="fa fa-chevron-down"></i></div>
 					  <ul class="submenu">
 						<li class="item"><a><i class="fa fa-list-alt"></i><span>Dashboard</span></a></li>
 						<li class="item active"><a href="#"><i class="fa-solid fa-list-check"></i><span>Ver Todo</span></a></li>
