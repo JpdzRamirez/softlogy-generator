@@ -45,6 +45,13 @@ class GlpiUser extends Model
         'cookie_token_date',
     ];
 
+    /**
+     * Relaciones que siempre deben cargarse.
+     *
+     * @var array
+    */
+    protected $with = ['location','entiti','profile','title','email'];
+
     /*  
     ***************************************************
                👚 Complementary Data info
