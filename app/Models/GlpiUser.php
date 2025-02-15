@@ -29,6 +29,9 @@ class GlpiUser extends Model
         'realname',
         'firstname',
         'picture',
+        'profiles_id',
+        'entities_id',
+        'usertitles_id',
         'password',
     ];
 
@@ -50,7 +53,7 @@ class GlpiUser extends Model
      *
      * @var array
     */
-    protected $with = ['location','entiti','profile','title','email'];
+    protected $with = ['location','entiti','profile','title','email','usercategory'];
 
     /*  
     ***************************************************
@@ -81,7 +84,7 @@ class GlpiUser extends Model
      */
     public function profile()
     {
-        return $this->belongsTo(GlpiUserProfile::class, 'profiles_id');
+        return $this->belongsTo(GlpiUserProfile::class, 'profiles_id','id');
     }
 
     /**
@@ -93,9 +96,22 @@ class GlpiUser extends Model
         return $this->belongsTo(GlpiUserTitle::class, 'usertitles_id');
     }
 
+    /**
+     * Summary of email
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<GlpiUserEmail, GlpiUser>
+     */
     public function email()
     {
         return $this->hasOne(GlpiUserEmail::class, 'users_id');
+    }
+
+    /**
+     * Summary of usercategory
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<GlpiUserCategory, GlpiUser>
+    */
+    public function usercategory()
+    {
+        return $this->belongsTo(GlpiUserCategory::class, 'usercategories_id');
     }
     /*  
     ***************************************************

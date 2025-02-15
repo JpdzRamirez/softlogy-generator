@@ -285,6 +285,24 @@
         padding: 2px 5px;
         border-radius: 3px;
     }
+    .chat-area ul .message > p > .gold-label {
+        background: $gold;
+        color: #fff;
+        padding: 2px 5px;
+        border-radius: 3px;
+    }
+    .chat-area ul .message > p > .black-label {
+        background: $closed;
+        color: #fff;
+        padding: 2px 5px;
+        border-radius: 3px;
+    }
+    .chat-area ul .message > p > .violet-label {
+        background: $violet;
+        color: #fff;
+        padding: 2px 5px;
+        border-radius: 3px;
+    }
     .chat-area ul .msg-time {
         position: absolute;
         top: 16px;
@@ -453,9 +471,11 @@
         left: 0;
         right: 0;
         bottom: 0;
-        height: 70px;
+        height: auto;
         padding: 8px;
         background: #445166;
+        display: inline-flex;
+        flex-wrap: wrap;
 
         > .image {
             width: 30px;

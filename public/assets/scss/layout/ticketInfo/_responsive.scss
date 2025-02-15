@@ -59,6 +59,16 @@
                 overflow: scroll;
                 min-height: 20%;
                 .tabs-container{
+                    .tmln.tmln--box.timeline-horinzontal {
+                        display: block;
+                        opacity: 1;
+                        visibility: visible;  
+                    }
+                    .tmln.tmln--box.timeline-vertical {
+                        display: none;
+                        opacity: 0;
+                        visibility: hidden;  
+                    }
                     li{
                         .member-list{
                             display: flex;

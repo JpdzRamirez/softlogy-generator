@@ -490,6 +490,9 @@
         // Obtener el modal asociado a este botón
         let modal = $(this).closest(".modal");
 
+        if (modal.attr("id") === "imageModal") {
+            return;
+        }
         // Reiniciar el formulario dentro de ese modal específico
         modal.find("form")[0].reset();
 
@@ -561,7 +564,15 @@
             //specialButtons: green
         });
     });
+    // Modal image preview
+    const modalImage = document.getElementById("modalImage");
+    const images = document.querySelectorAll(".expand-img");
 
+    images.forEach(img => {
+        img.addEventListener("click", function() {
+            modalImage.src = this.getAttribute("data-src");
+        });
+    });
     // File Input
     // Activar el input de archivo al hacer clic en el icono de paperclip
     Livewire.on("triggerFileInput", () => {

@@ -7,7 +7,7 @@
                 <i class="fa fa-circle"></i>
             </div>
             <div class="title">
-                <span><i class="fa-solid fa-file-waveform"></i> SoftlogyDesk Historial de Caso</span>
+                <span><i class="fa-solid fa-file-waveform"></i>Historial de Ticket</span>
             </div>
             <div class="expand">
                 <i class="fa fa-expand"></i>
@@ -54,15 +54,15 @@
                         </div>
                     </div>
                     <div class="name">
-                        <span>Cucu Ionel</span>
+                        <span>{{ $ticketInfo->user->name }}</span>
                         <i class="fa fa-angle-down"></i>
-                        <span class="availability">Available</span>
+                        <span class="availability">Conectado</span>
                     </div>
                 </div>
             </div>
 
             <div class="chat-area">
-                <div class="title"><b>Caso #{{ $ticketInfo->id }}-{{ $ticketInfo->name }} </b><i
+                <div class="title"><b>Ticket #{{ $ticketInfo->id }}-{{ $ticketInfo->name }} </b><i
                         class="fa fa-search"></i></div>
                 <div class="chat-list">
                     <ul>
@@ -70,18 +70,24 @@
                         <li class="me">
                             <div class="name">
                                 <span class="user-msg">
-                                    <i class="fa-solid fa-user-tie idle"></i>
+                                    <i class="fa-solid fa-user-tie offline"></i>
                                     <br>
                                     {{ $ticketInfo->user->name }}
                                 </span>
                             </div>
                             <div class="message">
-                                <p><span class="blue-label">Apertura de Caso</span></p>
+                                <p><span class="blue-label">Apertura de Ticket</span></p>
                                 <p>{{ $ticketInfo->content }}</p>
                                 @if ($ticketInfo->resources && count($ticketInfo->resources) > 0)
                                     @foreach ($ticketInfo->resources as $key => $resource)
                                         <hr>
-                                        <img src="{{ $resource }}" alt="{{ $ticketInfo->documents[$key]->tag }}" />
+                                        <img src="{{ $resource }}" 
+                                        alt="{{ $ticketInfo->documents[$key]->tag }}" 
+                                        class="img-thumbnail expand-img"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#imageModal" 
+                                        data-src="{{ $resource }}"
+                                        />
                                     @endforeach
                                 @endif
                             </div>
@@ -90,20 +96,50 @@
                         {{-- Iterator folloups --}}
                         @if ($ticketInfo->followups && count($ticketInfo->followups) > 0)
                             @foreach ($ticketInfo->followups as $followup)
+                                <li class="me">
+                                    <div class="name">
+                                        @if ($followup->users_id!=$ticketInfo->users_id_recipient)
+                                                <i class="fa-solid fa-user-astronaut online"></i>
+                                            @else
+                                                <i class="fa-solid fa-user-tie offline"></i>
+                                        @endif
+                                        
+                                        <br>
+                                        <span class="user-msg">{{$followup->user->name}}</span>
+                                    </div>
+                                    <div class="message">
+                                        @if (optional($followup->user->profile)->id === 4)
+                                            <p><span class="violet-label">Administrador Softlogy</span></p>    
+                                        @endif                                             
+                                        
+                                        @if (in_array(optional($followup->user->profile)->id, [5, 7], true))
+                                            <p><span class="gold-label">Lider de Soporte Softlogy</span></p>    
+                                        @endif                                         
+                                        
+                                        @if (optional($followup->user->profile)->id === 9)
+                                            <p><span class="green-label">Tecnico N1 Softlogy</span></p>    
+                                        @endif                                          
+                                        
+                                        @if (optional($followup->user->profile)->id === 10)
+                                            <p><span class="black-label">Tecnico N2 Softlogy</span></p>    
+                                        @endif                                       
+                                        <p>{{$followup->content}}</p>                                        
+                                        @if ($followup->documents->resources && count($followup->documents->resources) > 0)
+                                            @foreach ($followup->documents->resources as $key => $resource)
+                                                <hr>
+                                                <img src="{{ $resource }}" 
+                                                alt="{{ $followup->documents[$key]->tag }}" 
+                                                class="img-thumbnail expand-img"
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#imageModal" 
+                                                data-src="{{ $resource }}">
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                    <span class="msg-time">{{$followup->date}}</span>
+                                </li>
                             @endforeach
                         @endif
-                        <li class="me">
-                            <div class="name">
-                                <i class="fa-solid fa-user-astronaut online"></i>
-                                <br>
-                                <span class="user-msg">Christian Smith</span>
-                            </div>
-                            <div class="message">
-                                <p><span class="green-label">Tecnico Softlogy</span></p>
-                                <p>La situacion es esta y aquella</p>
-                            </div>
-                            <span class="msg-time">2025-02-01 : 5:01 PM</span>
-                        </li>
                     </ul>
                 </div>
 
@@ -111,7 +147,7 @@
 
                     <div class="input-wrapper">
                         <form wire:submit.prevent="uploadFollowUp">
-                            <input type="text" class="messageFollowUp" wire:model="message"
+                            <input type="text" name="message" class="messageFollowUp" wire:model="message"
                                 placeholder="Escribe un mensaje...">
                             <i class="fa-regular fa-face-smile emojiButton"
                                 wire:click="$dispatch('toggleEmojiPicker')"></i>
@@ -142,36 +178,87 @@
                     <li class="active">
                         <ul class="member-list">
                             <li>
-								<span class="status offline">
-									<i class="fa-solid fa-user-tie"></i>
-								</span>
-								<span>
-									Solicitante:
-									<br>
+                                <span class="status offline">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                </span>
+                                <span>
+                                    <strong>Solicitante:</strong>
+                                    <br>
                                     <ul style="list-style:disc;">
                                         <li style="display: list-item;">{{ $ticketInfo->user->name }}</li>
                                     </ul>
                                 </span>
-							</li>
-                            <li><span class="status online"><i
-                                        class="fa-solid fa-user-astronaut"></i></span><span>Tecnicos:<br>
-                                    @if (!empty($ticket->tecnicos) && count($ticket->tecnicos) > 0)
+                                @if ($ticketInfo->user->usercategory)
+                                    <span>
+                                        <strong>Tipo de Cliente:</strong>
+                                        <br>
+                                        <ul style="list-style:disc;">
+                                            <li style="display: list-item; word-wrap: break-word;">
+                                                {{ $ticketInfo->user->usercategory->name }}</li>
+                                        </ul>
+                                    </span>
+                                @endif
+                                @if ($ticketInfo->user->email)
+                                    <span>
+                                        Email:
+                                        <br>
+                                        <ul style="list-style:disc;">
+                                            <li style="display: list-item; word-wrap: break-word;">
+                                                {{ $ticketInfo->user->email->email }}</li>
+                                        </ul>
+                                    </span>
+                                @endif
+                                @if ($ticketInfo->user->location)
+                                    <span>
+                                        <strong>Ubicación:</strong> 
+                                        <br>
+                                        <ul style="list-style:disc;">
+                                            <li style="display: list-item; word-wrap: break-word;">
+                                                {{ $ticketInfo->user->location->name }}</li>
+                                        </ul>
+                                    </span>
+                                @endif
+                                @if ($ticketInfo->user->entiti)
+                                    <span>
+                                        <strong>Razón Social:</strong>
+                                        <br>
+                                        <ul style="list-style:disc;">
+                                            @if ($ticketInfo->user->entiti->id===0)
+                                                <li style="display: list-item; word-wrap: break-word;">
+                                                   Softlogy S.A.S
+                                                </li>
+                                            @else
+                                                <li style="display: list-item; word-wrap: break-word;">
+                                                    {{ $ticketInfo->user->entiti->completename }}
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </span>
+                                @endif
+                            </li>
+                            <li>
+                                <span class="status online"><i
+                                        class="fa-solid fa-user-astronaut"></i></span><span><strong>Tecnicos:</strong><br>
+                                    @if (!empty($ticketInfo->tecnicos) && count($ticketInfo->tecnicos) > 0)
                                         <ul style="list-style: disc;">
-                                            @foreach ($ticket->tecnicos as $index => $tecnico)
+                                            @foreach ($ticketInfo->tecnicos as $index => $tecnico)
                                                 @if ($index === 0)
-                                                    <li style="display: list-item;">{{ $tecnico->name }}</li>
+                                                    <li style="display: list-item;">{{ $tecnico->nombrecompleto }}
+                                                    </li>
                                                 @else
-                                                    <li>{{ $tecnico->name }}</li>
+                                                    <li>{{ $tecnico->nombrecompleto }}</li>
                                                 @endif
                                             @endforeach
                                         </ul>
                                     @endif
-                                </span></li>
-                            <li><span class="status idle"><i class="fa-solid fa-users"></i></span>
-                                <span>Observadores:<br>
-                                    @if (!empty(trim($ticket->observadores)))
+                                </span>
+                            </li>
+                            <li>
+                                <span class="status idle"><i class="fa-solid fa-users"></i></span>
+                                <span><strong>Observadores:</strong><br>
+                                    @if (!empty(trim($ticketInfo->observadores)))
                                         @php
-                                            $observadores = array_map('trim', explode(',', $ticket->observadores)); // Convertir en array y limpiar espacios
+                                            $observadores = array_map('trim', explode(',', $ticketInfo->observadores)); // Convertir en array y limpiar espacios
                                         @endphp
                                         <ul style="list-style: disc;">
                                             @foreach ($observadores as $index => $observador)
@@ -182,30 +269,72 @@
                                                 @endif
                                             @endforeach
                                         </ul>
+                                    @else
+                                        <ul style="list-style: disc;">
+                                            <li style="display: list-item;">Sin Observadores</li>
+                                        </ul>
                                     @endif
-                                </span><span class="time">10:45 pm</span>
+                                </span>
+                                <span class="time">{{$followup->date_mod}}</span>
                             </li>
                         </ul>
-                        <nav class="tmln tmln--box tmln--hr">
-                            <h2 class="tmln__header">Estado de Caso</h2>
+                        <nav class="tmln tmln--box tmln--hr timeline-horinzontal">
+                            <h4 class="tmln__header">Estado de Caso</h4>
                             <ul class="tmln__list">
-                                <li class="tmln__item tmln__item--active">
+                                <li class="tmln__item tmln__item bg-new">
                                     <span data-title>32 mins ago</span>
-                                    <h3 class="tmln__item-headline">Nuevo</h3>
+                                    <h6 class="tmln__item-headline">Nuevo</h6>
                                 </li>
-                                <li class="tmln__item tmln__item--bg-lght">
+                                <li class="tmln__item tmln__item--active bg-curse">
                                     <span data-title>36 mins ago</span>
-                                    <h3 class="tmln__item-headline">En Curso</h3>
+                                    <h6 class="tmln__item-headline">En Curso</h6>
                                 </li>
-                                <li class="tmln__item tmln__item--bg-dark">
+                                <li class="tmln__item tmln__item bg-wait">
+                                    <span data-title>36 mins ago</span>
+                                    <h6 class="tmln__item-headline">En Espera</h6>
+                                </li>
+                                <li class="tmln__item tmln__item bg-planning">
+                                    <span data-title>36 mins ago</span>
+                                    <h6 class="tmln__item-headline">Planificado</h6>
+                                </li>
+                                <li class="tmln__item tmln__item bg-solved">
                                     <span data-title>58 mins ago</span>
-                                    <h3 class="tmln__item-headline">Solucionado</h3>
+                                    <h6 class="tmln__item-headline">Solucionado</h6>
                                 </li>
-                                <li class="tmln__item tmln__item--bg-lght">
+                                <li class="tmln__item tmln__item bg-closed">
                                     <span data-title>1 day ago</span>
-                                    <h3 class="tmln__item-headline">Cerrado</h3>
+                                    <h6 class="tmln__item-headline">Cerrado</h6>
                                 </li>
                             </ul>
+                        </nav>
+                        <nav class="tmln tmln--box timeline-vertical">
+                            <h4 class="tmln__header">Estado de Caso</h4>
+                                <ul class="tmln__list">
+                                    <li class="tmln__item tmln__item--active bg-new">
+                                        <span data-title>32 mins ago</span>
+                                        <h6 class="tmln__item-headline">Nuevo</h6>
+                                    </li>
+                                    <li class="tmln__item tmln__item bg-curse">
+                                        <span data-title>36 mins ago</span>
+                                        <h6 class="tmln__item-headline">En Curso</h6>
+                                    </li>
+                                    <li class="tmln__item tmln__item bg-wait">
+                                        <span data-title>36 mins ago</span>
+                                        <h6 class="tmln__item-headline">En Espera</h6>
+                                    </li>
+                                    <li class="tmln__item tmln__item bg-planning">
+                                        <span data-title>36 mins ago</span>
+                                        <h6 class="tmln__item-headline">Planificado</h6>
+                                    </li>
+                                    <li class="tmln__item tmln__item bg-solved">
+                                        <span data-title>58 mins ago</span>
+                                        <h6 class="tmln__item-headline">Solucionado</h6>
+                                    </li>
+                                    <li class="tmln__item tmln__item bg-closed">
+                                        <span data-title>1 day ago</span>
+                                        <h6 class="tmln__item-headline">Cerrado</h6>
+                                    </li>
+                                </ul>
                         </nav>
                     </li>
                     <li>

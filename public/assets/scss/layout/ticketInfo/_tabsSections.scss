@@ -7,10 +7,20 @@
     display: block;
 }
 
-.tabs-container {
+.tabs-container { 
+    .tmln.tmln--box.timeline-horinzontal {
+        display: none;
+        opacity: 0;
+        visibility: hidden;                   
+    } 
     .tmln {
         --bdc: #505D71;
         --bdc-a: #0ea2bd;
+        --bdc-c: #0fcc45;
+        --bdc-w: #ffac69;
+        --bdc-p: #0726d6;
+        --bdc-s: #f57e7d;
+        --bdc-c: #333;
         --bdc-h: hsl(200, 30%, 90%);
         --bgc: hsl(200, 40%, 80%);
         --bdrs: 0.25rem;
@@ -32,7 +42,7 @@
         --sl-mbe: 2em;
         --bi-miw: 85%;
         --bi-miw-tablet: 15%;
-        
+        margin-top: 3em;
         border-radius: var(--bdrs, 0);
         color: var(--c, currentColor);
         width: var(--w, 100%);
@@ -88,6 +98,8 @@
 
     .tmln__item-headline {
         margin-block: 0;
+        word-wrap: break-word;
+        color: #fff;
     }
 
     .tmln__list {
@@ -98,6 +110,7 @@
         justify-content: center;
         padding-inline: 0;
         padding: 1em;
+        color:#fff;
     }
 
     /* 
@@ -107,12 +120,43 @@
     */
 
     /* Active Circle */
-    .tmln__item--active::after {
+    .tmln__item--active::after.bg-new {
         --bdc: var(--bdc-a);
         box-shadow: 0 0 0 calc(var(--bullet-sz-a) - var(--bdw)) var(--bgc, #fff),
             0 0 0 var(--bullet-sz-a) var(--bdc-a);
         background-color: var(--bdc-a);
     }
+    .tmln__item--active::after.bg-curse {
+        --bdc: var(--bdc-c);
+        box-shadow: 0 0 0 calc(var(--bullet-sz-a) - var(--bdw)) var(--bgc, #fff),
+            0 0 0 var(--bullet-sz-a) var(--bdc-c);
+        background-color: var(--bdc-c);
+    }
+    .tmln__item--active::after.bg-wait {
+        --bdc: var(--bdc-w);
+        box-shadow: 0 0 0 calc(var(--bullet-sz-a) - var(--bdw)) var(--bgc, #fff),
+            0 0 0 var(--bullet-sz-a) var(--bdc-w);
+        background-color: var(--bdc-w);
+    }
+    .tmln__item--active::after.bg-planning {
+        --bdc: var(--bdc-p);
+        box-shadow: 0 0 0 calc(var(--bullet-sz-a) - var(--bdw)) var(--bgc, #fff),
+            0 0 0 var(--bullet-sz-a) var(--bdc-p);
+        background-color: var(--bdc-p);
+    }
+    .tmln__item--active::after.bg-solved {
+        --bdc: var(--bdc-s);
+        box-shadow: 0 0 0 calc(var(--bullet-sz-a) - var(--bdw)) var(--bgc, #fff),
+            0 0 0 var(--bullet-sz-a) var(--bdc-s);
+        background-color: var(--bdc-s);
+    }
+    .tmln__item--active::after.bg-closed {
+        --bdc: var(--bdc-c);
+        box-shadow: 0 0 0 calc(var(--bullet-sz-a) - var(--bdw)) var(--bgc, #fff),
+            0 0 0 var(--bullet-sz-a) var(--bdc-c);
+        background-color: var(--bdc-c);
+    }
+
 
     /* :focus, :focus-within, :focus-visible */
     .tmln__item--active:focus-visible::after,
@@ -206,18 +250,24 @@
         );
     }
 
-    .tmln--box .tmln__item--bg-dark {
-        background-color: var(--box-item-dark-bgc);        
+    .tmln--box .tmln__item.bg-new {
+        background-color: $new;
     }
-
-    .tmln--box:not(.tmln--hr) .tmln__item--bg-dark a {
-        outline-color: var(--box-item-dark-bgc);
+    .tmln--box .tmln__item.bg-curse {
+        background-color: $oncurse;
     }
-
-    .tmln--box .tmln__item--bg-lght {
-        background-color: var(--box-item-lght-bgc);
+    .tmln--box .tmln__item.bg-wait {
+        background-color: $wait;
     }
-
+    .tmln--box .tmln__item.bg-planning {
+        background-color: $planning;
+    }
+    .tmln--box .tmln__item.bg-solved {
+        background-color: $solved;
+    }
+    .tmln--box .tmln__item.bg-closed {
+        background-color: $closed;
+    }
     .tmln--box .tmln__list {
         gap: var(--gap);
         padding-inline-end: var(--gap);

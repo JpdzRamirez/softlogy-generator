@@ -114,8 +114,9 @@ class GlpiTickets extends Model
     public function user()
     {
         return $this->belongsTo(GlpiUser::class, 'users_id_recipient', 'id')
-        ->select('id', 'name', 'phone', 'phone2', 'mobile', 'realname', 'firstname', 'locations_id')
-        ->with(['location:id,name'])
+        ->select('id', 'name', 'phone', 'phone2', 'mobile', 'realname', 'firstname','entities_id','usertitles_id',
+         'locations_id','profiles_id','usercategories_id')
+        ->with(['location:id,name'],['usercategory:id,name'])
         ->withDefault();         
     }
 
