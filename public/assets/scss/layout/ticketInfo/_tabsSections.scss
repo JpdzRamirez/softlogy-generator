@@ -320,6 +320,9 @@
         .tmln--box.tmln--hr .tmln__item {
             --miw: var(--bi-miw-tablet);
         }
+        .tmln__list{
+            justify-content: unset;
+        }
     }
 
     .sla-indicator{

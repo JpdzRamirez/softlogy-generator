@@ -15,6 +15,6 @@ interface HelpDeskServicesInterface
 
     public function getTicketInfo(int $ticketID, int $userID);
 
-    public function createFollowup(int $ticketID, int $userID);
+    public function createFollowup(int $ticketID, $user,string $message, $file);
     
 }

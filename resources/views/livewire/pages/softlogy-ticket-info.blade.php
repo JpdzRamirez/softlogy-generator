@@ -16,50 +16,50 @@
         <div class="window-area">
             <div class="dropdown-ticket-info">
                 <ul id="accordion" class="accordion">
-                    <li>
+                    <li class="filter-list">
                         <div class="link"><i class="fa fa-database"></i>Acceso Rápido<i
                                 class="fa fa-chevron-down"></i></div>
-                        <ul class="submenu">
-                            <li class="item"><a><i class="fa fa-list-alt"></i>
-                                <span>Dashboard</span>
-                                </a>
-                            </li>
-                            <li class="item active"><a href="#"><i class="fa-solid fa-list-check"></i>
-                                <span>Ver Todo</span>
-                                </a>
-                            </li>
-                            <li><a href="#"><i class="fa-solid fa-person-chalkboard"></i>
-                                <span>Actualizaciones Softlogy</span>
-                                </a>
-                            </li>
-                            <li><a href="#"><i class="fa-solid fa-child-reaching"></i>
-                                <span>Tus respuestas</span>
-                                </a>
-                            </li>
-                            <li><a href="#"><i class="fa-solid fa-clock"></i>
-                                <span>Ultima Actualización</span>
-                                </a>
-                            </li>
-                        </ul>
+                                <ul class="submenu">
+                                    <li class="item" data-filter="dashboard"><a><i class="fa fa-list-alt"></i>
+                                        <span>Dashboard</span>
+                                        </a>
+                                    </li>
+                                    <li class="item active" data-filter="ver-todo"><a><i class="fa-solid fa-list-check"></i>
+                                        <span>Ver Todo</span>
+                                        </a>
+                                    </li>
+                                    <li class="item" data-filter="actualizaciones"><a><i class="fa-solid fa-person-chalkboard"></i>
+                                        <span>Actualizaciones Softlogy</span>
+                                        </a>
+                                    </li>
+                                    <li class="item" data-filter="tus-respuestas"><a><i class="fa-solid fa-child-reaching"></i>
+                                        <span>Tus respuestas</span>
+                                        </a>
+                                    </li>
+                                    <li class="item" data-filter="ultima-actualizacion"><a><i class="fa-solid fa-clock"></i>
+                                        <span>Ultima Actualización</span>
+                                        </a>
+                                    </li>
+                                </ul>
                     </li>
                 </ul>
             </div>
 
             <div class="conversation-list">
-                <ul id="filter-list">
-                    <li id="dashboard" class="item"><a href="#"><i class="fa fa-list-alt"></i>
+                <ul class="filter-list">
+                    <li class="item" data-filter="dashboard"><a><i class="fa fa-list-alt"></i>
                         <span>Dashboard</span>
                     </a></li>
-                    <li id="ver-todo" class="item active"><a href="#"><i class="fa-solid fa-list-check"></i>
+                    <li class="item active" data-filter="ver-todo"><a><i class="fa-solid fa-list-check"></i>
                         <span>Ver Todo</span>
                     </a></li>
-                    <li id="actualizaciones" class="item"><a href="#"><i class="fa-solid fa-person-chalkboard"></i>
+                    <li class="item" data-filter="actualizaciones"><a><i class="fa-solid fa-person-chalkboard"></i>
                         <span>Actualizaciones Softlogy</span>
                     </a></li>
-                    <li id="tus-respuestas" class="item"><a href="#"><i class="fa-solid fa-child-reaching"></i>
+                    <li class="item" data-filter="tus-respuestas"><a><i class="fa-solid fa-child-reaching"></i>
                         <span>Tus respuestas</span>
                     </a></li>
-                    <li id="ultima-actualizacion" class="item"><a href="#"><i class="fa-solid fa-clock"></i>
+                    <li class="item" data-filter="ultima-actualizacion"><a><i class="fa-solid fa-clock"></i>
                         <span>Ultima Actualización</span>
                     </a></li>
                 </ul>
@@ -151,7 +151,7 @@
                                                 class="img-thumbnail expand-img"
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#imageModal" 
-                                                data-src="{{ $resource }}">
+                                                data-src="{{ $resource }}"/>
                                             @endforeach
                                         @endif
                                     </div>
@@ -163,24 +163,27 @@
                 </div>
 
                 <div class="input-area">
-
                     <div class="input-wrapper">
-                        <form wire:submit.prevent="uploadFollowUp">
-                            <input type="text" name="message" class="messageFollowUp" wire:model="message"
+                        <form wire:submit.prevent="uploadFollowUp">                            
+                            <input type="text" name="message" class="messageFollowUp @error('message') is-invalid @enderror" wire:model="message"
                                 placeholder="Escribe un mensaje...">
+                                @error('message') <span class="error">{{ $message }}</span> @enderror
+                                @if ($tempFilePath && !empty($tempFilePath))
+                                    <img  src="{{asset('assets/img/img-loaded.png')}}"
+                                    id="preview-img"
+                                    class="img-thumbnail expand-img img-loaded"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#imageModal" 
+                                    data-src="{{ $tempFilePath }}"/>                            
+                                @endif
                             <i class="fa-regular fa-face-smile emojiButton"
                                 wire:click="$dispatch('toggleEmojiPicker')"></i>
-                            <i class="fa fa-paperclip" wire:click="$dispatch('triggerFileInput')"></i>
-
+                            <i class="fa fa-paperclip" wire:click="$dispatch('triggerFileInput')"></i>                            
                             <!-- Mostrar el input de archivo -->
-                            <input type="file" wire:model="file" id="file-input" style="display: none;"
-                                accept="image/*, .pdf, .doc, .docx">
-
-                            @error('file')
-                                <span class="error">{{ $message }}</span>
-                            @enderror
+                            <input type="file" wire:model.live.debounce.500ms="attach" id="attach-message" style="display: none;"
+                             capture="camera"">
                     </div>
-                    <button type="submit" value="Enviar" class="btn send-btn">Enviar</button>
+                    <button type="submit" value="Enviar" class="btn send-btn" onclick="showSpinner(true)">Enviar</button>
                     </form>
                 </div>
 
@@ -473,19 +476,10 @@
                         </div>
                     </li>
                     <li>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce porttitor leo nec ligula
-                            viverra, quis facilisis nunc vehicula. Maecenas purus orci, efficitur in dapibus vel, rutrum
-                            in massa. Sed auctor urna sit amet eros mattis interdum. Integer imperdiet ante in quam
-                            lacinia, a laoreet risus imperdiet. Ut a blandit elit, vitae volutpat nunc. Nam posuere urna
-                            sagittis lectus eleifend viverra. Quisque mauris nunc, viverra vitae sodales non, auctor in
-                            diam. Sed dignissim pulvinar sapien sed fermentum. Praesent interdum turpis ut neque
-                            tristique ornare. Nam dictum est sed sem elementum rutrum. Nam a mollis turpis.</p>
+                        <p><strong>Adjuntos:</strong></p>
                     </li>
                     <li>
-                        <p>Pellentesque rutrum sit amet nunc sit amet faucibus. Ut id arcu tempus, varius erat et,
-                            ornare libero. In quis felis nunc. Aliquam euismod lacus a eros ornare, ut aliquam sem
-                            mattis. Cras non varius dui, quis commodo ante. Maecenas gravida est non nulla malesuada
-                            egestas. Proin tincidunt eros et lacus sodales lobortis.</p>
+                        <p><strong>Enlaces Externos:</strong></p>
                     </li>
                 </ul>
             </div>

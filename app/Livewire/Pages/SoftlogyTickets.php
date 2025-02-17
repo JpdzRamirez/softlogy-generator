@@ -7,7 +7,7 @@ use App\Contracts\CastServicesInterface;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Arr;
+
 
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -153,7 +153,7 @@ class SoftlogyTickets extends Component
             session()->flash('error', 'Hubo un problema de compatibilidad | ' . $e->getMessage());
             return redirect()->route('softlogy.tickets');
         } finally {
-            $this->dispatch('hideSpinnerRequest'); // Oculta el spinner
+            $this->dispatch('reloadrequestModal'); // Oculta el spinner
         }
     }
 

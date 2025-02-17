@@ -251,16 +251,40 @@
     }
     window.addEventListener("load", navmenuScrollspy);
     document.addEventListener("scroll", navmenuScrollspy);
+
+
     const spinner = $(".spinner");
 
     // Exponer la función al ámbito global
     window.showSpinner = function (show) {
         spinner.css("display", show ? "block" : "none");
     };
+    window.messageFormValidate=function(show){
 
-    document.addEventListener("hideSpinnerTicketSubmmited", function (event) {
+        if(show){
+            showSpinner(true);
+        }
+    }
+    document.addEventListener("hideSpinnerRequest", function () {
         showSpinner(false);
-        console.log(event);
+    });
+    document.addEventListener("hideSpinnerFollowup", function (event) {
+        showSpinner(false);
+        let responseData = event.detail[0]; // Recibe el array
+        let date = responseData.date; // Extrae el ID del ticket
+        Swal.fire({
+            title: "¡Envío exitoso!",
+            imageUrl: "/assets/img/support/softlogyLogo-White.png",
+            imageWidth: 150,
+            imageHeight: 50,
+            imageAlt: "SoftlogyFollowup",
+            html: `Se ha enviado un seguimiento con fecha: <br>N°: <strong style="background-color: yellow;font-size: 2em;"><code>${date}</code></strong>`,
+            icon: "success",
+            confirmButtonColor: "#3085d6",
+        });
+    });
+    document.addEventListener("hideSpinnerTicketSubmmited", function (event) {
+        showSpinner(false);        
         let responseData = event.detail[0]; // Recibe el array
         let ticketId = responseData.ticket; // Extrae el ID del ticket
         Swal.fire({
@@ -359,7 +383,7 @@
         }
     }
     // Cargar foto de ticket
-    $('#photoTicketData,#photoRequestData').on('change', function () {
+    $('#photoTicketData,#photoRequestData,#attach-message').on('change', function () {
         showSpinner(true); 
         $(this).prop('disabled', true);
     });
@@ -559,7 +583,6 @@
         Emoji Picker
     */
     Livewire.on("toggleEmojiPicker", () => {
-        console.log("emoji testing");
         new EmojiPicker({
             trigger: [
                 {
@@ -574,16 +597,25 @@
     // Modal image preview
     const modalImage = document.getElementById("modalImage");
     const images = document.querySelectorAll(".expand-img");
-
+    $(document).on("click", "#preview-img", function (e) { 
+        e.preventDefault(); // Evita el comportamiento predeterminado del enlace
+        console.log("Image clicked"); // Mensaje corregido
+            
+        const imageUrl = $(this).data("src");
+            
+        if (imageUrl) {
+            modalImage.src = imageUrl;
+        } 
+    });
     images.forEach(img => {
-        img.addEventListener("click", function() {
+        img.addEventListener("click", function() {            
             modalImage.src = this.getAttribute("data-src");
         });
     });
     // File Input
     // Activar el input de archivo al hacer clic en el icono de paperclip
     Livewire.on("triggerFileInput", () => {
-        document.getElementById("file-input").click();
+        document.getElementById("attach-message").click();
     });
     // Event acordion effect
     function Accordion(el, multiple) {
@@ -655,12 +687,15 @@
         }
     };
     
-    $(document).on("click", "#filter-list .item a", function (e) {
-        e.preventDefault();        
-        $("#filter-list .item").removeClass("active");
-        $(this).parent().addClass("active");    
-        let filterId = $(this).parent().attr("id");        
-        window.filtrarMensajes(filterId);
+    $(document).on("click", ".filter-list .item a", function (e) { 
+        e.preventDefault();
+    
+        $(".filter-list .item").removeClass("active");
+        $(this).parent().addClass("active");
+    
+        let filter = $(this).parent().data("filter");
+        window.filtrarMensajes(filter);
     });
+    
     
 })();

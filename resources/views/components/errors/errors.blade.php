@@ -62,7 +62,7 @@
 
                 {{-- Mensajes de éxito --}}
                 @if (session('mensage_session'))
-                    <div class="alert alert-success d-flex align-items-center" role="alert">
+                    <div class="alert alert-success d-flex align-items-center" style="word-wrap: break-word;" role="alert">
                         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
                             aria-label="Success:">
                             <use xlink:href="#check-circle-fill" />
@@ -76,7 +76,7 @@
 
                 {{-- Errores de validación --}}
                 @if (session('validation_errors'))
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger" style="word-wrap: break-word;">
                         <h4>Errores de validación:</h4>
                         <ul>
                             @foreach (session('validation_errors') as $campo => $errores)
@@ -91,7 +91,7 @@
 
                 {{-- Errores generales --}}
                 @if (session('error'))
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger" style="word-wrap: break-word;">
                         <h4>Error:</h4>
                         <p>{{ session('error') }}</p>
                     </div>
@@ -100,7 +100,7 @@
 
                 {{-- Procesos adicionales --}}
                 @if (!empty(session('response_process')))
-                    <div class="alert alert-success">
+                    <div class="alert alert-success" style="word-wrap: break-word;">
                         <h4>Procesos adicionales:</h4>
                         <ul>
                             @foreach (session('response_process') as $fila)

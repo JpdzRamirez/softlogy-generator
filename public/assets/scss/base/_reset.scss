@@ -3,3 +3,12 @@
 body{
     overflow-x: hidden;
 }
+
+.is-invalid {
+    border-color: #dc3545; /* Rojo para indicar error */
+}
+
+.error {
+    color: #dc3545; /* Rojo para el mensaje de error */
+    font-size: 0.875em; /* Tamaño de fuente más pequeño */
+}

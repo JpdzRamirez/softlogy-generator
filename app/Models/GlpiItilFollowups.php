@@ -50,22 +50,23 @@ class GlpiItilFollowups extends Model
     public function documents()
     {
         return $this->hasManyThrough(
-            GlpiDocuments::class,            // Modelo final
-            GlpiDocumentsItems::class,       // Modelo intermedio
-            'items_id',                      // Clave foránea en GlpiDocumentsItems
-            'id',                            // Clave foránea en GlpiDocuments
-            'id',                            // Clave local en GlpiTicket
-            'documents_id'                   // Clave local en GlpiDocumentsItems
-        )->where('glpi_documents_items.itemtype', 'ITILFollowup') // Condición adicional
-            ->select(
-                'glpi_documents.id',
-                'glpi_documents.name',
-                'glpi_documents.filename',
-                'glpi_documents.filepath',
-                'glpi_documents.mime',
-                'glpi_documents.sha1sum',
-                'glpi_documents.tag',
-            );
+            GlpiDocuments::class,         // Modelo final (documentos)
+            GlpiDocumentsItems::class,    // Modelo intermedio (relación documentos-items)
+            'items_id',                   // Clave foránea en GlpiDocumentsItems que apunta a GlpiItilFollowups
+            'id',                         // Clave primaria en GlpiDocuments
+            'id',                         // Clave primaria en GlpiItilFollowups
+            'documents_id'                // Clave foránea en GlpiDocumentsItems que apunta a GlpiDocuments
+        )
+        ->where('glpi_documents_items.itemtype', '=', 'ITILFollowup') // Validar que los documentos pertenezcan a ITILFollowup
+        ->select(
+            'glpi_documents.id',
+            'glpi_documents.name',
+            'glpi_documents.filename',
+            'glpi_documents.filepath',
+            'glpi_documents.mime',
+            'glpi_documents.sha1sum',
+            'glpi_documents.tag'
+        );
     }
 
     /**

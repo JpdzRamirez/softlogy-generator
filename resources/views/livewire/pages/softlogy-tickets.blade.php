@@ -179,7 +179,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                                               </div>
                                               <div class="toast-body">
-                                                {{$ticket->content}}                                                
+                                                {!!$ticket->content!!}                                                
                                                 @if($ticket->resources && count($ticket->resources) > 0)
                                                     @foreach ($ticket->resources as $resource)
                                                         <hr>
@@ -365,10 +365,6 @@
                               </label>
                               <!-- /.radio-card -->
                             </div>
-                            @error('ticketCheck')
-                                <span class="@error('ticketCheck') is-invalid @enderror">Error de check</span>
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
                             <!-- /.grid-wrapper -->
                           </div>
                           <!-- /.container -->
@@ -411,13 +407,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="aditionalDescription" class="form-label">Datos Adicionales</label>
-                        <textarea required class="form-control @error('descriptionTicketData') is-invalid @enderror" wire:model="descriptionTicketData" id="aditionalDescription" name="aditionalDescription" placeholder="Añada aquí una descripción breve" aria-label="With textarea"></textarea>
-                        @error('descriptionTicketData')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror 
-                        <small>Opcional</small>
+                        <textarea required class="form-control" wire:model="descriptionTicketData" id="aditionalDescription" name="aditionalDescription" placeholder="Añada aquí una descripción breve" aria-label="With textarea"></textarea>
                      </div>                
             </div>
             <div class="modal-footer">
@@ -475,25 +465,13 @@
                     <div class="mb-3">
                         <label for="photoRequestData" class="form-label">Fotos</label>
                         <input id="photoRequestData"
-                        class="form-control @error('photoRequestData') is-invalid @enderror" 
-                        wire:model.live.debounce.500ms="photoRequestData" name="photoRequestData" type="file" capture="camera"/>
-                        @error('photoRequestData')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror                        
-                        <small>Opcional</small>
+                        class="form-control" 
+                        wire:model.live.debounce.500ms="photoRequestData" name="photoRequestData" type="file" capture="camera"/>                                
                     </div>
                     <div class="mb-3">
                         <label for="aditionalDescription" class="form-label">Datos Adicionales</label>
-                        <textarea required class="form-control @error('descriptionTicketData') is-invalid @enderror" wire:model="descriptionTicketData" id="aditionalDescription" name="aditionalDescription" placeholder="Añada aquí una descripción breve" aria-label="With textarea"></textarea>
-                        @error('descriptionTicketData')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror 
-                        <small>Opcional</small>
-                     </div>                
+                        <textarea required class="form-control" wire:model="descriptionTicketData" id="aditionalDescription" name="aditionalDescription" placeholder="Añada aquí una descripción breve" aria-label="With textarea"></textarea>
+                    </div>                
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

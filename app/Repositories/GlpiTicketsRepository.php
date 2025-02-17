@@ -173,8 +173,8 @@ class GlpiTicketsRepository
             });
     }
 
-    /*
-     * Summary of createTicket
+    /**
+     * /
      * @param array $ticketData
      * @return GlpiTickets
      */
@@ -309,6 +309,7 @@ class GlpiTicketsRepository
             throw $e;
         }
     }
+    
     public function updateTicket(int $ticketID, array $data)
     {
         try {
@@ -521,14 +522,10 @@ class GlpiTicketsRepository
         }        
     }
 
-    public function getAllTicketFollowUps(int $ticketId, int $userId){
-        return $this->model
-        ->where('id', $ticketId)
-        ->with(['itilfollowups' => function ($query) use ($userId) {
-            $query->with('documents','user')
-            ->orderBy('date','asc'); // Cargamos los documentos de cada follow-up
-        }])
+    public function getAllTicketFollowUps(int $ticketId){
+        return GlpiTickets::where('id', $ticketId) // Buscar el Ticket específico
+        ->with(['itilfollowups.documents', 'itilfollowups.user']) // Cargar followups y sus documentos
         ->firstOrFail()
-        ->itilfollowups;         
+        ->itilfollowups; // Obtener solo los followups asociados     
     }
 }

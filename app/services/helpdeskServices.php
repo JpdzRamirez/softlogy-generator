@@ -9,6 +9,7 @@ use App\Models\GlpiTickets;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 use App\Repositories\GlpiTicketsRepository;
+use App\Repositories\GlpiFollowupRepository;
 
 use Carbon\Carbon;
 
@@ -17,14 +18,20 @@ use Exception;
 class HelpdeskServices implements HelpDeskServicesInterface
 {
 
+    /**
+     * Summary of glpiTicketRepository
+     * @var 
+     */
     protected $glpiTicketRepository;
+    protected $glpiFollowupRepository;
 
     /**
      * Create a new class instance.
      */
-    public function __construct(GlpiTicketsRepository $glpiTicketRepository)
+    public function __construct(GlpiTicketsRepository $glpiTicketRepository,GlpiFollowupRepository $glpiFollowupRepository)
     {
         $this->glpiTicketRepository = $glpiTicketRepository;
+        $this->glpiFollowupRepository=$glpiFollowupRepository;
     }
     private function curlRequest($url)
     {
@@ -70,7 +77,7 @@ class HelpdeskServices implements HelpDeskServicesInterface
         return null;
     }
     /**
-     * 
+     * /
      * @param array $ticketData
      * @return array{message: string, status: bool|array{status: bool, ticket: mixed}}
      */
@@ -460,9 +467,9 @@ class HelpdeskServices implements HelpDeskServicesInterface
         }
     }
     
-    public function addTicketFollowups(int $ticketId, int $userId){
+    public function addTicketFollowups(int $ticketId){
         try{
-            $followups= $this->glpiTicketRepository->getAllTicketFollowUps($ticketId,$userId);
+            $followups= $this->glpiTicketRepository->getAllTicketFollowUps($ticketId);
             if ($followups) {
                 foreach ($followups as $followup) {
                     // Limpiar contenido del followup
@@ -497,17 +504,31 @@ class HelpdeskServices implements HelpDeskServicesInterface
             // Construir el contenido de el ticket
             $processedTicket = $this->processTicketInfo($ticketInfo);
             // Añadir los followups al ticket armado
-            $processedTicket->followups=$this->addTicketFollowups($ticketId,$userId);
+            $processedTicket->followups=$this->addTicketFollowups($ticketId);
             return $processedTicket;
         } catch (Exception $e) {
             throw $e;
         }
     }
-    public function createFollowup(int $ticketID, int $userID){
+    public function createFollowup(int $ticketId, $user,string $message, $file){
+        // Aseguramos que no haya límites de tiempo y memoria
+        DB::statement('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
+        // set_time_limit(90);
+        // ini_set('default_socket_timeout', 90);
+        DB::connection('mysql_second')->beginTransaction();
         try{
-
+            $this->glpiFollowupRepository->createFollowup($ticketId,$user,$message,$file);
+            DB::connection('mysql_second')->commit();
+            return [
+                'date' => now()->format('Y-m-d H:i:s'),
+                'status' => true
+            ];
         }catch(Exception $e){
-            throw $e;
+            DB::connection('mysql_second')->rollBack();
+            return [
+                'message' => "Error en la transacción: " . $e->getMessage(),
+                'status' => false
+            ];
         }
     }
 }

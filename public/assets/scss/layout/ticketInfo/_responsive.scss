@@ -68,6 +68,9 @@
                 overflow: scroll;
                 min-height: 20%;
                 .tabs-container{
+                    .tmln__list{
+                        justify-content: center;
+                    }
                     .tmln.tmln--box.timeline-horinzontal {
                         display: block;
                         opacity: 1;
