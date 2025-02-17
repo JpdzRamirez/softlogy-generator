@@ -29,10 +29,15 @@ class AuthServices implements AuthServicesInterface
         // For unix linux
         // $resourcePath = env('SOFTLOGY_HELDEKS_PICTURES') . $user->picture;
         // For windos enviroment
-        $resourcePath = str_replace('/', '\\', env('SOFTLOGY_HELDEKS_PICTURES') . $user->picture);
-        if (file_exists($resourcePath)) {
-            $imageData = file_get_contents($resourcePath);
-            return 'data:image/png;base64,' . base64_encode($imageData);
+        $picturePath = env('SOFTLOGY_HELDEKS_PICTURES');
+
+        if (!empty($user->picture)) {
+            $resourcePath = str_replace('/', '\\', $picturePath . $user->picture);
+        
+            if (file_exists($resourcePath)) {
+                $imageData = file_get_contents($resourcePath);
+                return 'data:image/png;base64,' . base64_encode($imageData);
+            }
         }
 
         $defaultImagePath = public_path('assets/img/user.png');

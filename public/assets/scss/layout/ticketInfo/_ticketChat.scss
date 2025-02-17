@@ -187,7 +187,7 @@
         top: 0;
         bottom: 0;
         left: 176px;
-        right: 200px;
+        right: 260px;
         box-shadow: inset 0 1px 3px rgba(207, 218, 225, 0.42);
         .online{
             color: $oncurse;
@@ -238,6 +238,9 @@
         border-bottom: 1px solid #cfdae1;
         overflow: hidden;
         position: relative;
+    }
+    .chat-area ul > li.principal {
+        background: #E2F2E3;
     }
     .chat-area ul > li.me {
         background: #e4eaee;
@@ -309,6 +312,7 @@
         right: 15px;
         color: #738ba3;
         font-size: 9px;
+        display: contents;
     }
     .input-area {
         display: flex;
@@ -388,8 +392,14 @@
         overflow: hidden;
         border-left: 1px solid #cfdae1;
         border-top: 1px solid #cfdae1;
-        width: 200px;
+        width: 260px;
         overflow: scroll;
+        .itilbreadcrumb{
+            li a{
+                cursor: pointer;
+                color: $new;
+            }
+        }
     }
     .right-tabs > ul.tabs {
         padding-left: 0;

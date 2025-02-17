@@ -496,6 +496,13 @@
         // Reiniciar el formulario dentro de ese modal específico
         modal.find("form")[0].reset();
 
+        let backdrops = $(".modal-backdrop.fade.show");
+
+        let totalBackdrops = backdrops.length;
+
+        if (totalBackdrops > 1) {
+            backdrops.remove();
+        }
         // Resetear variables
 
         Livewire.dispatch("resetAll");
@@ -625,4 +632,35 @@
     // Asegurar que la primera pestaña y su contenido estén visibles al cargar la página
     $(".tabs li:first-child").addClass("active");
     $(".tabs-container > li").hide().first().show();
+
+    // Filtros de lista
+    window.filtrarMensajes = function (filtro) {
+        let mensajes = $(".message-item");    
+        if (filtro === "ver-todo") {            
+            mensajes.show();
+        } else if (filtro === "actualizaciones") {            
+            mensajes.hide().filter(function () {                
+                return $(this).data("profile-id") !== 1; // Mostrar todos menos los que tienen ID 1
+            }).show();
+        } else if (filtro === "tus-respuestas") {            
+            mensajes.hide().filter(function () {                
+                return $(this).data("profile-id") === 1; // Mostrar solo los que tienen ID 1                
+            }).show();
+        } else if (filtro === "ultima-actualizacion") {
+            mensajes.hide();
+            let mensajeMasReciente = mensajes.sort(function (a, b) {
+                return new Date($(b).data("date")) - new Date($(a).data("date"));
+            }).first();            
+            mensajeMasReciente.show();
+        }
+    };
+    
+    $(document).on("click", "#filter-list .item a", function (e) {
+        e.preventDefault();        
+        $("#filter-list .item").removeClass("active");
+        $(this).parent().addClass("active");    
+        let filterId = $(this).parent().attr("id");        
+        window.filtrarMensajes(filterId);
+    });
+    
 })();

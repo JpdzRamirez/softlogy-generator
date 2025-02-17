@@ -66,6 +66,7 @@ body {
   font-family: var(--default-font);
   height: 100vh;
   width: 100vw;
+  background-image: url('../img/hero-bg.png');
 }
 main{
   position: relative;
@@ -815,7 +816,6 @@ h6 {
 section,
 .section {
   color: var(--default-color);
-  background-color: var(--background-color);
   padding: 60px 0 60px 0;
   scroll-margin-top: 100px;
   overflow: clip;

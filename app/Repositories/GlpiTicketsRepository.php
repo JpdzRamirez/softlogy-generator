@@ -502,11 +502,14 @@ class GlpiTicketsRepository
                 'date',
                 'closedate',
                 'solvedate',
+                'date_mod',
                 'status',
                 'users_id_recipient',
                 'content',
                 'urgency',
                 'impact',
+                'priority',
+                'itilcategories_id',
                 'type'
             )
             ->where('is_deleted', '!=', 1)

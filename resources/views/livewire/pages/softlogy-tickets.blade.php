@@ -236,8 +236,8 @@
                                         </li>
                                         <li class="mr-md-4">
                                             @if (!$ticket->solvedate)
-                                            <i class="zmdi zmdi-time mr-2"></i> Fecha de apertura: {{$ticket->date}}
-                                                @else
+                                                <i class="zmdi zmdi-time mr-2"></i> Fecha de apertura: {{$ticket->date}} - {{$ticket->tiempoTranscurrido}}
+                                             @else
                                                 <i class="zmdi zmdi-time mr-2"></i> Fecha de solución: {{$ticket->solvedate}}
                                             @endif                                            
                                         </li>

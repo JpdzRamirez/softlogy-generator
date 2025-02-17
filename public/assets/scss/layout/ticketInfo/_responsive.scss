@@ -1,6 +1,6 @@
 @use "../../utils" as *;
 
-@media (max-width: 920px) {
+@media (max-width: 980px) {
     .dropdown-ticket-info{
         visibility: visible;
         opacity: 1;
@@ -47,6 +47,15 @@
                     position: relative;
                     ul {
                         padding-left: 0;
+                    }
+                    .message{
+                        width: 100%;
+                    }
+                    .msg-time{
+                        top: 7em;
+                        left: 15px;
+                        display: block;
+                        position: relative;
                     }
                 }
                 .input-area {

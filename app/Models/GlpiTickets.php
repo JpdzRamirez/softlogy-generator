@@ -126,6 +126,7 @@ class GlpiTickets extends Model
      */
     public function itilcategory()
     {
-        return $this->belongsTo(GlpiItilCategories::class, 'itilcategories_id', 'id');         
+        return $this->belongsTo(GlpiItilCategories::class, 'itilcategories_id', 'id')
+        ->select('id','name','itilcategories_id','completename');         
     }
 }

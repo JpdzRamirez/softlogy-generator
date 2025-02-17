@@ -20,9 +20,9 @@
         --bdc-w: #ffac69;
         --bdc-p: #0726d6;
         --bdc-s: #f57e7d;
-        --bdc-c: #333;
+        --bdc-cl: #333;
         --bdc-h: hsl(200, 30%, 90%);
-        --bgc: hsl(200, 40%, 80%);
+        --bgc: hsl(0, 0%, 100%);
         --bdrs: 0.25rem;
         --bdw: 2px;
         --bullet-bdrs: 50%;
@@ -34,10 +34,9 @@
         --box-item-dark-bgc: #fff;
         --box-item-dark-c: hsl(200, 40%, 95%);
         --box-item-lght-bgc: hsl(200, 30%, 90%);
-        --gap: 1rem;                        
+        --gap: 0.8rem;                        
         --trsdu: 0.3s;
-        --trstf: ease-out;
-
+        --trstf: ease-out;        
         /* Modifier-specific properties */
         --sl-mbe: 2em;
         --bi-miw: 85%;
@@ -47,14 +46,15 @@
         color: var(--c, currentColor);
         width: var(--w, 100%);
         -webkit-tap-highlight-color: transparent;
+        
     }
-
-    .tmln:not(.tmln--hr) {
-        padding-inline-start: var(--gap);
+    h4,h5,h6, span{
+        font-family: inherit !important;
     }
 
     .tmln__header {
         margin-block-start: 0;
+        text-align: center;
     }
 
     .tmln__item {
@@ -105,11 +105,7 @@
     .tmln__list {
         display: flex;
         flex-direction: column;
-        margin: 0;
-        padding-block: 0 var(--gap);
-        justify-content: center;
-        padding-inline: 0;
-        padding: 1em;
+        padding: 0;
         color:#fff;
     }
 
@@ -120,41 +116,41 @@
     */
 
     /* Active Circle */
-    .tmln__item--active::after.bg-new {
+    .tmln__item--active.bg-new::after {
         --bdc: var(--bdc-a);
         box-shadow: 0 0 0 calc(var(--bullet-sz-a) - var(--bdw)) var(--bgc, #fff),
             0 0 0 var(--bullet-sz-a) var(--bdc-a);
         background-color: var(--bdc-a);
     }
-    .tmln__item--active::after.bg-curse {
+    .tmln__item--active.bg-curse::after {
         --bdc: var(--bdc-c);
         box-shadow: 0 0 0 calc(var(--bullet-sz-a) - var(--bdw)) var(--bgc, #fff),
             0 0 0 var(--bullet-sz-a) var(--bdc-c);
         background-color: var(--bdc-c);
     }
-    .tmln__item--active::after.bg-wait {
+    .tmln__item--active.bg-wait::after {
         --bdc: var(--bdc-w);
         box-shadow: 0 0 0 calc(var(--bullet-sz-a) - var(--bdw)) var(--bgc, #fff),
             0 0 0 var(--bullet-sz-a) var(--bdc-w);
         background-color: var(--bdc-w);
     }
-    .tmln__item--active::after.bg-planning {
+    .tmln__item--active.bg-planning::after {
         --bdc: var(--bdc-p);
         box-shadow: 0 0 0 calc(var(--bullet-sz-a) - var(--bdw)) var(--bgc, #fff),
             0 0 0 var(--bullet-sz-a) var(--bdc-p);
         background-color: var(--bdc-p);
     }
-    .tmln__item--active::after.bg-solved {
+    .tmln__item--active.bg-solved::after {
         --bdc: var(--bdc-s);
         box-shadow: 0 0 0 calc(var(--bullet-sz-a) - var(--bdw)) var(--bgc, #fff),
             0 0 0 var(--bullet-sz-a) var(--bdc-s);
         background-color: var(--bdc-s);
     }
-    .tmln__item--active::after.bg-closed {
-        --bdc: var(--bdc-c);
+    .tmln__item--active.bg-closed::after {
+        --bdc: var(--bdc-cl);
         box-shadow: 0 0 0 calc(var(--bullet-sz-a) - var(--bdw)) var(--bgc, #fff),
-            0 0 0 var(--bullet-sz-a) var(--bdc-c);
-        background-color: var(--bdc-c);
+            0 0 0 var(--bullet-sz-a) var(--bdc-cl);
+        background-color: var(--bdc-cl);
     }
 
 
@@ -269,8 +265,7 @@
         background-color: $closed;
     }
     .tmln--box .tmln__list {
-        gap: var(--gap);
-        padding-inline-end: var(--gap);
+        gap: var(--gap);        
     }
 
     /* Item Box AND Horizontal */
@@ -327,4 +322,18 @@
         }
     }
 
+    .sla-indicator{
+        .bg-hight {
+            background-color: $hight;
+        }
+        .bg-medium {
+            background-color: $medium;
+        }
+        .bg-low {
+            background-color: $low;
+        }
+        .bg-max{
+            background-color: $max;
+        }
+    }
 }

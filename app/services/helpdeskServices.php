@@ -10,6 +10,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 use App\Repositories\GlpiTicketsRepository;
 
+use Carbon\Carbon;
+
 use Exception;
 
 class HelpdeskServices implements HelpDeskServicesInterface
@@ -356,7 +358,10 @@ class HelpdeskServices implements HelpDeskServicesInterface
         if (!$ticket) {
             return null;
         }
-
+        // obtener los tiempos transcurridos
+        $fechaCreacion = Carbon::parse($ticket->date);
+        $ticket->tiempoTranscurrido = $fechaCreacion->diffForHumans();
+        
         // Obtener los destinatarios del ticket
         $recipients = $this->glpiTicketRepository->getAllRecipients($ticket->id);
 
@@ -384,7 +389,18 @@ class HelpdeskServices implements HelpDeskServicesInterface
 
         // Limpiar contenido del ticket
         $decodedContent = htmlspecialchars_decode($ticket->content);
-        $ticket->content = strip_tags($decodedContent);
+
+        // Reemplaza los enlaces que contienen imágenes, eliminando solo la etiqueta <img>
+        $ticket->content = preg_replace_callback(
+            '/<a\b[^>]*>(.*?)<img\b[^>]*>(.*?)<\/a>/is',
+            function ($matches) {
+                return $matches[1] . $matches[2]; // Mantiene cualquier texto antes o después de <img>, pero elimina la imagen
+            },
+            $decodedContent
+        );
+
+        // Elimina cualquier <a></a> vacío que haya quedado
+        $ticket->content = preg_replace('/<a\b[^>]*>\s*<\/a>/i', '', $ticket->content);
 
         // Procesar documentos adjuntos en Base64
         $ticket->resources = $this->processDocuments($ticket->documents);
@@ -397,12 +413,14 @@ class HelpdeskServices implements HelpDeskServicesInterface
         $imagesBase64 = [];
 
         foreach ($documents as $document) {
-            $resoursesFile = env('SOFTLOGY_HELDEKS_RESOURCES');
-            $completePath = $resoursesFile . DIRECTORY_SEPARATOR . $document->filepath;
-
-            if (file_exists($completePath)) {
-                $imageData = file_get_contents($completePath);
-                $imagesBase64[] = 'data:' . $document->mime . ';base64,' . base64_encode($imageData);
+            if($document->mime != "application/pdf"){
+                $resoursesFile = env('SOFTLOGY_HELDEKS_RESOURCES');
+                $completePath = $resoursesFile . DIRECTORY_SEPARATOR . $document->filepath;
+    
+                if (file_exists($completePath)) {
+                    $imageData = file_get_contents($completePath);
+                    $imagesBase64[] = 'data:' . $document->mime . ';base64,' . base64_encode($imageData);
+                }
             }
         }
 
@@ -449,7 +467,18 @@ class HelpdeskServices implements HelpDeskServicesInterface
                 foreach ($followups as $followup) {
                     // Limpiar contenido del followup
                     $decodedContent = htmlspecialchars_decode($followup->content);
-                    $followup->content = strip_tags($decodedContent);
+
+                     // Reemplaza los enlaces que contienen imágenes, eliminando solo la etiqueta <img>
+                    $followup->content = preg_replace_callback(
+                        '/<a\b[^>]*>(.*?)<img\b[^>]*>(.*?)<\/a>/is',
+                        function ($matches) {
+                            return $matches[1] . $matches[2]; // Mantiene cualquier texto antes o después de <img>, pero elimina la imagen
+                        },
+                        $decodedContent
+                    );
+
+                    // Elimina cualquier <a></a> vacío que haya quedado
+                    $followup->content = preg_replace('/<a\b[^>]*>\s*<\/a>/i', '', $followup->content);
 
                    $followup->documents->resources=$this->processDocuments($followup->documents);
                 }
@@ -471,6 +500,13 @@ class HelpdeskServices implements HelpDeskServicesInterface
             $processedTicket->followups=$this->addTicketFollowups($ticketId,$userId);
             return $processedTicket;
         } catch (Exception $e) {
+            throw $e;
+        }
+    }
+    public function createFollowup(int $ticketID, int $userID){
+        try{
+
+        }catch(Exception $e){
             throw $e;
         }
     }
