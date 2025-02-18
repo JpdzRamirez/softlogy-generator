@@ -15,7 +15,7 @@
     } 
     .tmln {
         --bdc: #505D71;
-        --bdc-a: #0ea2bd;
+        --bdc-a: #33589F;
         --bdc-c: #0fcc45;
         --bdc-w: #ffac69;
         --bdc-p: #0726d6;
@@ -107,7 +107,9 @@
         flex-direction: column;
         padding: 0;
         color:#fff;
+        justify-content: unset;
     }
+
 
     /* 
     ====================
@@ -320,9 +322,7 @@
         .tmln--box.tmln--hr .tmln__item {
             --miw: var(--bi-miw-tablet);
         }
-        .tmln__list{
-            justify-content: unset;
-        }
+
     }
 
     .sla-indicator{

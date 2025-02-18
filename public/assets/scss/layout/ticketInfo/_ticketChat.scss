@@ -59,7 +59,7 @@
         > .expand {
             position: absolute;
             right: 14px;
-            top: 12px;
+            top: 0px;
         }
     }
     .dots {
@@ -117,7 +117,7 @@
             }
             a {
                 padding: 15px;
-                color: #bcc3d0;
+                color: #fff;
                 text-decoration: none;
                 display: block;
                 position: relative;
@@ -127,7 +127,7 @@
                 align-items: center;
                 text-wrap: inherit;
                 i {
-                    color: $new;
+                    color: #fff;
                     font-size: 1.2em;
                     transition: all 0.3s ease-in-out;
                     &.fa-times {
@@ -148,7 +148,7 @@
                 }
 
                 &:hover {
-                    background: #445166;
+                    background: #33589F;
                     color: #fff;
                 }
             }

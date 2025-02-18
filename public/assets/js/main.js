@@ -582,17 +582,18 @@
     /*
         Emoji Picker
     */
-    Livewire.on("toggleEmojiPicker", () => {
-        new EmojiPicker({
-            trigger: [
-                {
-                    selector: ".emojiButton",
-                    insertInto: [".messageFollowUp"],
-                },
-            ],
-            closeButton: true,
-            //specialButtons: green
-        });
+    $(document).on("click", ".emojiButton", function (e) { 
+            e.preventDefault(); // Evita el comportamiento predeterminado del enlace
+            new EmojiPicker({
+                trigger: [
+                    {
+                        selector: ".emojiButton",
+                        insertInto: ["#messageFollowUp"],
+                    },
+                ],
+                closeButton: true,
+                //specialButtons: green
+            });
     });
     // Modal image preview
     const modalImage = document.getElementById("modalImage");
@@ -614,9 +615,10 @@
     });
     // File Input
     // Activar el input de archivo al hacer clic en el icono de paperclip
-    Livewire.on("triggerFileInput", () => {
-        document.getElementById("attach-message").click();
+    $(document).on("click", ".triggerFileInput", function (e) {         
+        $("#attach-message").click();
     });
+
     // Event acordion effect
     function Accordion(el, multiple) {
         this.el = el;

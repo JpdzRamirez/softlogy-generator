@@ -3,10 +3,8 @@
     <div class="footer-top">
         <div class="container">
             <div class="row gy-4">
-                <div class="col-lg-4 col-md-6 footer-about">
-                    <a class="logo d-flex align-items-center">
-                        <span class="sitename">Softlogy S.A.S</span>
-                    </a>
+                <div class="col-lg-4 col-md-6 flex-row footer-about" style="gap:2em;">
+                    <img src="{{asset('assets/img/support/softlogyLogo-White.png')}}" style="width:20em; background-color: white; border-radius: 1em;">
                     <div class="footer-contact pt-3">
                         <p>CL 6 A # 75 - 56 OF 137</p>
                         <p>Bogotá D.C</p>

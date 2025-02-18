@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html style="height:100%;" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>SoftLogy-MICRO</title>
+    <title>SoftLogyDesk</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -22,7 +22,7 @@
     <link href="{{ asset('assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
     <!-- Main CSS File -->
-    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/main.min.css') }}" rel="stylesheet">
     <!-- Styles / Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -79,7 +79,7 @@
             <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
                 <!-- Uncomment the line below if you also wish to use an image logo -->
                 <!-- <img src="assets/img/logo.png" alt=""> -->
-                <h1 class="sitename">Softlogy-MICRO</h1>
+                <h1 class="sitename">SoftlogyDesk</h1>
                 <span>.</span>
             </a>
 
@@ -100,9 +100,9 @@
 
             <div class="container d-flex flex-column justify-content-center align-items-center text-center position-relative"
                 data-aos="zoom-out">
-                <img src="{{ asset('assets/img/hero-img.svg') }}" class="img-fluid animated" alt="">
-                <h1>Bienvenido a <span>Softlogy MICRO</span></h1>
-                <p>Portal de servicios empresariales.</p>
+                <img src="{{ asset('assets/img/clients/softlogy-logo.png') }}" class="img-fluid animated" alt="">
+                <h1>Bienvenido a <span>SoftlogyDesk</span></h1>
+                <p>Portal de mesa de ayuda.</p>
                 <div class="d-flex">
                     @guest
                         <!-- Mostrar el botón para iniciar sesión cuando el usuario no esté autenticado -->
@@ -227,7 +227,7 @@
     <script src="{{ asset('assets/vendor/imagesloaded/imagesloaded.pkgd.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
     <!-- Main JS File -->
-    <script src="{{ asset('assets/js/main.js') }}"></script>
+    <script src="{{ asset('assets/js/main.min.js') }}"></script>
     <script>
         $(".button-errors").click(function() {
             $(".modal-errors").addClass("fade-out");

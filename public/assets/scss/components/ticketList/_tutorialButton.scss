@@ -1,6 +1,6 @@
 @use "../../utils" as *;
 
-$base-color: #0ea2bd;
+$base-color: #33589F;
 $modified-value: 40 + (lightness($base-color) * 20);
 $opacity: 0.3 + (1 * 0.8);
 

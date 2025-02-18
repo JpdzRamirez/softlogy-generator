@@ -392,7 +392,7 @@
           <div class="modal-dialog">
               <div class="modal-content">
                   <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="adminUserModalLabel"><i style="color:#0EA2BD"
+                      <h1 class="modal-title fs-5" id="adminUserModalLabel"><i style="color:#33589F"
                               class="fa-solid fa-circle-exclamation"></i> Aceso Restringido</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>

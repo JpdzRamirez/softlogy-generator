@@ -10,7 +10,7 @@
                 <span><i class="fa-solid fa-file-waveform"></i>Historial de Ticket</span>
             </div>
             <div class="expand">
-                <i class="fa fa-expand"></i>
+                <a href="{{route('softlogy.tickets')}}"><button type="button" class="btn btn-info send-btn" style="color:white;"><i class="fa-solid fa-left-long"></i> Regresar</button></a>
             </div>
         </div>
         <div class="window-area">
@@ -164,9 +164,12 @@
 
                 <div class="input-area">
                     <div class="input-wrapper">
-                        <form wire:submit.prevent="uploadFollowUp">                            
-                            <input type="text" name="message" class="messageFollowUp @error('message') is-invalid @enderror" wire:model="message"
-                                placeholder="Escribe un mensaje...">
+                        <form wire:submit.prevent="uploadFollowUp">
+                            <div class="input-group" style="flex-wrap: nowrap; width: inherit;align-items: center;">                                                                   
+                                <button class="btn btn-outline-secondary emojiButton" type="button"><i class="fa-regular fa-face-smile"></i></button>
+                                <button class="btn btn-outline-secondary triggerFileInput" type="button"><i class="fa fa-paperclip"></i>  </button>
+                                <input type="text" class="form-control" name="message" id="messageFollowUp" class="@error('message') is-invalid @enderror" wire:model="message"
+                                placeholder="Escribe un mensaje..." style="margin: 6px;">
                                 @error('message') <span class="error">{{ $message }}</span> @enderror
                                 @if ($tempFilePath && !empty($tempFilePath))
                                     <img  src="{{asset('assets/img/img-loaded.png')}}"
@@ -175,13 +178,11 @@
                                     data-bs-toggle="modal" 
                                     data-bs-target="#imageModal" 
                                     data-src="{{ $tempFilePath }}"/>                            
-                                @endif
-                            <i class="fa-regular fa-face-smile emojiButton"
-                                wire:click="$dispatch('toggleEmojiPicker')"></i>
-                            <i class="fa fa-paperclip" wire:click="$dispatch('triggerFileInput')"></i>                            
-                            <!-- Mostrar el input de archivo -->
-                            <input type="file" wire:model.live.debounce.500ms="attach" id="attach-message" style="display: none;"
-                             capture="camera"">
+                                @endif                       
+                                <!-- Mostrar el input de archivo -->
+                                <input type="file" wire:model.live.debounce.500ms="attach" id="attach-message" style="display: none;"
+                                capture="camera"">
+                            </div>                            
                     </div>
                     <button type="submit" value="Enviar" class="btn send-btn" onclick="showSpinner(true)">Enviar</button>
                     </form>

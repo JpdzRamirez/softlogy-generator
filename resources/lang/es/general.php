@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title'=>'Softlogy-Micro',
+    'title'=>'SoftlogyDesk',
     'welcome' => 'Bienvenido',
     'help'=> 'Ayuda',
     'license'=> 'Licenciamiento',

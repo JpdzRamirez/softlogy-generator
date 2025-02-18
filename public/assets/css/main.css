@@ -22,7 +22,7 @@
   --background-color: #ffffff; /* Background color for the entire website, including individual sections */
   --default-color: #1a1f24; /* Default color used for the majority of the text content across the entire website */
   --heading-color: #485664; /* Color for headings, subheadings and title throughout the website */
-  --accent-color: #0ea2bd; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
+  --accent-color: #33589F; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
   --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
   --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
 }
@@ -30,11 +30,11 @@
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
 :root {
   --nav-color: #485664;  /* The default color of the main navmenu links */
-  --nav-hover-color: #0ea2bd; /* Applied to main navmenu links when they are hovered over or active */
+  --nav-hover-color: #33589F; /* Applied to main navmenu links when they are hovered over or active */
   --nav-mobile-background-color: #ffffff; /* Used as the background color for mobile navigation menu */
   --nav-dropdown-background-color: #ffffff; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
   --nav-dropdown-color: #485664; /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #0ea2bd; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
+  --nav-dropdown-hover-color: #33589F; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
 }
 
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
@@ -66,9 +66,6 @@ body {
   font-family: var(--default-font);
   height: 100%;
   width: 100%;
-  background: #C9CCD3;
-  background-image: linear-gradient(-180deg, rgba(255,255,255,0.50) 0%, rgba(0,0,0,0.50) 100%);
-  background-blend-mode: lighten;
 }
 main{
   position: relative;
@@ -648,17 +645,23 @@ h6 {
 }
 
 .footer .footer-links ul a {
-  color: color-mix(in srgb, var(--default-color), transparent 30%);
+  color: #fff;
   display: inline-block;
   line-height: 1;
 }
 
 .footer .footer-links ul a:hover {
-  color: var(--accent-color);
+  color: #fff;
 }
 
 .footer .footer-contact p {
   margin-bottom: 5px;
+}
+.footer .footer-contact p a {
+  color: #fff;
+}
+.footer .footer-contact p a:hover {
+  color: #fff;
 }
 
 .footer .copyright {
@@ -672,6 +675,13 @@ h6 {
 .footer .credits {
   margin-top: 5px;
   font-size: 13px;
+}
+
+.footer .credits a {
+  color: #A931F2;
+}
+.footer .credits a:hover {
+  color: #fff;
 }
 
 .footer .social-links a {
@@ -934,7 +944,7 @@ section,
 
 @media (min-width: 992px) {
   .hero .animated {
-    max-width: 30%;
+    max-width: 25%;
   }
 }
 
@@ -3414,10 +3424,10 @@ details summary::-webkit-details-marker {
 .softlogy-modal .form-check-input:checked{
   background-color: var(--accent-color) !important;
   border-color: var(--accent-color) !important;   
-  box-shadow: 0 0 0 .25rem #0ea2bd59 !important;
+  box-shadow: 0 0 0 .25rem #33589F59 !important;
 }
 .softlogy-modal .form-control:focus {
   border-color: var(--accent-color) !important;
   outline: 0;
-  box-shadow: 0 0 0 .25rem #0ea2bd59 !important;
+  box-shadow: 0 0 0 .25rem #33589F59 !important;
 }
