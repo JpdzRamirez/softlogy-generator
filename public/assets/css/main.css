@@ -64,9 +64,11 @@ body {
   color: var(--default-color);
   background-color: var(--background-color);
   font-family: var(--default-font);
-  height: 100vh;
-  width: 100vw;
-  background-image: url('../img/hero-bg.png');
+  height: 100%;
+  width: 100%;
+  background: #C9CCD3;
+  background-image: linear-gradient(-180deg, rgba(255,255,255,0.50) 0%, rgba(0,0,0,0.50) 100%);
+  background-blend-mode: lighten;
 }
 main{
   position: relative;
@@ -449,8 +451,7 @@ h6 {
   .navmenu ul {
     display: none;
     list-style: none;
-    position: absolute;
-    inset: 60px 10em 40em 10em;
+    position: absolute;    
     padding: 10px 0;
     margin: 0;
     border-radius: 6px;
@@ -459,7 +460,10 @@ h6 {
     box-shadow: none;
     overflow-y: auto;
     transition: 0.3s;
+    min-height: 20em;
+    min-width: 15em;
     z-index: 9998;
+    top: 30%;
   }
 
   .navmenu a,
@@ -549,6 +553,9 @@ h6 {
     inset: 0;
     background: rgba(33, 37, 41, 0.8);
     transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .mobile-nav-active .navmenu>ul {

@@ -87,12 +87,12 @@ class SoftlogyTickets extends Component
         if ($this->formType == 1) {
             // Si el formType es 1, hacer ticketCheck obligatorio
             $rules['ticketCheck'] = 'required';
-            $rules['photoTicketData'] = 'required';
+            $rules['photoTicketData'] = 'nullable';
             // También puedes añadir más reglas específicas para este caso
         } elseif ($this->formType == 2) {
             $rules['requestType'] = 'required';
             $rules['requestTitle'] = 'required';
-            $rules['photoRequestData'] = 'required';
+            $rules['photoRequestData'] = 'nullable';
         }
 
         return $rules;  // Devuelves las reglas dinámicas

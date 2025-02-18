@@ -25,7 +25,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
     @livewireStyles
     <!-- Main CSS File -->
-    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/main.min.css') }}" rel="stylesheet">
     @stack('styles')
     <!-- Styles / Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -69,8 +69,8 @@
     <script src="{{ asset('assets/vendor/imagesloaded/imagesloaded.pkgd.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
     <!-- Main JS File -->
-    <script src="{{ asset('assets/js/emojiPicker.js') }}"></script>
-    <script src="{{ asset('assets/js/main.js') }}"></script>
+    <script src="{{ asset('assets/js/emojiPicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/main.min.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

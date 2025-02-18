@@ -15,7 +15,7 @@ return [
     'photoTicketData' => 'foto del ticket',
     'requestType' => 'tipo de solicitud',
     'requestTitle' => 'título de la solicitud',
-    'photoRequestData' => 'toto de la solicitud',
+    'photoRequestData' => 'foto de la solicitud',
 
     'name'                  => 'nombre',
     'username'              => 'usuario',

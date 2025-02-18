@@ -297,7 +297,7 @@
                             <div class="top-text-wrapper">
                               <h4>Opciones rápidas: Unica elección</h4>
                               <p>
-                                Seleccione <code>UN ELEMENTO</code> de la lista de opciones y da click en  <code>ENVIAR</code>.
+                                Seleccione <code>UN ELEMENTO</code> de la lista de opciones y da click en  <code>Continuar</code>.
                               </p>
                               <hr />
                             </div>
@@ -343,8 +343,8 @@
                                       src="{{asset('assets/img/support/id-web.jpg')}}"
                                       alt=""
                                     />
-                                    <h4>Identificador Web</h4>
-                                    <h5>Sí necesitas identificar una factura en el portal.</h5>
+                                    <h4>Portal Web</h4>
+                                    <h5>Sí necesitas identificar una factura o se presentan fallasn en el portal.</h5>
                                   </div>
                                 </div>
                               </label>
@@ -359,7 +359,7 @@
                                       alt=""
                                     />
                                     <h4>Errores en Factura</h4>
-                                    <h5>Sí tu factura presenta anomalías en sus datos.</h5>
+                                    <h5>Sí tus facturas presentan anomalías en sus datos.</h5>
                                   </div>
                                 </div>
                               </label>
