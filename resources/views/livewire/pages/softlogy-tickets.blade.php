@@ -21,18 +21,19 @@
             <div class="card-tickets-title">
                 <div class="header-ticket-title clearfix" style="display: none;">
                     <div class="thumbnail"><img class="left"
-                            src="https://herothemes.com/wp-content/uploads/how-to-create-a-support-ticket-form2x-1200x600.png" />
+                            src="{{asset('assets/img/support/Tutorial.gif')}}" />
                     </div>
                     <div class="right">
                         <h1>¿Cómo crear tus tickets de soporte?</h1>
                         <div class="author"><img src="https://randomuser.me/api/portraits/men/95.jpg" />
-                            <h2>SoftlogyTech</h2>
+                            <h2>Softlogy</h2>
                         </div>
                         <div class="separator"></div>
                         <p>
                             Crear una solicitud de soporte no puede ser más fácil. Solo necesitas seguir unos pocos
                             pasos para encontrar ayuda inmediata y especializada. Nuestro equipo está siempre disponible
                             para resolver tus consultas y garantizar una solución eficiente a tus problemas.
+                            <a href="https://softlogy.sharepoint.com/:b:/s/CALIDAD/ESQ6I_bcVYxKgoaIt2IrhQ4BCKxAiq3OzFZPILbbrDM_pA?e=xkOizj" target="_blank" rel="noopener noreferrer"><code>Mas información🔑👈</code></a>
                         </p>
                     </div>
                     <button class="icon-button" id="closeTutorial">
