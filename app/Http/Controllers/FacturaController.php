@@ -179,5 +179,64 @@ class FacturaController extends Controller
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
+    public function generarXMLS(Request $request)
+    {
+                // Validar el archivo
+                $request->validate([
+                    'listadoFolios' => 'required|file|mimes:xlsx,xls',
+                    'brandIdSelect' => 'required|integer',
+                ]);
+            
+                $filasNoProcesadas = []; // Inicializamos el array para las filas no procesadas.
+                $responses = []; // Almacena los responses como cadenas.
+                $fileName = 'responses.txt'; // Nombre del archivo generado.
+                $filePath = storage_path("app/public/{$fileName}"); // Ruta completa del archivo.
+            
+                try {
+                    // Cargar el archivo y leer la hoja principal
+                    $path = $request->file('listadoFolios')->getRealPath();
+                    $excel = IOFactory::load($path);
+                    $hoja = $excel->getSheet(0);
+                    $filas = $hoja->getHighestRow(); // Obtenemos el total de filas
+            
+                    // Verificar y procesar las filas
+                    if ($filas > 1) {
+                        for ($i = 2; $i <= $filas; $i++) {
+            
+                            $dataInput = [
+                                'prefijo' => $hoja->getCell("M$i")->getValue() ?: '',
+                                'folio' => $hoja->getCell("N$i")->getValue() ?: '',
+                                'noresolucion' => $hoja->getCell("L$i")->getValue() ?: '',
+                                'folioPOS' => $hoja->getCell("AB$i")->getValue() ?: '',
+                                'checkid' => $hoja->getCell("AS$i")->getValue() ?: '',
+                                'BrandId' => $hoja->getCell("C$i")->getValue() ?: '',
+                                'StoreId' => $hoja->getCell("D$i")->getValue() ?: '',
+                            ];
+            
+                            if (empty($dataInput['prefijo'])||empty($dataInput['folio'])) {
+                                // Si la celda está vacía, la agregamos a las filas no procesadas
+                                $filasNoProcesadas[] = $i;
+                            } else {
+                                // Convertir la celda a XML y procesar                        
+                                $response = $this->xmlService->xmlGenerar($dataInput);
+                                $responses[] = $response; // Agregar el response al array con el número de fila
+                            }
+                        }
+            
+                        // Crear el archivo TXT con los responses
+                        file_put_contents($filePath, implode('', $responses));
+                    }
+                    // Redirigir con mensajes en la sesión
+                    return redirect()->route('back.tools')->with([
+                        'response_process' => $filasNoProcesadas,
+                        'mensage_session' => 'El archivo ha sido procesado correctamente.',
+                        'response_file' => $fileName,
+                    ]);
+                }catch(Exception $e){
+                    // En caso de error, redirigir con mensaje de error
+                    return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+                }
+    }
     
 }

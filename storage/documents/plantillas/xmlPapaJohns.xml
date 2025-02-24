@@ -1,0 +1,152 @@
+<Factura>
+<Encabezado>
+	<llavecomprobante>1</llavecomprobante>
+	<nitemisor>900328834</nitemisor>
+	<codSucursal>900328834</codSucursal>
+	<ciiuEmisor>5611</ciiuEmisor>
+	<tiporeceptor>2</tiporeceptor>
+	<tipoDocRec>13</tipoDocRec>
+	<nitreceptor>222222222222</nitreceptor>
+	<digitoverificacion>0</digitoverificacion>
+	<obligacionesfiscalesreceptor>R-99-PN</obligacionesfiscalesreceptor>
+	<tributoreceptor>ZA</tributoreceptor>
+	<regimenreceptor>71</regimenreceptor>
+	<nombrereceptor>Consumidor</nombrereceptor>
+	<segnombrereceptor/>
+	<apellidosreceptor>Final</apellidosreceptor>
+	<nombrecomercialreceptor>Consumidor Final</nombrecomercialreceptor>
+	<paisreceptor>CO</paisreceptor>
+	<codigodepartamento>66</codigodepartamento>
+	<departamentoreceptor>Risaralda</departamentoreceptor>
+	<codigociudadreceptor>66001</codigociudadreceptor>
+	<ciudadreceptor>PEREIRA</ciudadreceptor>
+	<codigopostal>000000</codigopostal>
+	<direccionreceptor>CARRERA 17 #10-23/ 10-37 LOCAL 2</direccionreceptor>
+	<telefonoreceptor>6684545</telefonoreceptor>
+	<telefonomovilreceptor/>
+	<mailreceptor>recuperacionfepos@alimentosalconsumidor.com</mailreceptor>
+	<mailreceptorcontacto>recuperacionfepos@alimentosalconsumidor.com</mailreceptorcontacto>
+	<nombrecontactoreceptor>Consumidor Final</nombrecontactoreceptor>
+	<tipocomprobante>01</tipocomprobante>
+	<noresolucion>18764079352540</noresolucion>
+	<prefijo>427P</prefijo>
+	<folio>10258</folio>
+	<fecha>2025-02-21</fecha>
+	<hora>15:13:37</hora>
+	<xslt>1</xslt>
+	<moneda>COP</moneda>
+	<subtotal>1.00</subtotal>
+	<metodopago>1</metodopago>
+	<mediopago>ZZZ</mediopago>
+	<fechavencimiento>2025-02-21</fechavencimiento>
+	<terminospago>0</terminospago>
+	<baseimpuesto>1.00</baseimpuesto>
+	<totalsindescuento>1.00</totalsindescuento>
+	<totaldescuentos>0.00</totaldescuentos>
+	<totalimpuestos>0.00</totalimpuestos>
+	<totalimpuestosretenidos>0.00</totalimpuestosretenidos>
+	<total>1.00</total>
+	<montoletra/>
+	<textolibre/>
+	<totalcargos>0.00</totalcargos>
+	<tipoOpera>10</tipoOpera>
+	<totalAnticipo>0.00</totalAnticipo>
+	<ncidfact/>
+	<nccod/>
+	<nciddoc>427P10258</nciddoc>
+	<ncuuid/>
+	<ncfecha/>
+	<ndidfact/>
+	<ndcod/>
+	<ndiddoc/>
+	<nduuid/>
+	<ndfecha/>
+	<extra1>PJ PEREIRA-PINARES</extra1>
+	<extra2>CARRERA 17 #10-23/ 10-37 LOCAL 2</extra2>
+	<extra3>6684545</extra3>
+	<extra4>recuperacionfepos@alimentosalconsumidor.com</extra4>
+	<extra5>0.00</extra5>
+	<extra6>0.00</extra6>
+	<extra7>0.00</extra7>
+	<extra8/>
+	<extra9>Pereira</extra9>
+	<extra10/>
+	<extra11/>
+	<extra12/>
+	<extra13/>
+	<extra14/>
+	<extra15/>
+	<extra16/>
+	<extra17/>
+	<extra18/>
+	<idContrato/>
+	<tipoContrato/>
+	<numMatricula/>
+	<numMatriculaMan/>
+	<nombreMandatario/>
+	<nitDV/>
+	<tiposResponsabilidades/>
+	<numeroConformidad/>
+	<numeroPedido/>
+	<folioPOS>13154513</folioPOS>
+	<checkid>20008</checkid>
+	<IdentificadorOrden/>
+	<BrandId>1</BrandId>
+	<StoreId>427</StoreId>
+	<ordenCompra/>
+	<hojaEntrada/>
+<centroOperacion/>
+</Encabezado>	
+<Detalle>
+	<Det>
+		<llaveComprobante>1</llaveComprobante>
+		<idConcepto>607</idConcepto>
+		<cantidad>1</cantidad>
+		<unidadmedida>94</unidadmedida>
+		<impuestolinea>0.00</impuestolinea>
+		<tasa>0.00</tasa>
+		<tipo>01</tipo>
+		<baseimpuestos>1.00</baseimpuestos>
+		<UnidadMedidaBase>0.00</UnidadMedidaBase>
+		<ValorporUnidad>0.00</ValorporUnidad>
+		<subpartidaarancelaria/>
+		<MultipleImpuesto>false</MultipleImpuesto>
+		<identificacionproductos>607</identificacionproductos>
+		<descripcion>Obs. Garlic Knots</descripcion>
+		<precioUnitario>1.00</precioUnitario>
+		<importe>1.00</importe>
+		<importemuestra>0.00</importemuestra>
+		<tipomuestra/>
+		<adicionalInfo/>
+		<articulocubierto>0</articulocubierto>
+		<extra1/>
+		<extra2/>
+		<extra3/>
+		<extra4/>
+		<extra5/>
+		<extra6/>
+		<extra7/>
+		<extra8/>
+		<extra9/>
+		<extra10/>
+		<extra11/>
+		<extra12/>
+		<extra13/>
+		<extra14/>
+		<extra15/>
+	</Det>
+</Detalle>	
+	<Impuestos>
+	<Imp>
+		<llaveComprobante>1</llaveComprobante>
+		<idImpuesto>1</idImpuesto>
+		<baseimpuestos>1.00</baseimpuestos>
+		<tasa>0.00</tasa>
+		<UnidadMedidaBase>0.00</UnidadMedidaBase>
+		<ValorporUnidad>0.00</ValorporUnidad>
+		<tipoImpuesto>01</tipoImpuesto>
+		<importe>0.00</importe>
+		<redondeo/>
+	</Imp>
+</Impuestos>
+</Factura>

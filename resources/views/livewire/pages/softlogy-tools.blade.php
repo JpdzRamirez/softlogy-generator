@@ -308,6 +308,35 @@
                     </div>
                 </div><!-- End Service Item -->
 
+                           {{-- Remplzar folios facturas --}}
+            <div class="col gy-4">
+
+                <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
+                    <div class="service-item position-relative">
+                        <div class="icon"><i class="fa-solid fa-user"></i></div>
+                        <h4>Generar XMLS Facturas</h4>
+                        <p>Su uso está pensado para la generar facturas electrónicas de forma masiva, con datos por defecto
+                        </p>
+                        <form method="POST" action="{{route('generar.xmls')}}" enctype="multipart/form-data">
+                            @csrf
+                            <div class="col-auto my-1">
+                                <label class="mr-sm-2" for="brandIdSelect">Empresa</label>
+                                <select required name="brandIdSelect" class="custom-select mr-sm-2"
+                                    id="brandIdSelect">
+                                    <option value="" selected>Seleccione Empresa...</option>
+                                    <option value="1">Papa Johns</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="listadoFolios" class="form-label">Archivo Excel Formato- XlsX</label>
+                                <input class="form-control" required name="listadoFolios" type="file" id="listadoFolios">
+                            </div>
+                            <button type="submit" style="background: #27303F; margin:auto;"
+                                class="btn btn-primary mb-3">Generar Facturas</button>
+                        </form>
+                    </div>
+                </div><!-- End Service Item -->
+
             </div>
 
         </div>

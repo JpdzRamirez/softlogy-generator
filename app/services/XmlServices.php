@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Storage;
+
 
 use App\Contracts\XmlServicesInterface;
 use App\Models\Paises;
@@ -153,6 +155,45 @@ class XmlServices implements XmlServicesInterface
             $xmlString = $xml->asXML();
             // Eliminar la primera línea (declaración XML) si existe
             $xmlString = preg_replace('/^<\?xml.*\?>\s*/', '', $xmlString);
+
+            // Retornar el XML como texto sin la declaración
+            return $xmlString;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+    public function xmlGenerar($dataInput)
+    {
+        try {
+            $filePath = storage_path("documents/plantillas/xmlPapaJohns.xml");            
+            // normalizar path
+            $normalizedPath = str_replace('/', '\\', $filePath);
+            // Obtener el contenido del archivo XML
+            $xmlContent = file_get_contents($normalizedPath);
+
+            // Cargar el XML
+            $xml = simplexml_load_string($xmlContent);
+            
+            // Cambiamos el folio noresolucion
+            $xml->Encabezado->noresolucion = $dataInput['noresolucion'];
+            $xml->Encabezado->prefijo = $dataInput['prefijo'];
+            $xml->Encabezado->folio = $dataInput['folio'];
+            $xml->Encabezado->nciddoc = $xml->Encabezado->prefijo.$dataInput['folio'];
+            $xml->Encabezado->folioPOS = $dataInput['folioPOS'];
+            $xml->Encabezado->checkid = $dataInput['checkid'];
+            $xml->Encabezado->BrandId = $dataInput['BrandId'];
+            $xml->Encabezado->StoreId = $dataInput['StoreId'];
+            $fecha = now()->format('Y-m-d');
+            $hora = now()->subHour()->format('H:i:s');
+            $xml->Encabezado->fecha = $fecha;
+            $xml->Encabezado->fechavencimiento = $fecha;
+            $xml->Encabezado->hora = $hora;
+
+            $xmlString = $xml->asXML();
+            // Eliminar la primera línea (declaración XML) si existe
+            $xmlString = preg_replace('/^<\?xml.*\?>\s*/', '', $xmlString);
+
+            $xmlString = preg_replace('/>\s+</', '><', $xmlString);
 
             // Retornar el XML como texto sin la declaración
             return $xmlString;
