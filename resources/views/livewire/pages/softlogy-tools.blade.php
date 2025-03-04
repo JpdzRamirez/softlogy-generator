@@ -83,7 +83,7 @@
                         <p>Su uso está pensado para la creación de usuarios para puntos de ventas de forma masiva
                         </p>
                         <div class="d-flex flex-column align-items-center g-1" style="margin-bottom: 4em">
-                            <a href="{{ route('descargar.formatos') }}" style="position: relative"
+                            <a href="{{ route('descargar.formatos', ['tipo' => 'cargue-helpdesk']) }}" style="position: relative"
                                 class="d-flex flex-column align-items-center">Descargar formato Excel
                                 <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDlhaWNjaWEwdmFla2tpdnYwdXE1amF4b2RzNmV2ZDZ5NTRsZ3F4dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/24G0F8lQWYMb6jD47X/giphy.webp"
                                     alt="Click-Here" style="width: 5em; position: absolute; top:1em;"></a>
@@ -279,28 +279,22 @@
                 <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
                     <div class="service-item position-relative">
                         <div class="icon"><i class="fa-solid fa-user"></i></div>
-                        <h4>Remplazar folios de facturas pisadas</h4>
-                        <p>Su uso está pensado para la Solucionar de forma masiva el cambiod e folio en facturas electrónicas
+                        <h4>Remplazar datos de facturas pisadas</h4>
+                        <p>Su uso está pensado para la Solucionar de forma masiva el cambio de datos en facturas electrónicas
                         </p>
-                        <form method="POST" action="{{route('remplazar.folios')}}" enctype="multipart/form-data">
+                        <code>Las celdas deben ser asignadas en el orden del formato especializado</code>
+                        <div class="d-flex flex-column align-items-center g-1" style="margin-bottom: 4em">
+                            <a href="{{ route('descargar.formatos', ['tipo' => 'cargue-facturas']) }}" style="position: relative"
+                                class="d-flex flex-column align-items-center">Descargar formato Excel
+                                <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDlhaWNjaWEwdmFla2tpdnYwdXE1amF4b2RzNmV2ZDZ5NTRsZ3F4dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/24G0F8lQWYMb6jD47X/giphy.webp"
+                                    alt="Click-Here" style="width: 5em; position: absolute; top:1em;"></a>
+
+                        </div>
+                        <form method="POST" action="{{route('remplazar.datos')}}" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
                                 <label for="foliosPisados" class="form-label">Archivo Excel Formato- XlsX</label>
                                 <input class="form-control" required name="foliosPisados" type="file" id="foliosPisados">
-                            </div>
-                            <div class="mb-3 row">
-                                <label for="inicioFolio" class="col-sm-2 col-form-label">Inicio</label>
-                                <div class="col-sm-10">
-                                    <input type="number" name="inicio" required class="form-control" id="inicioFolio"
-                                        placeholder="Ejemplo: 301">
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
-                                <label for="finFolio" class="col-sm-2 col-form-label">Fin</label>
-                                <div class="col-sm-10">
-                                    <input type="number" name="fin" required class="form-control" id="finFolio"
-                                        placeholder="Ejemplo: 1520">
-                                </div>
                             </div>
                             <button type="submit" style="background: #27303F; margin:auto;"
                                 class="btn btn-primary mb-3">Procesar XlsX</button>
@@ -308,13 +302,13 @@
                     </div>
                 </div><!-- End Service Item -->
 
-                           {{-- Remplzar folios facturas --}}
+             {{-- Cambiar generar facturas en ceros --}}
             <div class="col gy-4">
 
                 <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
                     <div class="service-item position-relative">
                         <div class="icon"><i class="fa-solid fa-user"></i></div>
-                        <h4>Generar XMLS Facturas</h4>
+                        <h4>Generar XMLS Facturas en ceros</h4>
                         <p>Su uso está pensado para la generar facturas electrónicas de forma masiva, con datos por defecto
                         </p>
                         <form method="POST" action="{{route('generar.xmls')}}" enctype="multipart/form-data">

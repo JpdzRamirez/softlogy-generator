@@ -134,25 +134,40 @@ class XmlServices implements XmlServicesInterface
 
         return $xml;
     }
-    public function xmlCambiarFolio($rowText, $nuevoFolio)
+    public function xmlCambiarDatos(array $newData)
     {
         try {
             // Limpiar la cadena de entrada
-            $rowText = str_replace(';NULL;', '', $rowText); // Eliminar ;NULL;
+            $rowText = str_replace(';NULL;', '', $newData['factura']); // Eliminar ;NULL;
             $rowText = str_replace(';', '', $rowText);
-            // armar el xml
 
-            $xml = simplexml_load_string($rowText);
-            // Cambiamos el folio
-            $xml->Encabezado->folio = $nuevoFolio;
-            $xml->Encabezado->nciddoc = $xml->Encabezado->prefijo.$nuevoFolio;
+            // Asegurar que el XML se procese correctamente
+            $rowText = htmlspecialchars_decode($rowText, ENT_QUOTES); // Decodificar caracteres especiales
+
+            // Convertir a UTF-8 si no lo está
+            $rowText = mb_convert_encoding($rowText, 'UTF-8', 'auto');
+
+            // Cargar el XML
+            $xml = simplexml_load_string($rowText, 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_ERR_NONE | LIBXML_NOCDATA);
+
+            if ($xml === false) {
+                return 'Error al cargar el XML'; // Manejo de error en caso de que el XML no sea válido
+            }
+
+            // Cambiamos los datos
+            $xml->Encabezado->prefijo = $newData['prefijo'];
+            $xml->Encabezado->folio = $newData['folio'];
+            $xml->Encabezado->noresolucion = $newData['resolucion'];
+            $xml->Encabezado->nciddoc = $xml->Encabezado->prefijo . $xml->Encabezado->folio;
             $fecha = now()->format('Y-m-d');
             $hora = now()->subHour()->format('H:i:s');
             $xml->Encabezado->fecha = $fecha;
             $xml->Encabezado->fechavencimiento = $fecha;
             $xml->Encabezado->hora = $hora;
 
+            // Convertir el XML a cadena
             $xmlString = $xml->asXML();
+
             // Eliminar la primera línea (declaración XML) si existe
             $xmlString = preg_replace('/^<\?xml.*\?>\s*/', '', $xmlString);
 
@@ -165,7 +180,7 @@ class XmlServices implements XmlServicesInterface
     public function xmlGenerar($dataInput)
     {
         try {
-            $filePath = storage_path("documents/plantillas/xmlPapaJohns.xml");            
+            $filePath = storage_path("documents/plantillas/xmlPapaJohns.xml");
             // normalizar path
             $normalizedPath = str_replace('/', '\\', $filePath);
             // Obtener el contenido del archivo XML
@@ -173,12 +188,12 @@ class XmlServices implements XmlServicesInterface
 
             // Cargar el XML
             $xml = simplexml_load_string($xmlContent);
-            
+
             // Cambiamos el folio noresolucion
             $xml->Encabezado->noresolucion = $dataInput['noresolucion'];
             $xml->Encabezado->prefijo = $dataInput['prefijo'];
             $xml->Encabezado->folio = $dataInput['folio'];
-            $xml->Encabezado->nciddoc = $xml->Encabezado->prefijo.$dataInput['folio'];
+            $xml->Encabezado->nciddoc = $xml->Encabezado->prefijo . $dataInput['folio'];
             $xml->Encabezado->folioPOS = $dataInput['folioPOS'];
             $xml->Encabezado->checkid = $dataInput['checkid'];
             $xml->Encabezado->BrandId = $dataInput['BrandId'];

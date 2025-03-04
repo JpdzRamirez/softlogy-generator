@@ -119,16 +119,14 @@ class FacturaController extends Controller
         }
     }
 
-    public function remplazarFolios(Request $request)
+    public function remplazarDatos(Request $request)
     {
         // Validar el archivo
         $request->validate([
             'foliosPisados' => 'required|file|mimes:xlsx,xls',
-            'inicio' => 'required|integer',
-            'fin' => 'required|integer',
         ]);
     
-        $nuevoFolio = $request['inicio'];
+        //$nuevoFolio = $request['inicio'];
         $filasNoProcesadas = []; // Inicializamos el array para las filas no procesadas.
         $responses = []; // Almacena los responses como cadenas.
         $fileName = 'responses.txt'; // Nombre del archivo generado.
@@ -138,28 +136,28 @@ class FacturaController extends Controller
             // Cargar el archivo y leer la hoja principal
             $path = $request->file('foliosPisados')->getRealPath();
             $excel = IOFactory::load($path);
+            //solo leemos la hoja 1
             $hoja = $excel->getSheet(0);
             $filas = $hoja->getHighestRow(); // Obtenemos el total de filas
     
             // Verificar y procesar las filas
             if ($filas > 1) {
                 for ($i = 2; $i <= $filas; $i++) {
-                    if ($nuevoFolio > $request['fin']) {
-                        break; // Detenemos el proceso si alcanzamos el fin del rango
-                    }
-    
+                    // Celdas donde tomamos los nuevos datos para el xml
                     $dataInput = [
-                        'factura' => $hoja->getCell("L$i")->getValue() ?: '',
-                    ];
+                        'factura' => $hoja->getCell("A$i")->getValue() ?: '',
+                        'prefijo'=>$hoja->getCell("B$i")->getValue() ?: '',
+                        'folio'=>$hoja->getCell("C$i")->getValue() ?: '',
+                        'resolucion'=>$hoja->getCell("D$i")->getValue() ?: ''
+                    ];                
     
                     if (empty($dataInput['factura'])) {
                         // Si la celda está vacía, la agregamos a las filas no procesadas
                         $filasNoProcesadas[] = $i;
                     } else {
                         // Convertir la celda a XML y procesar                        
-                        $response = $this->xmlService->xmlCambiarFolio($dataInput['factura'], $nuevoFolio);
-                        $responses[] = $response; // Agregar el response al array con el número de fila
-                        $nuevoFolio++;
+                        $response = $this->xmlService->xmlCambiarDatos($dataInput);
+                        $responses[] = $response; // Agregar el response al array con el número de fila                        
                     }
                 }
     
