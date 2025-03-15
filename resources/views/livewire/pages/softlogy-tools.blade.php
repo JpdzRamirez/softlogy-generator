@@ -292,6 +292,12 @@
                         </div>
                         <form method="POST" action="{{route('remplazar.datos')}}" enctype="multipart/form-data">
                             @csrf
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="on" name="isBase64" id="isBase64">
+                                <label class="form-check-label" for="isBase64">
+                                  ¿Es Base 64?
+                                </label>
+                            </div>
                             <div class="mb-3">
                                 <label for="foliosPisados" class="form-label">Archivo Excel Formato- XlsX</label>
                                 <input class="form-control" required name="foliosPisados" type="file" id="foliosPisados">

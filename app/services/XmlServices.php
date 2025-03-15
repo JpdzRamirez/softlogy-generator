@@ -155,9 +155,11 @@ class XmlServices implements XmlServicesInterface
             }
 
             // Cambiamos los datos
-            $xml->Encabezado->prefijo = $newData['prefijo'];
-            $xml->Encabezado->folio = $newData['folio'];
-            $xml->Encabezado->noresolucion = $newData['resolucion'];
+            if($newData['type']==2){
+                $xml->Encabezado->prefijo = $newData['prefijo'];
+                $xml->Encabezado->noresolucion = $newData['resolucion'];
+            }            
+            $xml->Encabezado->folio = $newData['folio'];            
             $xml->Encabezado->nciddoc = $xml->Encabezado->prefijo . $xml->Encabezado->folio;
             $fecha = now()->format('Y-m-d');
             $hora = now()->subHour()->format('H:i:s');

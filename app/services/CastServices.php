@@ -77,4 +77,17 @@ class CastServices implements CastServicesInterface
         }
         return $dateObject;
     }
+
+    public function undecodeBase64(string $base64): string
+    {
+        // Decodifica la cadena Base64
+        $decodedString = base64_decode($base64);
+    
+        // Verifica si la decodificación fue exitosa
+        if ($decodedString === false) {
+            return '';
+        }
+    
+        return $decodedString;
+    }
 }

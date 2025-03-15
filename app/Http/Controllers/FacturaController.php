@@ -7,6 +7,7 @@ use App\Http\Requests\ValidateXMLRequest;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 use App\Contracts\XmlServicesInterface;
+use App\Contracts\CastServicesInterface;
 
 use SimpleXMLElement;
 use Exception;
@@ -15,11 +16,13 @@ class FacturaController extends Controller
 {
 
     protected $xmlService;
+    protected $castService;
 
     // Inyección de dependencias
-    public function __construct(XmlServicesInterface $xmlService)
+    public function __construct(XmlServicesInterface $xmlService,CastServicesInterface $castService )
     {
         $this->xmlService = $xmlService; // Aquí se inyecta la implementación de la interfaz
+        $this->castService = $castService;
     }
 
     public function obtenerCUFES_Folios(Request $request)
@@ -124,6 +127,7 @@ class FacturaController extends Controller
         // Validar el archivo
         $request->validate([
             'foliosPisados' => 'required|file|mimes:xlsx,xls',
+            'isBase64' => 'nullable|string|in:on'
         ]);
     
         //$nuevoFolio = $request['inicio'];
@@ -144,13 +148,22 @@ class FacturaController extends Controller
             if ($filas > 1) {
                 for ($i = 2; $i <= $filas; $i++) {
                     // Celdas donde tomamos los nuevos datos para el xml
-                    $dataInput = [
-                        'factura' => $hoja->getCell("A$i")->getValue() ?: '',
-                        'prefijo'=>$hoja->getCell("B$i")->getValue() ?: '',
-                        'folio'=>$hoja->getCell("C$i")->getValue() ?: '',
-                        'resolucion'=>$hoja->getCell("D$i")->getValue() ?: ''
-                    ];                
-    
+                    if($request->boolean('isBase64')){
+                        $facturaDecoded=$this->castService->undecodeBase64($hoja->getCell("A$i")->getValue());                        
+                        $dataInput = [
+                            'factura' => $facturaDecoded,
+                            'folio'=>$hoja->getCell("B$i")->getValue() ?: '',
+                            'type' => 1
+                        ];  
+                    }else{
+                        $dataInput = [
+                            'factura' => $hoja->getCell("A$i")->getValue() ?: '',
+                            'prefijo'=>$hoja->getCell("B$i")->getValue() ?: '',
+                            'folio'=>$hoja->getCell("C$i")->getValue() ?: '',
+                            'resolucion'=>$hoja->getCell("D$i")->getValue() ?: '',
+                            'type' => 2
+                        ];   
+                    }             
                     if (empty($dataInput['factura'])) {
                         // Si la celda está vacía, la agregamos a las filas no procesadas
                         $filasNoProcesadas[] = $i;
