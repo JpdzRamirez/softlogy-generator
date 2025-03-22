@@ -34,5 +34,10 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'gateway' => [
+        'url' => env('GATEWAY_URL', 'https://default-api.com'),
+        'autorization'=> env('AUTHORIZATION', ''),
+        'app-token'=> env('GATEWAY_APP_TOKEN', ''),
+    ]
 
 ];

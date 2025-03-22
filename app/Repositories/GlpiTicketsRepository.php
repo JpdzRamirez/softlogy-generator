@@ -523,9 +523,16 @@ class GlpiTicketsRepository
     }
 
     public function getAllTicketFollowUps(int $ticketId){
-        return GlpiTickets::where('id', $ticketId) // Buscar el Ticket específico
-        ->with(['itilfollowups.documents', 'itilfollowups.user']) // Cargar followups y sus documentos
-        ->firstOrFail()
-        ->itilfollowups; // Obtener solo los followups asociados     
+        return GlpiTickets::where('id', $ticketId)
+            ->with([
+                'itilfollowups' => function ($query) {
+                    $query->whereNotIn('itemtype', ['Change', 'Problem']); // Filtrar en la tabla correcta
+                },
+                'itilfollowups.documents',
+                'itilfollowups.user'
+            ])
+            ->firstOrFail()
+            ->itilfollowups; // Obtener solo los followups asociados     
     }
+    
 }
