@@ -156,8 +156,12 @@ class XmlServices implements XmlServicesInterface
 
             // Cambiamos los datos
             if($newData['type']==2){
-                $xml->Encabezado->prefijo = $newData['prefijo'];
-                $xml->Encabezado->noresolucion = $newData['resolucion'];
+                if(!empty($newData['prefijo'])){
+                    $xml->Encabezado->prefijo = $newData['prefijo'];
+                }
+                if(!empty($newData['resolucion'])){
+                    $xml->Encabezado->prefijo = $newData['resolucion'];
+                }
             }            
             $xml->Encabezado->folio = $newData['folio'];            
             $xml->Encabezado->nciddoc = $xml->Encabezado->prefijo . $xml->Encabezado->folio;
