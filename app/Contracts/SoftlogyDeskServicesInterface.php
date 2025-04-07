@@ -5,5 +5,7 @@ namespace App\Contracts;
 interface SoftlogyDeskServicesInterface
 {
     
-    public function getAuthToken();
+    public function getSessionToken();
+
+    public function reportStatusStore(array $data);
 }

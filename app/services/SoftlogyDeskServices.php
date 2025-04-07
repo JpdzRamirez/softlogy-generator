@@ -25,24 +25,26 @@ class SoftlogyDeskServices implements SoftlogyDeskServicesInterface
         $this->gatewayServices=$gatewayServices;
     }
     
-    public function getAuthToken()
+    public function getSessionToken()
     {
         $autorization=rtrim(config('services.gateway.autorization'));
-        // Sobrescribir headers en esta petición específica
-        $headers = ['Authorization' => $autorization];
+        // 
+        $headers = [
+            'Authorization' => "Basic $autorization",
+            'App-Token' =>  rtrim(config('services.gateway.app-token'))
+        ];
 
         $endpoint="initSession";
 
         $session_token = $this->gatewayServices->request('GET', $endpoint, $headers);
 
-        return response()->json($session_token);
+        return $session_token;
 
     }
 
-    public function getTicket(int $id)
-    {
-
-
+    public function reportStatusStore(array $data)
+    {        
+        return response()->json($data);
     }
 
 }

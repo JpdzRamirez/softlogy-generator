@@ -17,8 +17,7 @@ class Gateway
         $this->baseUrl = rtrim(config('services.gateway.url'), '/'); // Eliminar barra final
         $this->defaultHeaders = [
             'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'App-Token' =>  rtrim(config('services.gateway.app-token')) // Token opcional en .env
+            'Content-Type' => 'application/json',            
         ];
         $this->client = new Client([
             'timeout' => 10.0, // Timeout opcional

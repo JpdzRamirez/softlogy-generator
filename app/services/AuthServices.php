@@ -96,7 +96,7 @@ class AuthServices implements AuthServicesInterface
             if($data['plataform'] == "WEB"){
                 $expiration = isset($data['session']) ? (bool)$data['session'] : false;
             }else{
-                $expiration = $data['session'] ? null : now()->addMinutes(config('sanctum.expiration', 60));
+                $expiration = now()->addMinutes((int) config('sanctum.expiration', 1));
             }
             
 
