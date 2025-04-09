@@ -9,5 +9,7 @@ interface XmlServicesInterface
     public function xmlCambiarDatos(array $xml);
 
     public function xmlGenerar($xmlData);
+
+    public function xmlAplicarDescuentos(String $factura);
     
 }

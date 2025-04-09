@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Contracts\XmlServicesInterface;
 use App\Models\Paises;
 
+use DOMDocument;
+use DOMXPath;
 use Exception;
 
 class XmlServices implements XmlServicesInterface
@@ -155,15 +157,15 @@ class XmlServices implements XmlServicesInterface
             }
 
             // Cambiamos los datos
-            if($newData['type']==2){
-                if(!empty($newData['prefijo'])){
+            if ($newData['type'] == 2) {
+                if (!empty($newData['prefijo'])) {
                     $xml->Encabezado->prefijo = $newData['prefijo'];
                 }
-                if(!empty($newData['resolucion'])){
+                if (!empty($newData['resolucion'])) {
                     $xml->Encabezado->prefijo = $newData['resolucion'];
                 }
-            }            
-            $xml->Encabezado->folio = $newData['folio'];            
+            }
+            $xml->Encabezado->folio = $newData['folio'];
             $xml->Encabezado->nciddoc = $xml->Encabezado->prefijo . $xml->Encabezado->folio;
             $fecha = now()->format('Y-m-d');
             $hora = now()->subHour()->format('H:i:s');
@@ -218,6 +220,162 @@ class XmlServices implements XmlServicesInterface
 
             // Retornar el XML como texto sin la declaración
             return $xmlString;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function xmlAplicarDescuentos(String $factura)
+    {
+        try {
+            // Limpiar la cadena de entrada
+            $rowText = str_replace(';NULL;', '', $factura); // Eliminar ;NULL;
+            $rowText = str_replace(';', '', $rowText);
+
+            // Variables para descuentos
+            $FCARCH30 = false;
+            $productoMayorValor = 0;
+            $idProductoMayorValor = '';
+            $importeDescuento = 0;
+            $nodesToRemove = [];
+            $productoMayorValorNode = null;
+            $impuestoLineaOriginal = 0;
+            $baseImpuestoGeneral = 0;
+
+            // Asegurar que el XML se procese correctamente
+            $rowText = htmlspecialchars_decode($rowText, ENT_QUOTES); // Decodificar caracteres especiales
+
+            // Convertir a UTF-8 si no lo está
+            $rowText = mb_convert_encoding($rowText, 'UTF-8', 'auto');
+
+            // Cargar el XML
+            $xml = simplexml_load_string($rowText, 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_ERR_NONE | LIBXML_NOCDATA);
+
+            if ($xml === false) {
+                return [
+                    'status' => 0,
+                    'xml' => 'Error al cargar el XML'
+                ];
+            }
+
+
+            // 1. Primera pasada: Buscar FCARCH30 e identificar producto de mayor valor
+            foreach ($xml->Detalle->Det as $detalle) {
+                // Buscar descuento FCARCH30
+                if (isset($detalle->identificacionproductos) && str_contains((string)$detalle->identificacionproductos, 'FCARCH')) {
+                    $FCARCH30 = true;
+                    $importeDescuento = abs((float)$detalle->importe); // Valor absoluto del descuento
+                    $impuestoEnLineaDescuento= (float)$detalle->impuestolinea;
+                    $importeDescuento= $importeDescuento - $impuestoEnLineaDescuento;
+                    $nodesToRemove[] = $detalle;
+                }
+
+                // Identificar producto de mayor valor (excluyendo posibles descuentos)
+                if ((float)$detalle->importe > 0 && $productoMayorValor < (float)$detalle->importe) {
+                    $idProductoMayorValor = (string)$detalle->idConcepto;
+                    $productoMayorValor = (float)$detalle->importe;
+                    $productoMayorValorNode = $detalle;
+                    $impuestoLineaOriginal = (float)$detalle->impuestolinea;
+                }
+            }
+
+            // 2. Aplicar cambios si hay descuento FCARCH30
+            if ($FCARCH30 && $productoMayorValorNode !== null) {
+                // 2.1. Eliminar nodos de descuentos
+                foreach ($nodesToRemove as $node) {
+                    $dom = dom_import_simplexml($node);
+                    $dom->parentNode->removeChild($dom);
+                }
+
+                // 2.2. Recalcular valores del producto de mayor valor
+                $nuevoImporte = $productoMayorValor - $importeDescuento;
+                $sumaParcial = $nuevoImporte + $impuestoLineaOriginal;
+                $baseImponible = $sumaParcial / 1.08;
+                $nuevoImpuesto = ($baseImponible * 8) / 100;
+
+                // Actualizar valores en el XML
+                $productoMayorValorNode->importe = number_format($baseImponible, 2, '.', '');
+                $productoMayorValorNode->baseimpuestos = number_format($baseImponible, 2, '.', '');
+                $productoMayorValorNode->impuestolinea = number_format($nuevoImpuesto, 2, '.', '');
+
+                // 2.3. Agregar sección de descuentos inmediatamente después de Detalle
+                // Convertir a DOM para manipulación de posición
+                $dom = new DOMDocument('1.0', 'UTF-8');
+                $dom->loadXML($xml->asXML());
+
+                $xpath = new DOMXPath($dom);
+                $descuentosLineaNodes = $xpath->query('//DescuentosLinea');
+
+                if ($descuentosLineaNodes->length === 0) {
+                    $descuentosNode = $dom->createElement('DescuentosLinea');
+                    $detDesc = $dom->createElement('detDesc');
+
+                    $detDesc->appendChild($dom->createElement('idlineaDescuento', $idProductoMayorValor));
+                    $detDesc->appendChild($dom->createElement('basedescuentodet', number_format($importeDescuento, 2, '.', '')));
+                    $detDesc->appendChild($dom->createElement('importedescuentodet', number_format($importeDescuento, 2, '.', '')));
+                    $detDesc->appendChild($dom->createElement('razondescuentodet', 'DESCUENTO'));
+                    $detDesc->appendChild($dom->createElement('porcentajedescdet', '100'));
+
+                    $descuentosNode->appendChild($detDesc);
+
+                    $detalleNodes = $xpath->query('//Detalle');
+                    if ($detalleNodes->length > 0) {
+                        $detalleNode = $detalleNodes->item(0);
+                        $detalleNode->parentNode->insertBefore($descuentosNode, $detalleNode->nextSibling);
+                    } else {
+                        $dom->documentElement->appendChild($descuentosNode);
+                    }
+                } else {
+                    $detDesc = $dom->createElement('detDesc');
+                    $detDesc->appendChild($dom->createElement('idlineaDescuento', $idProductoMayorValor));
+                    $detDesc->appendChild($dom->createElement('basedescuentodet', number_format($importeDescuento, 2, '.', '')));
+                    $detDesc->appendChild($dom->createElement('importedescuentodet', number_format($importeDescuento, 2, '.', '')));
+                    $detDesc->appendChild($dom->createElement('razondescuentodet', 'DESCUENTO'));
+                    $detDesc->appendChild($dom->createElement('porcentajedescdet', '100'));
+
+                    $descuentosLineaNodes->item(0)->appendChild($detDesc);
+                }
+
+                // Volver a SimpleXML para continuar con el procesamiento
+                $xml = simplexml_load_string($dom->saveXML());
+
+                // Recalculamos etiquetas generales
+                $baseImpuestoGeneral = $xml->Encabezado->totalsindescuento;
+                $nuevoTotalBaseImpuesto = ($baseImpuestoGeneral / 1.08);
+                $nuevoTotalImpuestoGeneral = ($nuevoTotalBaseImpuesto * 8) / 100;
+
+                // Modificamos los encabezados
+                $xml->Encabezado->baseimpuesto = number_format($nuevoTotalBaseImpuesto, 2, '.', '');
+                $xml->Encabezado->subtotal = number_format($nuevoTotalBaseImpuesto, 2, '.', '');
+                $xml->Encabezado->totalimpuestos = number_format($nuevoTotalImpuestoGeneral, 2, '.', '');
+
+                $xml->Encabezado->extra11 = number_format($importeDescuento, 2, '.', '');
+
+                // Verificar si existen los nodos de impuestos antes de modificarlos
+                if (isset($xml->Impuestos) && isset($xml->Impuestos->Imp)) {
+                    $xml->Impuestos->Imp->baseimpuestos = number_format($nuevoTotalBaseImpuesto, 2, '.', '');
+                    $xml->Impuestos->Imp->importe = number_format($nuevoTotalImpuestoGeneral, 2, '.', '');
+                }
+
+                // Cambiamos los datos de fechas para envío                              
+                $fecha = now()->format('Y-m-d');
+                $hora = now()->subHour()->format('H:i:s');
+                $xml->Encabezado->fecha = $fecha;
+                $xml->Encabezado->fechavencimiento = $fecha;
+                $xml->Encabezado->hora = $hora;
+            }
+
+            // Convertir el XML a cadena
+            $xmlString = $xml->asXML();
+
+            // Eliminar la primera línea (declaración XML) si existe
+            $xmlString = preg_replace('/^<\?xml.*\?>\s*/', '', $xmlString);
+
+            // Retornar el XML como texto sin la declaración
+            return [
+                'xml' => $xmlString,
+                'status' => $FCARCH30
+            ];
         } catch (Exception $e) {
             throw $e;
         }

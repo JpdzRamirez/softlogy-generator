@@ -59,7 +59,6 @@
             <section class="modal-errors-container-body rtf">
                 <h2 style="text-align:center;">¡Se registraron los siguientes resultados!</h2>
                 <hr>
-
                 {{-- Mensajes de éxito --}}
                 @if (session('mensage_session'))
                     <div class="alert alert-success d-flex align-items-center" style="word-wrap: break-word;" role="alert">
@@ -100,8 +99,8 @@
 
                 {{-- Procesos adicionales --}}
                 @if (!empty(session('response_process')))
-                    <div class="alert alert-success" style="word-wrap: break-word;">
-                        <h4>Procesos adicionales:</h4>
+                    <div class="alert alert-warning" style="word-wrap: break-word;">
+                        <h4>Lista de procesos adicionales:</h4>
                         <ul>
                             @foreach (session('response_process') as $fila)
                                 <li>Fila {{ $fila }}</li>
@@ -111,11 +110,20 @@
                     <hr>
                 @endif
 
-                {{-- Archivo procesado --}}
-                @if (session('response_file'))
-                    <a href="{{ route('descargar.pisados', session('response_file')) }}" class="btn btn-info">
-                        Descargar archivo procesado
-                    </a>
+                {{-- Archivo procesado --}}                
+                @if (session('response_file_ok'))
+                    <div class="d-flex flex-column justify-center">
+                        <a style="color: #fff" href="{{ route('descargar.pisados', session('response_file_ok')) }}" class="btn btn-info">
+                            Descargar archivo de resultados 
+                        </a>
+                    </div>
+                @endif
+                @if (session('response_file_failed'))
+                    <div class="d-flex flex-column justify-center">
+                        <a style="color: #fff" href="{{ route('descargar.pisados', session('response_file_failed')) }}" class="btn btn-info">
+                            Descargar resultado de errores
+                        </a>
+                    </div>                    
                 @endif
             </section>
             <footer class="modal-errors-container-footer">

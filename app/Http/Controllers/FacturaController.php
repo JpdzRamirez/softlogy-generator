@@ -249,5 +249,70 @@ class FacturaController extends Controller
                     return redirect()->back()->withErrors(['error' => $e->getMessage()]);
                 }
     }
+
+    public function generarXMLSDescuentos(Request $request)
+    {
+                // Validar el archivo
+                $request->validate([
+                    'listadoXML' => 'required|file|mimes:xlsx,xls',                    
+                ]);
+            
+                $filasNoProcesadas = []; // Inicializamos el array para las filas no procesadas.
+                $responsesOk = []; // XML generados correctamente.
+                $responsesFailed = []; // Facturas no procesadas.
+                // Definir nombres y rutas de los archivos
+                $fileOk = 'responses_ok.txt';
+                $fileFailed = 'responses_failed.txt';
+                $filePathOk = storage_path("app/public/{$fileOk}");
+                $filePathFailed = storage_path("app/public/{$fileFailed}");
+            
+                try {
+                    // Cargar el archivo y leer la hoja principal
+                    $path = $request->file('listadoXML')->getRealPath();
+                    $excel = IOFactory::load($path);
+                    $hoja = $excel->getSheet(0);
+                    $filas = $hoja->getHighestRow(); // Obtenemos el total de filas
+            
+                    // Verificar y procesar las filas
+                    if ($filas >= 1) {
+                        for ($i = 2; $i <= $filas; $i++) {
+                            $factura = $hoja->getCell("A$i")->getValue() ?: '';
+            
+                            if (empty($factura)) {
+                                // Si la celda está vacía, agregamos la línea a "fallidos"
+                                $responsesFailed[] = "Línea {$i}: Factura vacía o incompleta";
+                            } else {
+                                try {
+                                    // Convertir la celda a XML y procesar                        
+                                    $response = $this->xmlService->xmlAplicarDescuentos($factura);
+                                    if($response['status']===true){
+                                        $responsesOk[] = $response['xml'];
+                                    }else{
+                                        $responsesFailed[] =  $response['xml'];
+                                    }
+                                    
+                                } catch (Exception $e) {
+                                    // Si hay un error en el proceso de XML, lo registramos en fallidos
+                                    throw $e;
+                                }
+                            }
+                        // Crear el archivo TXT con los responses
+                        // Guardar los archivos de respuestas
+                        file_put_contents($filePathOk, implode("", $responsesOk));
+                        file_put_contents($filePathFailed, implode("", $responsesFailed));
+                    }
+                }
+                    // Redirigir con mensajes en la sesión
+                    return redirect()->route('back.tools')->with([
+                        'response_process' => $filasNoProcesadas,
+                        'mensage_session' => 'El archivo ha sido procesado correctamente.',
+                        'response_file_ok' => $fileOk,
+                        'response_file_failed' => $fileFailed,
+                    ]);
+                }catch(Exception $e){
+                    // En caso de error, redirigir con mensaje de error
+                    return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+                }
+    }
     
 }

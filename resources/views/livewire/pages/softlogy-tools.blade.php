@@ -73,7 +73,7 @@
                 </div><!-- End Service Item -->
 
             </div>
-            {{-- Cergue de clientes HelpDesk--}}
+            {{-- Cergue de clientes HelpDesk --}}
             <div class="col gy-4">
 
                 <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
@@ -83,8 +83,9 @@
                         <p>Su uso está pensado para la creación de usuarios para puntos de ventas de forma masiva
                         </p>
                         <div class="d-flex flex-column align-items-center g-1" style="margin-bottom: 4em">
-                            <a href="{{ route('descargar.formatos', ['tipo' => 'cargue-helpdesk']) }}" style="position: relative"
-                                class="d-flex flex-column align-items-center">Descargar formato Excel
+                            <a href="{{ route('descargar.formatos', ['tipo' => 'cargue-helpdesk']) }}"
+                                style="position: relative" class="d-flex flex-column align-items-center">Descargar
+                                formato Excel
                                 <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDlhaWNjaWEwdmFla2tpdnYwdXE1amF4b2RzNmV2ZDZ5NTRsZ3F4dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/24G0F8lQWYMb6jD47X/giphy.webp"
                                     alt="Click-Here" style="width: 5em; position: absolute; top:1em;"></a>
 
@@ -271,7 +272,7 @@
                 </div><!-- End Service Item -->
 
             </div>
-            {{-- End Refacturación--}}
+            {{-- End Refacturación --}}
 
             {{-- Remplzar folios facturas --}}
             <div class="col gy-4">
@@ -280,27 +281,31 @@
                     <div class="service-item position-relative">
                         <div class="icon"><i class="fa-solid fa-user"></i></div>
                         <h4>Remplazar datos de facturas pisadas</h4>
-                        <p>Su uso está pensado para la Solucionar de forma masiva el cambio de datos en facturas electrónicas
+                        <p>Su uso está pensado para la Solucionar de forma masiva el cambio de datos en facturas
+                            electrónicas
                         </p>
                         <code>Las celdas deben ser asignadas en el orden del formato especializado</code>
                         <div class="d-flex flex-column align-items-center g-1" style="margin-bottom: 4em">
-                            <a href="{{ route('descargar.formatos', ['tipo' => 'cargue-facturas']) }}" style="position: relative"
-                                class="d-flex flex-column align-items-center">Descargar formato Excel
+                            <a href="{{ route('descargar.formatos', ['tipo' => 'cargue-facturas']) }}"
+                                style="position: relative" class="d-flex flex-column align-items-center">Descargar
+                                formato Excel
                                 <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDlhaWNjaWEwdmFla2tpdnYwdXE1amF4b2RzNmV2ZDZ5NTRsZ3F4dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/24G0F8lQWYMb6jD47X/giphy.webp"
                                     alt="Click-Here" style="width: 5em; position: absolute; top:1em;"></a>
 
                         </div>
-                        <form method="POST" action="{{route('remplazar.datos')}}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('remplazar.datos') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="on" name="isBase64" id="isBase64">
+                                <input class="form-check-input" type="checkbox" value="on" name="isBase64"
+                                    id="isBase64">
                                 <label class="form-check-label" for="isBase64">
-                                  ¿Es Base 64?
+                                    ¿Es Base 64?
                                 </label>
                             </div>
                             <div class="mb-3">
                                 <label for="foliosPisados" class="form-label">Archivo Excel Formato- XlsX</label>
-                                <input class="form-control" required name="foliosPisados" type="file" id="foliosPisados">
+                                <input class="form-control" required name="foliosPisados" type="file"
+                                    id="foliosPisados">
                             </div>
                             <button type="submit" style="background: #27303F; margin:auto;"
                                 class="btn btn-primary mb-3">Procesar XlsX</button>
@@ -308,38 +313,64 @@
                     </div>
                 </div><!-- End Service Item -->
 
-             {{-- Cambiar generar facturas en ceros --}}
-            <div class="col gy-4">
+                {{-- Cambiar generar facturas en ceros --}}
+                <div class="col gy-4">
 
-                <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
-                    <div class="service-item position-relative">
-                        <div class="icon"><i class="fa-solid fa-user"></i></div>
-                        <h4>Generar XMLS Facturas en ceros</h4>
-                        <p>Su uso está pensado para la generar facturas electrónicas de forma masiva, con datos por defecto
-                        </p>
-                        <form method="POST" action="{{route('generar.xmls')}}" enctype="multipart/form-data">
-                            @csrf
-                            <div class="col-auto my-1">
-                                <label class="mr-sm-2" for="brandIdSelect">Empresa</label>
-                                <select required name="brandIdSelect" class="custom-select mr-sm-2"
-                                    id="brandIdSelect">
-                                    <option value="" selected>Seleccione Empresa...</option>
-                                    <option value="1">Papa Johns</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="listadoFolios" class="form-label">Archivo Excel Formato- XlsX</label>
-                                <input class="form-control" required name="listadoFolios" type="file" id="listadoFolios">
-                            </div>
-                            <button type="submit" style="background: #27303F; margin:auto;"
-                                class="btn btn-primary mb-3">Generar Facturas</button>
-                        </form>
-                    </div>
-                </div><!-- End Service Item -->
+                    <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
+                        <div class="service-item position-relative">
+                            <div class="icon"><i class="fa-solid fa-user"></i></div>
+                            <h4>Generar XMLS Facturas en ceros</h4>
+                            <p>Su uso está pensado para la generar facturas electrónicas de forma masiva, con datos por
+                                defecto
+                            </p>
+                            <form method="POST" action="{{ route('generar.xmls') }}" enctype="multipart/form-data">
+                                @csrf
+                                <div class="col-auto my-1">
+                                    <label class="mr-sm-2" for="brandIdSelect">Empresa</label>
+                                    <select required name="brandIdSelect" class="custom-select mr-sm-2"
+                                        id="brandIdSelect">
+                                        <option value="" selected>Seleccione Empresa...</option>
+                                        <option value="1">Papa Johns</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="listadoFolios" class="form-label">Archivo Excel Formato- XlsX</label>
+                                    <input class="form-control" required name="listadoFolios" type="file"
+                                        id="listadoFolios">
+                                </div>
+                                <button type="submit" style="background: #27303F; margin:auto;"
+                                    class="btn btn-primary mb-3">Generar Facturas</button>
+                            </form>
+                        </div>
+                    </div><!-- End Service Item -->
+
+                </div>
+
+                {{-- Cambiar Aplicar descuentos ALSEA --}}
+                <div class="col gy-4">
+
+                    <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
+                        <div class="service-item position-relative">
+                            <div class="icon"><i class="fa-solid fa-user"></i></div>
+                            <h4>Generar XMLS Facturas con descuentos correctos</h4>
+                            <p>Su uso está pensado para la generar descuentos que se inventó alsea
+                            </p>
+                            <form method="POST" action="{{ route('generar.descuentos') }}" enctype="multipart/form-data">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="listadoXML" class="form-label">Archivo Excel Formato- XlsX</label>
+                                    <input class="form-control" required name="listadoXML" type="file"
+                                        id="listadoXML">
+                                </div>
+                                <button type="submit" style="background: #27303F; margin:auto;"
+                                    class="btn btn-primary mb-3">Generar Descuentos <i class="fa-solid fa-file-invoice"></i></button>
+                            </form>
+                        </div>
+                    </div><!-- End Service Item -->
+
+                </div>
 
             </div>
-
-        </div>
 
     </section><!-- /Featured Services Section -->
 
@@ -415,32 +446,32 @@
             </div>
         </div>
     </section><!-- /About Section -->
-          <!-- Modal Form-AdminUsers -->
-          <div class="modal fade" id="adminUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-          aria-labelledby="adminUserModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="adminUserModalLabel"><i style="color:#33589F"
-                              class="fa-solid fa-circle-exclamation"></i> Aceso Restringido</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <form id="adminFormModal">
-                      <div class="modal-body">
-                          <div class="mb-3">
-                              <label for="adminPassword" class="form-label">Contraseña de Administrador</label>
-                              <input type="password" autocomplete="new-password" class="form-control"
-                                  id="adminPassword" placeholder="Contraseña">
-                          </div>
-                      </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                          <button type="button" id="submitAdminPassword" class="btn btn-primary">Enviar</button>
-                      </div>
-                  </form>
-              </div>
-          </div>
-      </div>
+    <!-- Modal Form-AdminUsers -->
+    <div class="modal fade" id="adminUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="adminUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="adminUserModalLabel"><i style="color:#33589F"
+                            class="fa-solid fa-circle-exclamation"></i> Aceso Restringido</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="adminFormModal">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="adminPassword" class="form-label">Contraseña de Administrador</label>
+                            <input type="password" autocomplete="new-password" class="form-control"
+                                id="adminPassword" placeholder="Contraseña">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" id="submitAdminPassword" class="btn btn-primary">Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 @push('scripts')
     @routes
