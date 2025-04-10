@@ -8,4 +8,5 @@ interface SoftlogyDeskServicesInterface
     public function getSessionToken();
 
     public function reportStatusStore(array $data);
+    
 }

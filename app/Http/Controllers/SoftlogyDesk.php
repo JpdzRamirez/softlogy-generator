@@ -29,6 +29,11 @@ class SoftlogyDesk extends Controller
         return $this->softogyAuthServices->Authenticate($data);
     }
 
+    public function makeEncriptCode(Request $request){
+        $name = $request->input('name');
+        return $this->softogyAuthServices->makeBycript($name);
+    }
+
     public function reportStatusStore(Request $request){
         $data = $request->all();
         return $this->softogyservices->reportStatusStore($data);
