@@ -26,12 +26,21 @@ class SoftlogyDesk extends Controller
 
     public function sessionSoftlogyMicroToken(Request $request){
         $data = $request->all();
+        $data['username'] = $this->softogyAuthServices->makeDecrypt($data['username'])['desencripted'];
+        $data['password'] = $this->softogyAuthServices->makeDecrypt($data['password'])['desencripted'];
         return $this->softogyAuthServices->Authenticate($data);
     }
 
-    public function makeEncriptCode(Request $request){
-        $name = $request->input('name');
-        return $this->softogyAuthServices->makeBycript($name);
+    public function makeBycript(Request $request){
+        $text = $request->input('text');
+        $data=$this->softogyAuthServices->makeBycript($text);
+        return response()->json($data);
+    }
+
+    public function makeDecrypt(Request $request){
+        $text = $request->input('text');
+        $data=$this->softogyAuthServices->makeDecrypt($text);
+        return response()->json($data);
     }
 
     public function reportStatusStore(Request $request){
