@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('endPoint_solicitudes');
             $table->text('endPoint_online');
             $table->text('endPoint_RPD');
+            $table->unsignedBigInteger('sqlConfig_id');
             $table->timestamps();
 
             // Definir la clave foránea

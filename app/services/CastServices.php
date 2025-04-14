@@ -90,4 +90,25 @@ class CastServices implements CastServicesInterface
     
         return $decodedString;
     }
+    public function jsonNetFormatter(string $date): string|null
+    {
+        
+        // Extraer los milisegundos
+        preg_match('/\/Date\((\d+)\)\//', $date, $matches);
+
+        if (isset($matches[1])) {
+            $milliseconds = (int) $matches[1];
+            $date = Carbon::createFromTimestampMs($milliseconds);
+
+            return $date->toDateTimeString(); 
+        } 
+
+        return null;
+    }
+
+    public function decodeUnicode($string)
+    {
+        return json_decode('"' . $string . '"');
+    }
+
 }
