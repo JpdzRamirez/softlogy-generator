@@ -38,6 +38,12 @@ class User extends Authenticatable
     ];
 
     /**
+     * Relaciones que siempre deben cargarse.
+     *
+     * @var array
+    */
+    protected $with = ['entiti'];
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
@@ -61,6 +67,14 @@ class User extends Authenticatable
         $this->attributes['name'] = ucwords(strtolower($value)); // Convierte la primera letra de cada palabra a mayúscula
     }
 
+    /**
+     * Entitie name
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function entiti()
+    {
+        return $this->belongsTo(GlpiUserEntiti::class, 'entities_id');
+    }
     /**
      * Get the attributes that should be cast.
      *

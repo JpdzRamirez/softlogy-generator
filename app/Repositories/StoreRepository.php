@@ -41,12 +41,12 @@ class StoreRepository
     /**
      * Find a Store by their name.
      * 
-     * @param string $name
+     * @param string $id
      * @return Store
      */
-    public function findByName(string $name)
+    public function findByUser_Id(string $id)
     {
-        return $this->model->where('name', $name)->first();
+        return $this->model->where('user_id', $id)->first();
     }
 
     /**

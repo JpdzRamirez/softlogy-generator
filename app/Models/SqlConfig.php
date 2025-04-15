@@ -16,6 +16,7 @@ class SqlConfig extends Model
     */
     protected $fillable = [
         'nombre',
+        'store_id',
         'direccion',
         'telefono',
         'marca',

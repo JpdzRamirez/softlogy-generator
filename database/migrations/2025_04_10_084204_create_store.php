@@ -13,20 +13,24 @@ return new class extends Migration
     {
         Schema::create('store', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('entitie_id');
-            $table->string('entitie', 500);
-            $table->text('token_User');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('entities_id');            
+            $table->unsignedBigInteger('sqlConfig_id')->nullable();
+            $table->string('tienda');
+            $table->string('id_tienda');
+            $table->string('id_brand');
             $table->text('token_endpoint');
             $table->text('token_pass');
+            $table->text('token_user');
             $table->text('endPoint');
             $table->text('endPoint_solicitudes');
             $table->text('endPoint_online');
             $table->text('endPoint_RPD');
-            $table->unsignedBigInteger('sqlConfig_id');
             $table->timestamps();
 
             // Definir la clave foránea
             $table->foreign('entitie_id')->references('id_entitie')->on('store_config');
+            $table->foreign('user_id')->references('id')->on('users');
         });
         
     }
