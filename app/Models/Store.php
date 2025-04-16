@@ -17,11 +17,11 @@ class Store extends Model
      */
     protected $fillable = [
         'user_id',
-        'entitie_id',        
+        'entities_id',        
         'tienda',
         'id_tienda',
         'id_brand',
-        'token_User',
+        'token_user',
         'token_endpoint',
         'token_pass',
         'endPoint',
@@ -30,7 +30,7 @@ class Store extends Model
         'endPoint_RPD'        
     ];
 
-    protected $with = ['sqlConfig'];
+    protected $with = ['sqlConfigs'];
 
     
     /**

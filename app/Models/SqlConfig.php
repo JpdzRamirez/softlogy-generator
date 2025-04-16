@@ -15,7 +15,9 @@ class SqlConfig extends Model
      * @var list<string>
     */
     protected $fillable = [
+        'id_consecutivo',
         'nombre',
+        'razonSocial',
         'store_id',
         'direccion',
         'telefono',
@@ -29,5 +31,6 @@ class SqlConfig extends Model
         'Folio',
         'Tipo',
         'NumCertificado',
+        'diferencias',
     ];
 }

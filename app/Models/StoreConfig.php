@@ -16,7 +16,7 @@ class StoreConfig extends Model
      */
     protected $fillable = [
         'id_entitie',
-        'entitie',
+        'entities_id',
         'token_User',
         'token_endpoint',
         'token_pass',

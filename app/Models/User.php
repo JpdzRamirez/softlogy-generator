@@ -42,7 +42,7 @@ class User extends Authenticatable
      *
      * @var array
     */
-    protected $with = ['entiti'];
+    protected $with = ['entity'];
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -71,7 +71,7 @@ class User extends Authenticatable
      * Entitie name
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function entiti()
+    public function entity()
     {
         return $this->belongsTo(GlpiUserEntiti::class, 'entities_id');
     }

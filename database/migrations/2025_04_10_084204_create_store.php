@@ -28,8 +28,7 @@ return new class extends Migration
             $table->text('endPoint_RPD');
             $table->timestamps();
 
-            // Definir la clave foránea
-            $table->foreign('entitie_id')->references('id_entitie')->on('store_config');
+            // Definir la clave foránea            
             $table->foreign('user_id')->references('id')->on('users');
         });
         

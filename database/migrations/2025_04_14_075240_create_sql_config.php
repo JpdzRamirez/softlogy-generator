@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('sql_config', function (Blueprint $table) {
             $table->id();            
+            $table->integer('id_consecutivo' );
             $table->string('nombre', 500);
+            $table->unsignedBigInteger('store_id')->nullable();
+            $table->string('razonSocial', 500);
             $table->string('direccion', 500);
             $table->string('telefono', 500);
             $table->string('marca', 500);
@@ -26,6 +29,7 @@ return new class extends Migration
             $table->integer('Folio');
             $table->integer('Tipo');
             $table->text('NumCertificado');
+            $table->boolean('diferencias')->default(false);            
             $table->timestamps();
         });
     }

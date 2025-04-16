@@ -29,15 +29,19 @@ class SqlConfigRespository
     }
 
     /**
-     * Find a SqlConfig by their ID.
+     * Find a SqlConfig by their id.
      * 
      * @param int $id
-     * @return SqlConfig
+     * @return SqlConfig|null
      */
-    public function findById(int $id){
-        return $this->model->findOrFail($id);
+    public function findByIdPunto(int $id,int $store_id): ?SqlConfig
+    {
+        /** @var SqlConfig|null $record */
+        $record = $this->model->where('id_consecutivo',$id)
+        ->where('store_id',$store_id)
+        ->first();
+        return $record;
     }
-
     /**
      * Find a SqlConfig by their name.
      * 
