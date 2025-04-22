@@ -157,21 +157,35 @@ class XmlServices implements XmlServicesInterface
             }
 
             // Cambiamos los datos
-            if ($newData['type'] == 2) {
+            if ($newData['type'] == 2 || $newData['type'] == 3) {
                 if (!empty($newData['prefijo'])) {
                     $xml->Encabezado->prefijo = $newData['prefijo'];
                 }
                 if (!empty($newData['resolucion'])) {
-                    $xml->Encabezado->prefijo = $newData['resolucion'];
+                    $xml->Encabezado->noresolucion = $newData['resolucion'];
                 }
             }
+            if($newData['type']==3){
+                $xml->Encabezado->tipocomprobante = $newData['tipoComprobante'];
+                $xml->Encabezado->xslt = $newData['xslt'];
+            }
+
             $xml->Encabezado->folio = $newData['folio'];
             $xml->Encabezado->nciddoc = $xml->Encabezado->prefijo . $xml->Encabezado->folio;
-            $fecha = now()->format('Y-m-d');
-            $hora = now()->subHour()->format('H:i:s');
-            $xml->Encabezado->fecha = $fecha;
-            $xml->Encabezado->fechavencimiento = $fecha;
-            $xml->Encabezado->hora = $hora;
+
+            if($newData['type']==3){
+                $xml->Encabezado->fecha = $newData['fecha'];
+                $xml->Encabezado->fechavencimiento = $newData['fecha'];
+                $hora = now()->subHour()->format('H:i:s');
+                $xml->Encabezado->hora = $hora;
+            }else{
+                $fecha = now()->format('Y-m-d');
+                $hora = now()->subHour()->format('H:i:s');
+                $xml->Encabezado->fecha = $fecha;
+                $xml->Encabezado->fechavencimiento = $fecha;
+                $xml->Encabezado->hora = $hora;
+            }
+
 
             // Convertir el XML a cadena
             $xmlString = $xml->asXML();

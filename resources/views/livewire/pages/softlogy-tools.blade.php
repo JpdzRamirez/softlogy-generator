@@ -296,10 +296,15 @@
                         <form method="POST" action="{{ route('remplazar.datos') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="on" name="isBase64"
-                                    id="isBase64">
+                                <input class="form-check-input" type="radio" name="documentOption" id="isBase64" value="base64">
                                 <label class="form-check-label" for="isBase64">
                                     ¿Es Base 64?
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="documentOption" id="isContingency" value="contingency">
+                                <label class="form-check-label" for="isContingency">
+                                    ¿Es Contingencia?
                                 </label>
                             </div>
                             <div class="mb-3">

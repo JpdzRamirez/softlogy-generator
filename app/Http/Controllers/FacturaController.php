@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\ValidateXMLRequest;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 use App\Contracts\XmlServicesInterface;
 use App\Contracts\CastServicesInterface;
 
@@ -127,7 +127,7 @@ class FacturaController extends Controller
         // Validar el archivo
         $request->validate([
             'foliosPisados' => 'required|file|mimes:xlsx,xls',
-            'isBase64' => 'nullable|string|in:on'
+            'documentOption' => 'nullable|string|in:base64,contingency'
         ]);
     
         //$nuevoFolio = $request['inicio'];
@@ -148,14 +148,31 @@ class FacturaController extends Controller
             if ($filas > 1) {
                 for ($i = 2; $i <= $filas; $i++) {
                     // Celdas donde tomamos los nuevos datos para el xml
-                    if($request->boolean('isBase64')){
+                    if($request->input('documentOption') === 'base64'){
                         $facturaDecoded=$this->castService->undecodeBase64($hoja->getCell("A$i")->getValue());                        
                         $dataInput = [
                             'factura' => $facturaDecoded,
                             'folio'=>$hoja->getCell("B$i")->getValue() ?: '',
                             'type' => 1
                         ];  
-                    }else{
+                    }elseif($request->input('documentOption') === 'contingency'){
+                        $facturaDecoded=$this->castService->undecodeBase64($hoja->getCell("A$i")->getValue());
+
+                        $cellValue = $hoja->getCell("E$i")->getValue();
+                        $fecha = Date::isDateTime($hoja->getCell("E$i")) 
+                            ? Date::excelToDateTimeObject($cellValue)->format('Y-m-d') 
+                            : $cellValue;
+                        $dataInput = [
+                            'factura' => $facturaDecoded,
+                            'prefijo'=>$hoja->getCell("B$i")->getValue() ?: '',
+                            'folio'=>$hoja->getCell("C$i")->getValue() ?: '',
+                            'resolucion'=>$hoja->getCell("D$i")->getValue() ?: '',
+                            'fecha' => $fecha ?: '',
+                            'tipoComprobante' => $hoja->getCell("F$i")->getValue() ?: '',
+                            'xslt'=> $hoja->getCell("G$i")->getValue() ?: '',
+                            'type' => 3
+                        ];  
+                    } else{
                         $dataInput = [
                             'factura' => $hoja->getCell("A$i")->getValue() ?: '',
                             'prefijo'=>$hoja->getCell("B$i")->getValue() ?: '',
@@ -182,7 +199,7 @@ class FacturaController extends Controller
             return redirect()->route('back.tools')->with([
                 'response_process' => $filasNoProcesadas,
                 'mensage_session' => 'El archivo ha sido procesado correctamente.',
-                'response_file' => $fileName,
+                'response_file_ok' => $fileName,
             ]);
     
         } catch (Exception $e) {
@@ -240,9 +257,9 @@ class FacturaController extends Controller
                     }
                     // Redirigir con mensajes en la sesión
                     return redirect()->route('back.tools')->with([
-                        'response_process' => $filasNoProcesadas,
+                        'response_file_failed' => $filasNoProcesadas,
                         'mensage_session' => 'El archivo ha sido procesado correctamente.',
-                        'response_file' => $fileName,
+                        'response_file_ok' => $fileName,
                     ]);
                 }catch(Exception $e){
                     // En caso de error, redirigir con mensaje de error
