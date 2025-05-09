@@ -5,7 +5,9 @@ namespace App\Services;
 use Illuminate\Support\Facades\Storage;
 
 
+
 use App\Contracts\XmlServicesInterface;
+use App\Contracts\CastServicesInterface;
 use App\Models\Paises;
 
 use DOMDocument;
@@ -15,15 +17,18 @@ use Exception;
 class XmlServices implements XmlServicesInterface
 {
 
-    protected $xmlService;
+
+    protected $castServices;
 
     /**
      * Create a new class instance.
      */
-    public function __construct()
+    public function __construct(CastServicesInterface $castServices)
     {
-        //
+        $this->castServices = $castServices;
     }
+
+
 
     public function xmlProcessData($xml, $request)
     {
@@ -165,7 +170,7 @@ class XmlServices implements XmlServicesInterface
                     $xml->Encabezado->noresolucion = $newData['resolucion'];
                 }
             }
-            if($newData['type']==3){
+            if ($newData['type'] == 3) {
                 $xml->Encabezado->tipocomprobante = $newData['tipoComprobante'];
                 $xml->Encabezado->xslt = $newData['xslt'];
             }
@@ -173,12 +178,12 @@ class XmlServices implements XmlServicesInterface
             $xml->Encabezado->folio = $newData['folio'];
             $xml->Encabezado->nciddoc = $xml->Encabezado->prefijo . $xml->Encabezado->folio;
 
-            if($newData['type']==3){
+            if ($newData['type'] == 3) {
                 $xml->Encabezado->fecha = $newData['fecha'];
                 $xml->Encabezado->fechavencimiento = $newData['fecha'];
                 $hora = now()->subHour()->format('H:i:s');
                 $xml->Encabezado->hora = $hora;
-            }else{
+            } else {
                 $fecha = now()->format('Y-m-d');
                 $hora = now()->subHour()->format('H:i:s');
                 $xml->Encabezado->fecha = $fecha;
@@ -279,8 +284,8 @@ class XmlServices implements XmlServicesInterface
                 if (isset($detalle->identificacionproductos) && str_contains((string)$detalle->identificacionproductos, 'FCARCH')) {
                     $FCARCH30 = true;
                     $importeDescuento = abs((float)$detalle->importe); // Valor absoluto del descuento
-                    $impuestoEnLineaDescuento= (float)$detalle->impuestolinea;
-                    $importeDescuento= $importeDescuento - $impuestoEnLineaDescuento;
+                    $impuestoEnLineaDescuento = (float)$detalle->impuestolinea;
+                    $importeDescuento = $importeDescuento - $impuestoEnLineaDescuento;
                     $nodesToRemove[] = $detalle;
                 }
 
@@ -389,6 +394,185 @@ class XmlServices implements XmlServicesInterface
             return [
                 'xml' => $xmlString,
                 'status' => $FCARCH30
+            ];
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function xmlCrearNotaCredito(array $data)
+    {
+        try {
+            // Limpiar la cadena de entrada
+            $rowText = str_replace(';NULL;', '', $data['factura']); // Eliminar ;NULL;
+            $rowText = str_replace(';', '', $rowText);
+
+            // Asegurar que el XML se procese correctamente
+            $rowText = htmlspecialchars_decode($rowText, ENT_QUOTES); // Decodificar caracteres especiales
+
+            // Convertir a UTF-8 si no lo está
+            $rowText = mb_convert_encoding($rowText, 'UTF-8', 'auto');
+
+            // Cargar el XML
+            $xml = simplexml_load_string($rowText, 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_ERR_NONE | LIBXML_NOCDATA);
+
+            if ($xml === false) {
+                return [
+                    'status' => 0,
+                    'xml' => 'Error al cargar el XML'
+                ];
+            }
+            // 1. Primera pasada: Buscar FCARCH30 e identificar producto de mayor valor
+            // 2. Aplicar cambios si hay descuento FCARCH30                         
+            // 2.3. Agregar sección de descuentos inmediatamente después de Detalle
+            // Convertir a DOM para manipulación de posición
+            $dom = new DOMDocument('1.0', 'UTF-8');
+            $dom->loadXML($xml->asXML());
+
+            $xpath = new DOMXPath($dom);
+            $encabezadoNodes = $xpath->query('//Encabezado');
+
+            if ($encabezadoNodes->length > 0) {
+                /** @var DOMElement $encabezado */
+                $encabezado = $encabezadoNodes->item(0);
+                // Array con nuevos valores
+                $nuevosValores = [
+                    'tipoOpera' => '20',
+                    'totalAnticipo' => '0.00',
+                    'ncidfact' => $data['prefijo'] . $data['folio'],
+                    'nccod' => '2',
+                    'nciddoc' => $xml->Encabezado->nciddoc,
+                    'ncuuid' => $data['cufe'],
+                    'ncfecha' => $xml->Encabezado->fecha,
+                    'ndidfact' => '',
+                    'ndcod' => '',
+                    'ndiddoc' => '',
+                    'nduuid' => '',
+                    'ndfecha' => '',
+                ];
+
+                foreach ($nuevosValores as $tag => $valor) {
+                    $nodo = null;
+
+                    foreach ($encabezado->getElementsByTagName($tag) as $child) {
+                        $nodo = $child;
+                        break;
+                    }
+
+                    if ($nodo) {
+                        $nodo->nodeValue = $valor;
+                    } else {
+                        $nuevoNodo = $dom->createElement($tag, $valor);
+                        $encabezado->appendChild($nuevoNodo);
+                    }
+                }
+            }
+
+            if ($data['tipo'] == 2) {
+            }
+            // Volver a SimpleXML para continuar con el procesamiento
+            $xml = simplexml_load_string($dom->saveXML());
+
+            // Cambiamos los datos de fechas para envío                              
+            $fecha = now()->format('Y-m-d');
+            $hora = now()->subHour()->format('H:i:s');
+            $xml->Encabezado->fecha = $fecha;
+            $xml->Encabezado->fechavencimiento = $fecha;
+            $xml->Encabezado->hora = $hora;
+
+
+            // Convertir el XML a cadena
+            $xmlString = $xml->asXML();
+
+            // Eliminar la primera línea (declaración XML) si existe
+            $xmlString = preg_replace('/^<\?xml.*\?>\s*/', '', $xmlString);
+
+            // Retornar el XML como texto sin la declaración
+            return [
+                'xml' => $xmlString,
+                'status' => true
+            ];
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function xmlCrearContingencias(array $data)
+    {
+        try {
+            // Limpiar la cadena de entrada
+            $rowText = str_replace(';NULL;', '', $data['factura']); // Eliminar ;NULL;
+            $rowText = str_replace(';', '', $rowText);
+
+            // Asegurar que el XML se procese correctamente
+            $rowText = htmlspecialchars_decode($rowText, ENT_QUOTES); // Decodificar caracteres especiales
+
+            // Convertir a UTF-8 si no lo está
+            $rowText = mb_convert_encoding($rowText, 'UTF-8', 'auto');
+
+            // Cargar el XML
+            $xml = simplexml_load_string($rowText, 'SimpleXMLElement', LIBXML_NOERROR | LIBXML_ERR_NONE | LIBXML_NOCDATA);
+
+            if ($xml === false) {
+                return [
+                    'status' => 0,
+                    'xml' => 'Error al cargar el XML'
+                ];
+            }
+            if ($data['optionSelect'] == 1) {
+                $xml->Encabezado->tipocomprobante = '03';
+                $xml->Encabezado->noresolucion = $data['resolucion'];
+                $xml->Encabezado->prefijo = $data['prefijo'];
+                $xml->Encabezado->ncuuid = '';
+                $xml->Encabezado->nccod = 'C1';
+                $xml->Encabezado->tipoOpera = 10;
+                $xml->Encabezado->xslt = 7;
+            }
+            $xml->Encabezado->folio = $data['folio'];
+            $xml->Encabezado->nciddoc = '';
+            $xml->Encabezado->ncidfact =  $xml->Encabezado->prefijo . $data['folio'];
+            $xml->Encabezado->ncfecha = $data['fecha'];
+
+            if ($data['optionSelect'] == 2) {
+                $xml->Encabezado->subtotal = number_format((float)$data['base'], 2, '.', '');
+                $xml->Encabezado->baseimpuesto = number_format((float)$data['base'], 2, '.', '');
+                $xml->Encabezado->totalsindescuento = number_format((float)$data['total'], 2, '.', '');
+                $xml->Encabezado->total = number_format((float)$data['total'], 2, '.', '');
+                $xml->Encabezado->totalimpuestos = number_format((float)$data['impuesto'], 2, '.', '');
+
+                $xml->Encabezado->montoletra = $this->castServices->numeroALetras($data['total']);
+
+                $xml->Encabezado->extra7 = number_format((float)$data['impuesto'], 2, '.', '');
+
+                $xml->Impuestos->Imp->baseimpuestos = number_format((float)$data['base'], 2, '.', '');
+                $xml->Detalle->Det->impuestolinea = number_format((float)$data['impuesto'], 2, '.', '');
+                $xml->Detalle->Det->baseimpuestos = number_format((float)$data['base'], 2, '.', '');
+                $xml->Detalle->Det->baseimpuestos = number_format((float)$data['base'], 2, '.', '');
+                $xml->Detalle->Det->precioUnitario = number_format((float)$data['base'], 2, '.', '');
+                $xml->Detalle->Det->importe = number_format((float)$data['base'], 2, '.', '');
+
+
+                $xml->Impuestos->Imp->baseimpuestos = number_format((float)$data['base'], 2, '.', '');
+                $xml->Impuestos->Imp->importe = number_format((float)$data['impuesto'], 2, '.', '');
+            }
+
+            // Cambiamos los datos de fechas para envío                                              
+            $hora = now()->subHour()->format('H:i:s');
+            $xml->Encabezado->fecha = $data['fecha'];
+            $xml->Encabezado->fechavencimiento = $data['fecha'];
+            $xml->Encabezado->hora = $hora;
+
+
+            // Convertir el XML a cadena
+            $xmlString = $xml->asXML();
+
+            // Eliminar la primera línea (declaración XML) si existe
+            $xmlString = preg_replace('/^<\?xml.*\?>\s*/', '', $xmlString);
+
+            // Retornar el XML como texto sin la declaración
+            return [
+                'xml' => $xmlString,
+                'status' => true
             ];
         } catch (Exception $e) {
             throw $e;

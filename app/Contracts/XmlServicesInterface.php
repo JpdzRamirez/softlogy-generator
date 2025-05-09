@@ -11,5 +11,7 @@ interface XmlServicesInterface
     public function xmlGenerar($xmlData);
 
     public function xmlAplicarDescuentos(String $factura);
+    public function xmlCrearNotaCredito(array $factura);
+    public function xmlCrearContingencias(array $factura);
     
 }

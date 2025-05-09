@@ -154,6 +154,7 @@ class BackendController extends Controller
         $formatos = [
             'cargue-helpdesk' => 'documents/Formato_Cargue_v1.xlsx',
             'cargue-facturas' => 'documents/Formato_Cargue_Facturas.xlsx',
+            'crear-contingencias'=> 'documents/Formato_Crear_Contingencias.xlsx',
         ];
 
         // Verificar si el formato solicitado existe en la lista

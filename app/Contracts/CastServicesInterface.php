@@ -9,4 +9,5 @@ interface CastServicesInterface
     public function undecodeBase64(string $base64);
     public function jsonNetFormatter(string $date): string|null;
     public function decodeUnicode($string);
+    public function numeroALetras(string $numero);
 }

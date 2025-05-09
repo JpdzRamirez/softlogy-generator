@@ -8,6 +8,7 @@ use Exception;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Encoders\PngEncoder;
+use NumberFormatter;
 
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -109,6 +110,12 @@ class CastServices implements CastServicesInterface
     public function decodeUnicode($string)
     {
         return json_decode('"' . $string . '"');
+    }
+
+    function numeroALetras(string $numero) {
+        $formatter = new NumberFormatter("es", NumberFormatter::SPELLOUT);
+        $texto = strtoupper($formatter->format($numero));
+        return $texto . ' PESOS';
     }
 
 }
