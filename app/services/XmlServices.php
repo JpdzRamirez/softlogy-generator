@@ -467,11 +467,21 @@ class XmlServices implements XmlServicesInterface
                     }
                 }
             }
+            // Volver a SimpleXML para continuar con el procesamiento
+            $xml = simplexml_load_string($dom->saveXML());
+
+            
+            if ($data['tipo'] == 1 ) {
+                $xml->Encabezado->tipocomprobante = '91';
+                $xml->Encabezado->noresolucion = $data['resolucion'];
+                $xml->Encabezado->prefijo = $data['prefijo'];
+                $xml->Encabezado->folio = $data['folio'];
+            }
+
+            $xml->Encabezado->xslt = '5';
 
             if ($data['tipo'] == 2) {
             }
-            // Volver a SimpleXML para continuar con el procesamiento
-            $xml = simplexml_load_string($dom->saveXML());
 
             // Cambiamos los datos de fechas para envío                              
             $fecha = now()->format('Y-m-d');

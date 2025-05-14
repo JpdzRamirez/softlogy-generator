@@ -11,8 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->integer('entities_id')->nullable()->after('entiti');
+        Schema::table('users', function (Blueprint $table) {            
             $table->string('profile')->nullable()->after('glpi_id');            
             $table->string('location_id')->nullable()->after('location');            
         });

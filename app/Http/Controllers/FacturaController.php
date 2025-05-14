@@ -336,7 +336,8 @@ class FacturaController extends Controller
     {
                 // Validar el archivo
                 $request->validate([
-                    'listadoNotas' => 'required|file|mimes:xlsx,xls',                    
+                    'listadoNotas' => 'required|file|mimes:xlsx,xls',
+                    'documentOption' => 'nullable|string|in:base64',                    
                     'optionSelect' => [
                         'required',
                         'in:1,2', // Solo permite los valores 1 o 2
@@ -362,12 +363,22 @@ class FacturaController extends Controller
                     // Verificar y procesar las filas
                     if ($filas >= 1) {
                         for ($i = 2; $i <= $filas; $i++) {
+                            $factura='';
+                            // Celdas donde tomamos los nuevos datos para el xml
+                            if($request->input('documentOption') === 'base64'){
+                                //Tomamos el valor de la celda y lo decodificamos
+                                $factura=$this->castService->undecodeBase64($hoja->getCell("A$i")->getValue() ?: '');
+                            }else{
+                                //Tomamos el valor literal de la celda ya que viene en formato xml
+                                $factura = $hoja->getCell("A$i")->getValue() ?: '';
+                            }
 
                             $dataInput = [
-                                'factura' => $hoja->getCell("A$i")->getValue() ?: '',
-                                'prefijo' => $hoja->getCell("B$i")->getValue() ?: '',
+                                'factura' => $factura,
+                                'prefijo' => $hoja->getCell("B$i")->getValue() ?: '',                                
                                 'folio' => $hoja->getCell("C$i")->getValue() ?: '',
-                                'cufe' => $hoja->getCell("D$i")->getValue() ?: '',
+                                'resolucion' => $hoja->getCell("D$i")->getValue() ?: '',                                
+                                'cufe' => $hoja->getCell("E$i")->getValue() ?: '',                                
                                 'tipo' => $request->input('optionSelect'),
                             ];                            
             
