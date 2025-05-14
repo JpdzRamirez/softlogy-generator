@@ -428,7 +428,7 @@ class XmlServices implements XmlServicesInterface
             // Convertir a DOM para manipulación de posición
             $dom = new DOMDocument('1.0', 'UTF-8');
             $dom->loadXML($xml->asXML());
-
+            
             $xpath = new DOMXPath($dom);
             $encabezadoNodes = $xpath->query('//Encabezado');
 
@@ -441,7 +441,7 @@ class XmlServices implements XmlServicesInterface
                     'totalAnticipo' => '0.00',
                     'ncidfact' => $data['prefijo'] . $data['folio'],
                     'nccod' => '2',
-                    'nciddoc' => $xml->Encabezado->nciddoc,
+                    'nciddoc' => $xml->Encabezado->ncidfact,
                     'ncuuid' => $data['cufe'],
                     'ncfecha' => $xml->Encabezado->fecha,
                     'ndidfact' => '',
