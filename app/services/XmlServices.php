@@ -440,16 +440,21 @@ class XmlServices implements XmlServicesInterface
                     'tipoOpera' => '20',
                     'totalAnticipo' => '0.00',
                     'ncidfact' => $data['prefijo'] . $data['folio'],
-                    'nccod' => '2',
-                    'nciddoc' => $xml->Encabezado->ncidfact,
+                    'nccod' => '2',                    
                     'ncuuid' => $data['cufe'],
-                    'ncfecha' => $xml->Encabezado->fecha,
+                    'ncfecha' => $data['fecha'],
                     'ndidfact' => '',
                     'ndcod' => '',
                     'ndiddoc' => '',
                     'nduuid' => '',
                     'ndfecha' => '',
                 ];
+                // 'nciddoc' => $xml->Encabezado->ncidfact,
+                if($data['tipo']==1){
+                    $nuevosValores['nciddoc']= $xml->Encabezado->ncidfact;
+                }elseif($data['tipo']== 2){                    
+                    $nuevosValores['nciddoc']= $data['prefijoFE'] . $data['folioFE'];
+                }
 
                 foreach ($nuevosValores as $tag => $valor) {
                     $nodo = null;
@@ -470,17 +475,38 @@ class XmlServices implements XmlServicesInterface
             // Volver a SimpleXML para continuar con el procesamiento
             $xml = simplexml_load_string($dom->saveXML());
 
-            
-            if ($data['tipo'] == 1 ) {
-                $xml->Encabezado->tipocomprobante = '91';
-                $xml->Encabezado->noresolucion = $data['resolucion'];
-                $xml->Encabezado->prefijo = $data['prefijo'];
-                $xml->Encabezado->folio = $data['folio'];
-            }
+            $xml->Encabezado->tipocomprobante = '91';
+            $xml->Encabezado->noresolucion = $data['resolucion'];
+            $xml->Encabezado->prefijo = $data['prefijo'];
+            $xml->Encabezado->folio = $data['folio'];
 
             $xml->Encabezado->xslt = '5';
 
             if ($data['tipo'] == 2) {
+                $xml->Encabezado->subtotal = number_format((float)$data['valor'], 2, '.', '');
+                $xml->Encabezado->baseimpuesto = number_format((float)$data['valor'], 2, '.', '');
+                $xml->Encabezado->totalsindescuento = number_format((float)($data['valor']+$data['impuesto']), 2, '.', '');
+                $xml->Encabezado->totalimpuestos = number_format((float)$data['impuesto'], 2, '.', '');
+                $xml->Encabezado->total = number_format((float)($data['valor']+$data['impuesto']), 2, '.', '');
+                $xml->Encabezado->montoletra = $this->castServices->numeroALetras($data['valor']+$data['impuesto']);
+
+                $xml->Encabezado->direccionreceptor = $data['direccion'];
+                $xml->Encabezado->mailreceptor = $data['correo'];
+                $xml->Encabezado->mailreceptorcontacto = $data['correo'];
+                $xml->Encabezado->extra1 = $data['marca'];
+                $xml->Encabezado->extra2 = $data['direccion'];
+                $xml->Encabezado->extra4 = $data['correo'];
+                $xml->Encabezado->extra7 = number_format((float)$data['impuesto'], 2, '.', '');
+                $xml->Encabezado->folioPOS = $data['folioPos'];
+                $xml->Encabezado->IdentificadorOrden = $data['checkId'];
+
+                $xml->Detalle->Det->impuestolinea=number_format((float)$data['impuesto'], 2, '.', '');
+                $xml->Detalle->Det->baseimpuestos=number_format((float)$data['valor'], 2, '.', '');
+                $xml->Detalle->Det->precioUnitario=number_format((float)$data['valor'], 2, '.', '');
+                $xml->Detalle->Det->importe=number_format((float)$data['valor'], 2, '.', '');
+
+                $xml->Impuestos->Imp->baseimpuestos=number_format((float)$data['valor'], 2, '.', '');
+                $xml->Impuestos->Imp->importe=number_format((float)$data['impuesto'], 2, '.', '');                                   
             }
 
             // Cambiamos los datos de fechas para envío                              

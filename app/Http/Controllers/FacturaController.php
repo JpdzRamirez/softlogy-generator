@@ -373,15 +373,36 @@ class FacturaController extends Controller
                                 $factura = $hoja->getCell("A$i")->getValue() ?: '';
                             }
 
+                            $cell = $hoja->getCell("O$i");
+                            $value = $cell->getValue();
+                            $fecha = '';
+
+                            if (Date::isDateTime($cell)) {
+                                $fecha = Date::excelToDateTimeObject($value)->format('Y-m-d'); // o el formato que necesites
+                            } else {
+                                $fecha = $value ?: '';
+                            }
+
                             $dataInput = [
                                 'factura' => $factura,
                                 'prefijo' => $hoja->getCell("B$i")->getValue() ?: '',                                
                                 'folio' => $hoja->getCell("C$i")->getValue() ?: '',
                                 'resolucion' => $hoja->getCell("D$i")->getValue() ?: '',                                
-                                'cufe' => $hoja->getCell("E$i")->getValue() ?: '',                                
+                                'cufe' => $hoja->getCell("E$i")->getValue() ?: '',  
+                                'fecha' => $fecha,                                                          
                                 'tipo' => $request->input('optionSelect'),
                             ];                            
-            
+                            if( $request->input('optionSelect') === '2'){
+                                $dataInput['prefijoFE']=$hoja->getCell("F$i")->getValue() ?: '';
+                                $dataInput['folioFE']=$hoja->getCell("G$i")->getValue() ?: '';
+                                $dataInput['correo']=$hoja->getCell("H$i")->getValue() ?: '';
+                                $dataInput['marca']=$hoja->getCell("I$i")->getValue() ?: '';
+                                $dataInput['direccion']=$hoja->getCell("J$i")->getValue() ?: '';
+                                $dataInput['valor'] = (float) ($hoja->getCell("K$i")->getValue() ?? 0);
+                                $dataInput['impuesto'] = (float) ($hoja->getCell("L$i")->getValue() ?? 0);
+                                $dataInput['folioPos']=$hoja->getCell("M$i")->getValue() ?: '';
+                                $dataInput['checkId']=$hoja->getCell("N$i")->getValue() ?: '';
+                            }
                             if (empty($dataInput['factura'])) {
                                 // Si la celda está vacía, agregamos la línea a "fallidos"
                                 $filasNoProcesadas[] = "Fila {$i}: Factura vacía,incompleta o con error";

@@ -115,7 +115,18 @@ class CastServices implements CastServicesInterface
     function numeroALetras(string $numero) {
         $formatter = new NumberFormatter("es", NumberFormatter::SPELLOUT);
         $texto = strtoupper($formatter->format($numero));
-        return $texto . ' PESOS';
+
+        // Reemplazar tildes por letras sin tilde
+        $sinTildes = strtr($texto, [
+            'Á' => 'A',
+            'É' => 'E',
+            'Í' => 'I',
+            'Ó' => 'O',
+            'Ú' => 'U',
+            'Ü' => 'U', // opcional
+        ]);
+
+        return $sinTildes . ' PESOS';
     }
 
 }
