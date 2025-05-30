@@ -296,13 +296,15 @@
                         <form method="POST" action="{{ route('remplazar.datos') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="documentOption" id="isBase64" value="base64">
+                                <input class="form-check-input" type="radio" name="documentOption" id="isBase64"
+                                    value="base64">
                                 <label class="form-check-label" for="isBase64">
                                     ¿Es Base 64?
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="documentOption" id="isContingency" value="contingency">
+                                <input class="form-check-input" type="radio" name="documentOption"
+                                    id="isContingency" value="contingency">
                                 <label class="form-check-label" for="isContingency">
                                     ¿Es Contingencia?
                                 </label>
@@ -353,14 +355,14 @@
 
                 {{-- Cambiar Aplicar descuentos ALSEA --}}
                 <div class="col gy-4">
-
                     <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
                         <div class="service-item position-relative">
                             <div class="icon"><i class="fa-solid fa-user"></i></div>
                             <h4>Generar XMLS Facturas con descuentos correctos</h4>
                             <p>Su uso está pensado para la generar descuentos que se inventó alsea
                             </p>
-                            <form method="POST" action="{{ route('generar.descuentos') }}" enctype="multipart/form-data">
+                            <form method="POST" action="{{ route('generar.descuentos') }}"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-3">
                                     <label for="listadoXML" class="form-label">Archivo Excel Formato- XlsX</label>
@@ -368,11 +370,43 @@
                                         id="listadoXML">
                                 </div>
                                 <button type="submit" style="background: #27303F; margin:auto;"
-                                    class="btn btn-primary mb-3">Generar Descuentos <i class="fa-solid fa-file-invoice"></i></button>
+                                    class="btn btn-primary mb-3">Generar Descuentos <i
+                                        class="fa-solid fa-file-invoice"></i></button>
                             </form>
                         </div>
                     </div><!-- End Service Item -->
+                </div>
 
+                {{-- RECONSTRUIR JSON --}}
+                <div class="col gy-4">
+                    <div class="row d-flex" data-aos="fade-up" style="min-width: 40vw;" data-aos-delay="100">
+                        <div class="service-item position-relative">
+                            <div class="icon"><i class="fa-solid fa-user"></i></div>
+                            <h4>Generar Detalles a xml</h4>
+                            <p>Su uso está pensado para reconstruir los putos xml que no oskar no arma bien
+                            </p>
+                            <div class="d-flex flex-column align-items-center g-1" style="margin-bottom: 4em">
+                                <a href="{{ route('descargar.formatos', ['tipo' => 'json-detalles']) }}"
+                                    style="position: relative" class="d-flex flex-column align-items-center">Descargar
+                                    formato Excel
+                                    <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDlhaWNjaWEwdmFla2tpdnYwdXE1amF4b2RzNmV2ZDZ5NTRsZ3F4dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/24G0F8lQWYMb6jD47X/giphy.webp"
+                                        alt="Click-Here" style="width: 5em; position: absolute; top:1em;"></a>
+
+                            </div>
+                            <form method="POST" action="{{ route('generar.detalles') }}"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="listadoJSON" class="form-label">Archivo Excel Formato- XlsX</label>
+                                    <input class="form-control" required name="listadoJSON" type="file"
+                                        id="listadoJSON">
+                                </div>
+                                <button type="submit" style="background: #27303F; margin:auto;"
+                                    class="btn btn-primary mb-3">Generar Descuentos <i
+                                        class="fa-solid fa-file-invoice"></i></button>
+                            </form>
+                        </div>
+                    </div><!-- End Service Item -->
                 </div>
 
                 <!-- Generar notas creditos manual -->
@@ -381,19 +415,22 @@
                         <div class="service-item position-relative">
                             <div class="icon"><i class="fa-solid fa-user"></i></div>
                             <h4>Generar Notas credito de Facturas</h4>
-                            <p>Su uso está pensado para la generar facturas electrónicas de forma masiva, con datos suministrados en el formato.</p>
+                            <p>Su uso está pensado para la generar facturas electrónicas de forma masiva, con datos
+                                suministrados en el formato.</p>
                             <div class="d-flex flex-column align-items-center g-1" style="margin-bottom: 4em">
                                 <a href="{{ route('descargar.formatos', ['tipo' => 'crear-notas']) }}"
                                     style="position: relative" class="d-flex flex-column align-items-center">Descargar
                                     formato Excel
-                                <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDlhaWNjaWEwdmFla2tpdnYwdXE1amF4b2RzNmV2ZDZ5NTRsZ3F4dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/24G0F8lQWYMb6jD47X/giphy.webp"
-                                    alt="Click-Here" style="width: 5em; position: absolute; top:1em;"></a>
+                                    <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDlhaWNjaWEwdmFla2tpdnYwdXE1amF4b2RzNmV2ZDZ5NTRsZ3F4dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/24G0F8lQWYMb6jD47X/giphy.webp"
+                                        alt="Click-Here" style="width: 5em; position: absolute; top:1em;"></a>
 
                             </div>
-                            <form method="POST" action="{{ route('generar.notas') }}" enctype="multipart/form-data">
+                            <form method="POST" action="{{ route('generar.notas') }}"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="documentOption" id="isBase64" value="base64">
+                                    <input class="form-check-input" type="radio" name="documentOption"
+                                        id="isBase64" value="base64">
                                     <label class="form-check-label" for="isBase64">
                                         ¿Es Base 64?
                                     </label>
@@ -425,24 +462,32 @@
                         <div class="service-item position-relative">
                             <div class="icon"><i class="fa-solid fa-user"></i></div>
                             <h4>Generar Contingencias</h4>
-                            <p>Su uso está pensado para la generar facturas electrónicas de forma masiva, con datos suministrados en el formato.</p>
-                            <small>1 => Para convertir una FE a contingencia, es necesario indicar la resolucion, el prefijo y fecha</small>
+                            <p>Su uso está pensado para la generar facturas electrónicas de forma masiva, con datos
+                                suministrados en el formato.</p>
+                            <small>1 => Para convertir una FE a contingencia, es necesario indicar la resolucion, el
+                                prefijo y fecha</small>
                             <br>
-                            <small>2 => Para crear una contingencia, es necesario indicar la base, impuesto, total, la fecha y los folios(En el excel), se debe cargar el xml ya con la resolucion y prefijo</small>
+                            <small>2 => Para crear una contingencia, es necesario indicar la base, impuesto, total, la
+                                fecha y los folios(En el excel), se debe cargar el xml ya con la resolucion y
+                                prefijo</small>
                             <br>
-                            <code>El check se selcciona si en el excel se cargará un base 64 o un xml con formato <factura></factura></factura></code>                            
+                            <code>El check se selcciona si en el excel se cargará un base 64 o un xml con formato
+                                <factura></factura>
+                                </factura></code>
                             <div class="d-flex flex-column align-items-center g-1" style="margin-bottom: 4em">
                                 <a href="{{ route('descargar.formatos', ['tipo' => 'crear-contingencias']) }}"
                                     style="position: relative" class="d-flex flex-column align-items-center">Descargar
                                     formato Excel
-                                <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDlhaWNjaWEwdmFla2tpdnYwdXE1amF4b2RzNmV2ZDZ5NTRsZ3F4dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/24G0F8lQWYMb6jD47X/giphy.webp"
-                                    alt="Click-Here" style="width: 5em; position: absolute; top:1em;"></a>
+                                    <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDlhaWNjaWEwdmFla2tpdnYwdXE1amF4b2RzNmV2ZDZ5NTRsZ3F4dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/24G0F8lQWYMb6jD47X/giphy.webp"
+                                        alt="Click-Here" style="width: 5em; position: absolute; top:1em;"></a>
 
                             </div>
-                            <form method="POST" action="{{ route('generar.contingencias') }}" enctype="multipart/form-data">
+                            <form method="POST" action="{{ route('generar.contingencias') }}"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="documentOption" id="isBase64" value="base64">
+                                    <input class="form-check-input" type="radio" name="documentOption"
+                                        id="isBase64" value="base64">
                                     <label class="form-check-label" for="isBase64">
                                         ¿Es Base 64?
                                     </label>
@@ -457,7 +502,8 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="listadoContingencias" class="form-label">Archivo Excel Formato- XlsX</label>
+                                    <label for="listadoContingencias" class="form-label">Archivo Excel Formato-
+                                        XlsX</label>
                                     <input class="form-control" required name="listadoContingencias" type="file"
                                         id="listadoContingencias">
                                 </div>

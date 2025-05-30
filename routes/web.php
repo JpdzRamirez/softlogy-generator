@@ -46,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/download/{filename}', [BackendController::class, 'descargarFoliosPisados'])->name('descargar.pisados');
         Route::get('/descargar-formatos/{tipo?}', [BackendController::class, 'descargarFormato_xlsx'])->name('descargar.formatos');        
         Route::post('/generar-xmls', [FacturaController::class, 'generarXMLS'])->name('generar.xmls');
+        Route::post('/reconstruir-detalles', [FacturaController::class, 'generarDetalles'])->name('generar.detalles');
         Route::post('/generar-notas', [FacturaController::class, 'generarNotasCredito'])->name('generar.notas');
         Route::post('/generar-contingencias', [FacturaController::class, 'generarContingencias'])->name('generar.contingencias');
         Route::post('/generar-descuentos', [FacturaController::class, 'generarXMLSDescuentos'])->name('generar.descuentos');

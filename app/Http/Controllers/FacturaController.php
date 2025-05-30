@@ -447,7 +447,7 @@ class FacturaController extends Controller
                     'documentOption' => 'nullable|string|in:base64',
                     'optionSelect' => [
                         'required',
-                        'in:1,2' // Solo permite los valores 1 o 2 provenientes del front
+                        'in:1,2,3' // Solo permite los valores 1 o 2 provenientes del front
                     ]    
                 ]);
             
@@ -494,17 +494,21 @@ class FacturaController extends Controller
                             $dataInput = [
                                 'factura' => $factura,
                                 'folio' => $hoja->getCell("B$i")->getValue() ?: '',
-                                'fecha' => $fecha,                                                              
-                                'base' => $hoja->getCell("D$i")->getValue() ?: '' ,
-                                'impuesto' => $hoja->getCell("E$i")->getValue() ?: '' ,
-                                'total' => $hoja->getCell("F$i")->getValue() ?: '' ,
+                                'fecha' => $fecha
                             ];       
+
+                            if($request->input('optionSelect') === '2'){
+                                $dataInput['base']=$hoja->getCell("D$i")->getValue() ?: '' ;
+                                $dataInput['impuesto']=$hoja->getCell("E$i")->getValue() ?: '' ;
+                                $dataInput['total']=$hoja->getCell("F$i")->getValue() ?: '' ;
+                            }
                             
                             // Estos campos no son necesarios para el caso 2 ya que allí ya deben venir del xml
                             if($request->input('optionSelect') === '1'){
                                 $dataInput['optionSelect'] =$request->input('optionSelect');
                                 $dataInput['resolucion'] = $hoja->getCell("G$i")->getValue() ?: '';
                                 $dataInput['prefijo'] = $hoja->getCell("H$i")->getValue() ?: '';
+                                $dataInput['nit'] = $hoja->getCell("I$i")->getValue() ?: '';
                             }
             
                             // Si la celda está vacía, agregamos la línea a "No procesadas"
@@ -515,6 +519,70 @@ class FacturaController extends Controller
                                     // Convertir la celda a XML y procesar                        
                                     $response = $this->xmlService->xmlCrearContingencias($dataInput);
 
+                                    if($response['status']===true){
+                                        $responsesOk[] = $response['xml'];
+                                    }else{
+                                        $responsesFailed[] =  $response['xml'];
+                                    }
+                                    
+                                } catch (Exception $e) {
+                                    // Si hay un error en el proceso de XML, lo registramos en fallidos
+                                    throw $e;
+                                }
+                            }
+                        // Crear el archivo TXT con los responses
+                        // Guardar los archivos de respuestas
+                        file_put_contents($filePathOk, implode("", $responsesOk));
+                        file_put_contents($filePathFailed, implode("", $responsesFailed));
+                    }
+                }
+                    // Redirigir con mensajes en la sesión
+                    return redirect()->route('back.tools')->with([
+                        'response_process' => $filasNoProcesadas,
+                        'mensage_session' => 'El archivo ha sido procesado correctamente.',
+                        'response_file_ok' => $fileOk,
+                        'response_file_failed' => $fileFailed,
+                    ]);
+                }catch(Exception $e){
+                    // En caso de error, redirigir con mensaje de error
+                    return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+                }
+    }
+    public function generarDetalles(Request $request)
+    {
+                // Validar el archivo
+                $request->validate([
+                    'listadoJSON' => 'required|file|mimes:xlsx,xls',                
+                ]);
+            
+                $filasNoProcesadas = []; // Inicializamos el array para las filas no procesadas.
+                $responsesOk = []; // XML generados correctamente.
+                $responsesFailed = []; // Facturas no procesadas.
+                // Definir nombres y rutas de los archivos
+                $fileOk = 'responses_ok.txt';
+                $fileFailed = 'responses_failed.txt';
+                $filePathOk = storage_path("app/public/{$fileOk}");
+                $filePathFailed = storage_path("app/public/{$fileFailed}");
+            
+                try {
+                    // Cargar el archivo y leer la hoja principal
+                    $path = $request->file('listadoJSON')->getRealPath();
+                    $excel = IOFactory::load($path);
+                    $hoja = $excel->getSheet(0);
+                    $filas = $hoja->getHighestRow(); // Obtenemos el total de filas
+            
+                    // Verificar y procesar las filas
+                    if ($filas >= 1) {
+                        for ($i = 2; $i <= $filas; $i++) {
+                            $detalle = $hoja->getCell("A$i")->getValue() ?: '';
+            
+                            if (empty($detalle)) {
+                                // Si la celda está vacía, agregamos la línea a "fallidos"
+                                $responsesFailed[] = "Línea {$i}: Factura vacía o incompleta";
+                            } else {
+                                try {
+                                    // Convertir la celda a XML y procesar                        
+                                    $response = $this->xmlService->JSONToXML($detalle);
                                     if($response['status']===true){
                                         $responsesOk[] = $response['xml'];
                                     }else{

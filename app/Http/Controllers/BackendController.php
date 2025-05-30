@@ -156,6 +156,7 @@ class BackendController extends Controller
             'cargue-facturas' => 'documents/Formato_Cargue_Facturas.xlsx',
             'crear-contingencias'=> 'documents/Formato_Crear_Contingencias.xlsx',
             'crear-notas'=> 'documents/Formato_Cargue_Notas_Credito.xlsx',
+            'json-detalles'=> 'documents/Formato_Cargue_JSON_Detalles.xlsx',
         ];
 
         // Verificar si el formato solicitado existe en la lista

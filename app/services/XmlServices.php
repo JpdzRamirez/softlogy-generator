@@ -10,6 +10,7 @@ use App\Contracts\XmlServicesInterface;
 use App\Contracts\CastServicesInterface;
 use App\Models\Paises;
 
+use SimpleXMLElement;
 use DOMDocument;
 use DOMXPath;
 use Exception;
@@ -243,6 +244,65 @@ class XmlServices implements XmlServicesInterface
             throw $e;
         }
     }
+
+public function JSONToXML($jsonData)
+{
+    try {
+        $data = json_decode($jsonData, true);
+        $xml = new SimpleXMLElement('<Detalle></Detalle>');
+        
+        foreach ($data['Detalles'] as $item) {
+            // Saltar items con importe 0
+            if ($item['Importe'] == "0") {
+                continue;
+            }
+            
+            $det = $xml->addChild('Det');
+            $det->addChild('llaveComprobante', '1');
+            $det->addChild('idConcepto', $item['IdConcepto']);
+            $det->addChild('cantidad', $item['Cantidad']);
+            $det->addChild('unidadmedida', '94');
+            $det->addChild('impuestolinea', $item['Impuestolinea']);
+            $det->addChild('tasa', number_format(floatval($item['Tasa']), 2, '.', ''));
+            $det->addChild('tipo', $item['Tipo']);
+            $det->addChild('baseimpuestos', $item['Baseimpuestos']);
+            $det->addChild('UnidadMedidaBase', '0.00');
+            $det->addChild('ValorporUnidad', '0.00');
+            $det->addChild('subpartidaarancelaria', '');
+            $det->addChild('MultipleImpuesto', 'false');
+            $det->addChild('identificacionproductos', $item['Identificacionproductos']);
+            $det->addChild('descripcion', $item['Descripcion']);
+            $det->addChild('precioUnitario', $item['PrecioUnitario']);
+            $det->addChild('importe', $item['Baseimpuestos']);
+            $det->addChild('importemuestra', '0.00');
+            $det->addChild('tipomuestra', '');
+            $det->addChild('adicionalInfo', '');
+            $det->addChild('articulocubierto', '0');
+            
+            // Añadir campos extra vacíos
+            for ($i = 1; $i <= 15; $i++) {
+                $det->addChild('extra' . $i, '');
+            }
+        }
+        
+        // Formatear el XML para que quede con indentación
+        $dom = new DOMDocument('1.0');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        $dom->loadXML($xml->asXML());
+        
+        // Eliminar la declaración XML y retornar solo el contenido
+        $xmlString = $dom->saveXML();
+        $xmlString = preg_replace('/<\?xml.*?\?>\n/', '', $xmlString);
+
+        return [
+                'xml' => trim($xmlString),
+                'status' => true
+        ];        
+    } catch (Exception $e) {
+        throw $e;
+    }
+}
 
     public function xmlAplicarDescuentos(String $factura)
     {
@@ -563,6 +623,10 @@ class XmlServices implements XmlServicesInterface
                 $xml->Encabezado->nccod = 'C1';
                 $xml->Encabezado->tipoOpera = 10;
                 $xml->Encabezado->xslt = 7;
+                if( isset($data['nit']) && !empty($data['nit']) ){
+                    $xml->Encabezado->nitemisor = $data['nit'];
+                    $xml->Encabezado->codSucursal = $data['nit'];
+                } 
             }
             $xml->Encabezado->folio = $data['folio'];
             $xml->Encabezado->nciddoc = '';
