@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('store', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('entities_id');            
-            $table->unsignedBigInteger('sqlConfig_id')->nullable();
+            $table->unsignedBigInteger('entities_id');                        
             $table->string('tienda');
             $table->string('id_tienda');
             $table->string('id_brand');

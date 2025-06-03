@@ -28,7 +28,7 @@ return new class extends Migration
             $table->integer('rangoFinal');
             $table->integer('Folio');
             $table->integer('Tipo');
-            $table->text('NumCertificado');
+            $table->text('NumCertificado')->nullable();
             $table->boolean('diferencias')->default(false);            
             $table->timestamps();
         });
