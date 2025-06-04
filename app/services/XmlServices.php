@@ -252,28 +252,31 @@ public function JSONToXML($jsonData)
         $xml = new SimpleXMLElement('<Detalle></Detalle>');
         
         foreach ($data['Detalles'] as $item) {
+
+             // Normalizar las claves del array a minúsculas
+            $item = array_change_key_case($item, CASE_LOWER);
             // Saltar items con importe 0
-            if ($item['Importe'] == "0") {
+            if ($item['importe'] == "0" ) {
                 continue;
             }
             
             $det = $xml->addChild('Det');
             $det->addChild('llaveComprobante', '1');
-            $det->addChild('idConcepto', $item['IdConcepto']);
-            $det->addChild('cantidad', $item['Cantidad']);
+            $det->addChild('idConcepto', $item['idconcepto'] ?? ''); // Usamos el operador null coalescente por si la clave no existe
+            $det->addChild('cantidad', $item['cantidad'] ?? '');
             $det->addChild('unidadmedida', '94');
-            $det->addChild('impuestolinea', $item['Impuestolinea']);
-            $det->addChild('tasa', number_format(floatval($item['Tasa']), 2, '.', ''));
-            $det->addChild('tipo', $item['Tipo']);
-            $det->addChild('baseimpuestos', $item['Baseimpuestos']);
+            $det->addChild('impuestolinea', $item['impuestolinea'] ?? '');
+            $det->addChild('tasa', number_format(floatval($item['tasa'] ?? 0), 2, '.', ''));
+            $det->addChild('tipo', $item['tipo'] ?? '');
+            $det->addChild('baseimpuestos', $item['baseimpuestos'] ?? '');
             $det->addChild('UnidadMedidaBase', '0.00');
             $det->addChild('ValorporUnidad', '0.00');
             $det->addChild('subpartidaarancelaria', '');
             $det->addChild('MultipleImpuesto', 'false');
-            $det->addChild('identificacionproductos', $item['Identificacionproductos']);
-            $det->addChild('descripcion', $item['Descripcion']);
-            $det->addChild('precioUnitario', $item['PrecioUnitario']);
-            $det->addChild('importe', $item['Baseimpuestos']);
+            $det->addChild('identificacionproductos', $item['identificacionproductos'] ?? '');
+            $det->addChild('descripcion', $item['descripcion'] ?? '');
+            $det->addChild('precioUnitario', $item['preciounitario'] ?? '');
+            $det->addChild('importe', $item['baseimpuestos'] ?? '');
             $det->addChild('importemuestra', '0.00');
             $det->addChild('tipomuestra', '');
             $det->addChild('adicionalInfo', '');
